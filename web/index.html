@@ -14,12 +14,18 @@
   <div class="topbar">
     <button id="btn-replay" title="Replay the intro">Replay</button>
     <button id="btn-tour" title="Fly through the matches">Tour</button>
+    <button id="btn-base" title="Switch between the satellite night view and a street map">Streets</button>
     <button id="btn-hide" title="Hide panels for recording">Hide panels</button>
   </div>
 
   <aside class="panel left" id="filters">
     <div class="k">Flat Finder · <select id="city-pick" aria-label="City"></select></div>
     <h1 class="ttl">Find the flat that fits.</h1>
+    <div class="search">
+      <input id="q" type="search" placeholder="Search a society, developer or sector" autocomplete="off" aria-label="Search societies">
+      <kbd>/</kbd>
+      <ol id="q-results" hidden></ol>
+    </div>
     <button class="preset" id="preset-divy">Load Divy's search</button>
 
     <section>

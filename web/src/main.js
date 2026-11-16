@@ -1,5 +1,6 @@
 import './style.css';
-import { addSocietyLayers, createMap, OVERVIEW, setSelected, setStates, startPulse } from './map.js';
+import { addBaseLayers, addSocietyLayers, createMap, OVERVIEW, setBaseMode, setSelected, setStates, startPulse } from './map.js';
+import { searchSocieties } from './search.js';
 import { createFeed } from './feed.js';
 import { AMENITY_KEYS, DEFAULT_CRITERIA, feetLabel, matchSociety, matchUnit, roomPasses } from './filters.js';
 
@@ -15,6 +16,7 @@ const DIVY = { // Divy's own Gurugram search, shown as the example
   kinds: ['apartment'], bhk: [2, 3, 4], room: { a: 11.25, b: 12.25 }, minSqft: 1620, maxPrice: null, amenities: ['squash'], ready: false };
 
 let crit = structuredClone(DEFAULT_CRITERIA);
+let baseMode = new URLSearchParams(location.search).get('map') === 'streets' ? 'streets' : 'night';
 let data, byId, map, feed, selected = null, states = new Map(), tourTimer = null;
 
 const fmtPrice = (r) => (r >= 1e7 ? `₹${(r / 1e7).toFixed(r >= 1e8 ? 0 : 2).replace(/\.?0+$/, '')} Cr` : `₹${Math.round(r / 1e5)} L`);
@@ -40,6 +42,7 @@ async function boot() {
   buildFilters();
   try {
     map = createMap('map', { mobile });
+    window.__map = map; // handy for debugging in the console
   } catch (e) {
     $('note').textContent = 'Your browser could not start WebGL, so the 3D map is off. Filters and results still work.';
     applyFilters();
@@ -52,6 +55,8 @@ async function boot() {
 
   map.once('style.load', () => {
     addSocietyLayers(map, shapes, points);
+    addBaseLayers(map);
+    setBaseMode(map, baseMode);
     startPulse(map);
     map.on('click', 'bld', (e) => openSociety(e.features[0].properties.sid));
     map.on('click', 'site-fill', (e) => openSociety(e.features[0].properties.sid));
@@ -128,6 +133,16 @@ function buildFilters() {
   $('btn-replay').onclick = intro;
   $('btn-tour').onclick = tour;
   $('btn-hide').onclick = () => document.body.classList.toggle('bare');
+  $('btn-base').onclick = () => {
+    baseMode = baseMode === 'streets' ? 'night' : 'streets';
+    if (map?.getLayer?.('st-bg')) setBaseMode(map, baseMode);
+    $('btn-base').textContent = baseMode === 'streets' ? 'Satellite' : 'Streets';
+    const q = new URLSearchParams(location.search);
+    baseMode === 'streets' ? q.set('map', 'streets') : q.delete('map');
+    history.replaceState(null, '', `?${q}`);
+  };
+  $('btn-base').textContent = baseMode === 'streets' ? 'Satellite' : 'Streets';
+  buildSearch();
 
   function readRoom() {
     crit.room = $('f-room-on').checked ? { a: getFtIn('ra'), b: getFtIn('rb') } : null;
@@ -266,6 +281,46 @@ function renderCard(s) {
     <div class="fine">${s.rera_id ? 'RERA ' + esc(s.rera_id) + ' · ' : ''}${s.shape === 'osm' ? 'Buildings from OpenStreetMap' : s.shape === 'osm-site' ? 'Boundary from OpenStreetMap, towers drawn approximately' : 'Approximate shape: towers drawn from the listed tower count'}</div>`;
   $('card').hidden = false;
   $('card').querySelector('.close').onclick = closeCard;
+}
+
+// ---------- society search ----------
+function buildSearch() {
+  const input = $('q'), list = $('q-results');
+  let items = [], active = -1;
+  const close = () => { list.hidden = true; active = -1; };
+  const render = () => {
+    items = searchSocieties(data.societies, input.value);
+    if (!items.length) {
+      list.innerHTML = input.value.trim() ? '<li class="empty">No society by that name</li>' : '';
+      list.hidden = !input.value.trim();
+      return;
+    }
+    list.replaceChildren(...items.map((s, i) => {
+      const li = document.createElement('li');
+      const st = states.get(s.id);
+      li.className = i === active ? 'on' : '';
+      li.innerHTML = `<span>${esc(s.name)}</span><span class="tag ${st}">${esc(s.locality || '')}${s.verified ? ' · verified' : ''}</span>`;
+      li.onmousedown = (e) => { e.preventDefault(); pick(s); };
+      return li;
+    }));
+    list.hidden = false;
+  };
+  const pick = (s) => { input.value = s.name; close(); input.blur(); openSociety(s.id); };
+  input.oninput = () => { active = -1; render(); };
+  input.onfocus = render;
+  input.onblur = close;
+  input.onkeydown = (e) => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (!items.length) return;
+      active = (active + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length;
+      render();
+    } else if (e.key === 'Enter' && items.length) pick(items[Math.max(0, active)]);
+    else if (e.key === 'Escape') { close(); input.blur(); }
+  };
+  addEventListener('keydown', (e) => {
+    if (e.key === '/' && document.activeElement !== input && !/INPUT|SELECT|TEXTAREA/.test(document.activeElement?.tagName)) { e.preventDefault(); input.focus(); }
+  });
 }
 
 // ---------- tour ----------

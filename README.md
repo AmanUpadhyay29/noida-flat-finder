@@ -40,7 +40,9 @@ Tests: `cd pipeline && uv run --with pytest pytest` and `cd web && npx vitest ru
 
 Cities live in `data/cities.json`. Gurugram is built; Bengaluru and Mumbai are configured and need the pipeline run (see the skill, Job 2).
 
-Useful links: `?city=gurgaon`, `?preset=divy` loads the example search, `?open=<society id>` opens one society, `?nointro` skips the globe fly-in.
+Press `/` to search for a society. The Streets button switches to a street map with road and sector names.
+
+Useful links: `?city=gurgaon`, `?map=streets`, `?preset=divy` loads the example search, `?open=<society id>` opens one society, `?nointro` skips the globe fly-in.
 
 ## Add verified research
 
