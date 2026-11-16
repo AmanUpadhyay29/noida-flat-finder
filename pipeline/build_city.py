@@ -171,6 +171,19 @@ def events_for(s):
     for k, f in s.get("amen_facts", {}).items():
         ev.append({"sid": sid, "step": f"Checked {k} court", "finding": f"{f['value']} · p.{f.get('page')}", "url": f["source"], "verified": True})
     for u in s["unit_types"]:
+        if u.get("ai"):
+            a = u["ai"]
+            bits = [f"narrowest bedroom {a['min_short']:.2f} ft" if a.get("min_short") else None,
+                    f"every bedroom at least {a['long_lb']} ft long" if a.get("long_lb") else None,
+                    f"and at least {a['area_lb']} sq ft" if a.get("area_lb") else None]
+            ev.append({"sid": sid, "step": "Jev read floor plan", "finding": f"{u['bhk']} BHK · " + ", ".join(b for b in bits if b),
+                       "url": u["source"], "verified": True, "unit": u["label"]})
+            continue
+        if u["bedrooms"] and u.get("confidence") == "ocr":
+            rooms = ", ".join(f"{a:.1f} x {b:.1f} ft" for a, b in u["bedrooms"])
+            ev.append({"sid": sid, "step": f"Read floor plan ({u.get('checked_by')})", "finding": f"{u['bhk']} BHK · bedrooms {rooms}",
+                       "url": u["source"], "verified": True, "unit": u["label"]})
+            continue
         if u["bedrooms"]:
             printed = ", ".join(u.get("bedrooms_printed") or [])
             ev.append({"sid": sid, "step": f"Reading plan p.{u['page']}", "finding": f"{u['label']} · bedrooms {printed}",
@@ -261,6 +274,35 @@ def main(city="gurgaon"):
         if v["unit_types"]:
             s["unit_types"] = v["unit_types"] + [u for u in s["unit_types"] if u["bhk"] not in {x["bhk"] for x in v["unit_types"]}]
 
+    # bedroom sizes read from floor plan images: local OCR first (every printed size), Jev as a fallback and cross-check
+    vdir = verified.ROOT / "data" / "verified"
+    ai_plans = json.loads((vdir / f"{city}-ai.json").read_text())["plans"] if (vdir / f"{city}-ai.json").exists() else {}
+    ocr_plans = json.loads((vdir / f"{city}-ocr.json").read_text())["plans"] if (vdir / f"{city}-ocr.json").exists() else {}
+    by_sid = {s["id"]: s for s in societies}
+    for url in set(ai_plans) | set(ocr_plans):
+        o, j = ocr_plans.get(url, {}), ai_plans.get(url, {})
+        s = by_sid.get(o.get("sid") or j.get("sid"))
+        if not s or s.get("verified"):
+            continue
+        bhk = j.get("bhk") or o.get("bhk_listed") or j.get("bhk_listed")
+        sizes = [u.get("size_sqft") or u.get("super_sqft") for u in s["unit_types"] if u.get("bhk") == bhk and (u.get("size_sqft") or u.get("super_sqft"))]
+        unit = {"label": f"{bhk} BHK floor plan", "bhk": bhk, "size_range": [min(sizes), max(sizes)] if sizes else None,
+                "source": url, "page": "plan image"}
+        beds = [b["ft"] for b in o.get("bedrooms") or []]
+        if o.get("status") == "read":
+            unit.update(bedrooms=[list(b) for b in beds], rooms_complete=True, confidence="ocr", checked_by=o.get("checked_by"))
+        elif beds and o.get("status") != "OCR and Jev disagree":
+            unit.update(bedrooms=[list(b) for b in beds], rooms_complete=False, confidence="ocr", checked_by="OCR, some bedrooms")
+        elif j.get("status") == "read" and o.get("status") != "OCR and Jev disagree":
+            ai = {k: j.get(k) for k in ("min_short", "long_lb", "long_ub", "area_lb", "area_ub")}
+            if ai.get("area_lb"):
+                ai["area_lb"] -= 2  # spot checks found a 119.9 sq ft room passed as "at least 120": keep a small margin
+            unit.update(bedrooms=[], rooms_complete=False, ai=ai, confidence="ai", checked_by="Jev only")
+        else:
+            continue
+        s["unit_types"].append(unit)
+        s["ai_read"] = True
+
     # smallest-bedroom lower bounds from unit size, for units whose plans are unread
     room_model = rooms_model.fit(ver)
     for s in societies:
@@ -339,6 +381,7 @@ def main(city="gurgaon"):
             "price_model": model,
             "room_model": room_model,
             "counts": {"listed": len(raw), "on_map": len(societies), "not_located": not_located,
+                       "ai_read": sum(1 for s in societies if s.get("ai_read")),
                        "for_sale": sum(s["sale_count"] or 0 for s in societies), "for_rent": sum(s["rent_count"] or 0 for s in societies),
                        "verified": sum(s["verified"] for s in societies)},
             "sources": ["Magicbricks project pages", "OpenStreetMap contributors", "HRERA Gurugram", "Builder brochures (verified rows)"],
@@ -387,11 +430,13 @@ def write_csv(soc_path, unit_path, societies):
             w.writerow(row)
     with open(unit_path, "w", newline="") as f:
         w = csv.writer(f)
-        w.writerow(["society_id", "society", "unit", "bhk", "super_sqft", "carpet_sqft", "listed_sqft", "bedrooms_ft", "all_bedrooms_read", "confidence", "source", "page"])
+        w.writerow(["society_id", "society", "unit", "bhk", "super_sqft", "carpet_sqft", "listed_sqft", "bedrooms_ft", "all_bedrooms_read",
+                    "ai_narrowest_bedroom_ft", "ai_every_bedroom_long_side_at_least_ft", "ai_every_bedroom_area_at_least_sqft", "confidence", "source", "page"])
         for s in societies:
             for u in s["unit_types"]:
                 w.writerow([s["id"], s["name"], u["label"], u.get("bhk"), u.get("super_sqft"), u.get("carpet_sqft"), u.get("size_sqft"),
                             "; ".join(f"{a:.2f} x {b:.2f}" for a, b in u.get("bedrooms") or []), u.get("rooms_complete"),
+                            (u.get("ai") or {}).get("min_short"), (u.get("ai") or {}).get("long_lb"), (u.get("ai") or {}).get("area_lb"),
                             u.get("confidence"), u.get("source"), u.get("page")])
 
 

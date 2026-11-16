@@ -62,7 +62,7 @@ function summary(s, st, crit) {
   const rooms = s.unit_types.flatMap((u) => u.bedrooms || []);
   const small = rooms.length ? rooms.reduce((m, r) => (r[0] < m[0] ? r : m)) : null;
   return {
-    name: s.name, locality: s.locality, verdict: st, type: s.kind,
+    name: s.name, locality: s.locality, verdict: st, type: s.kind, rooms_checked: s.verified ? 'by hand' : s.ai_read ? 'AI-read floor plans' : 'no',
     [crit.mode === 'rent' ? 'rent_from_inr' : 'price_from_inr']: p?.value ?? null, price_is_estimate: p ? p.estimated : null,
     smallest_bedroom_read: small ? `${feetLabel(small[0])} x ${feetLabel(small[1])}` : null,
     flat_finder_score: s.score, resident_rating: s.rating, listings_for_sale: s.sale_count, listings_for_rent: s.rent_count,
@@ -78,6 +78,8 @@ function detail(s) {
     unit_types: s.unit_types.map((u) => ({ unit: u.label, bhk: u.bhk, sqft: u.super_sqft || u.size_sqft || u.carpet_sqft,
       bedrooms: (u.bedrooms || []).map((r) => `${feetLabel(r[0])} x ${feetLabel(r[1])}`), all_bedrooms_read: u.rooms_complete,
       estimated_smallest_bedroom: u.est_short ? `at least ${feetLabel(u.est_short)} wide, ~${u.est_area} sq ft (estimate)` : null,
+      read_by_ai_from_plan: u.ai ? { narrowest_bedroom: u.ai.min_short != null ? feetLabel(u.ai.min_short) : null,
+        every_bedroom_long_side_at_least: u.ai.long_lb != null ? feetLabel(u.ai.long_lb) : null, every_bedroom_area_at_least_sqft: u.ai.area_lb } : null,
       source: u.source, page: u.page })),
     prices: s.prices, score: s.score, score_parts: s.score_parts, resident_rating: s.rating, rating_count: s.rating_count,
     nearby: s.nearby, amenities: s.amenities, magicbricks: s.url, google_maps: s.gmaps, flat_finder: `${SITE}/?open=${s.id}`,
@@ -97,7 +99,7 @@ async function callTool(name, args, env, origin) {
     const hits = data.societies.map((s) => [s, matchSociety(s, crit)]).filter(([, st]) => rank[st])
       .sort((a, b) => rank[b[1]] - rank[a[1]] || b[0].verified - a[0].verified || (b[0].score || 0) - (a[0].score || 0));
     const counts = hits.reduce((c, [, st]) => ((c[st] = (c[st] || 0) + 1), c), {});
-    return { city: data.city.name, total: hits.length, counts, how_to_read: 'match = every bedroom read from plans and passes; likely = rooms read so far pass; probable = plans unread, estimated from unit size. Societies without room data are not listed under room filters.',
+    return { city: data.city.name, total: hits.length, counts, how_to_read: 'match = bedrooms read from floor plans (by hand or by AI, see rooms_checked) and all pass; likely = rooms read so far pass; probable = plans unread, estimated from unit size. Societies without room data are not listed under room filters.',
       results: hits.slice(0, Math.min(args.limit || 15, 50)).map(([s, st]) => summary(s, st, crit)) };
   }
   const find = (n) => searchSocieties(data.societies, n, 1)[0];

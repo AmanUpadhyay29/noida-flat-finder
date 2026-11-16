@@ -4,6 +4,7 @@ usage: python mb_crawl.py list <city>      # all list pages -> out/<city>/mb_ind
        python mb_crawl.py projects <city>  # every project page -> out/<city>/mb_projects.json
 <city> is a key in data/cities.json (default gurgaon).
 """
+import gzip
 import hashlib
 import json
 import pathlib
@@ -27,14 +28,14 @@ DELAY = 1.0
 
 def fetch(url):
     CACHE.mkdir(parents=True, exist_ok=True)
-    f = CACHE / (hashlib.sha1(url.encode()).hexdigest() + ".html")
-    if f.exists() and f.stat().st_size > 10000:
-        return f.read_text(encoding="utf-8", errors="ignore")
+    f = CACHE / (hashlib.sha1(url.encode()).hexdigest() + ".html.gz")
+    if f.exists() and f.stat().st_size > 2000:
+        return gzip.decompress(f.read_bytes()).decode("utf-8", "ignore")
     for attempt in range(3):
         try:
             req = urllib.request.Request(url, headers={"User-Agent": UA})
             html = urllib.request.urlopen(req, timeout=40).read().decode("utf-8", "ignore")
-            f.write_text(html, encoding="utf-8")
+            f.write_bytes(gzip.compress(html.encode("utf-8"), 9))
             time.sleep(DELAY)
             return html
         except Exception as e:  # network hiccup: back off and retry

@@ -274,7 +274,7 @@ function renderResults() {
   $('count-sub').textContent = bits.join(' · ');
   $('v-list').textContent = myList.length ? `${myList.length} saved` : 'empty';
   const groups = rooms
-    ? [['match', 'Verified: every bedroom read and passes'], ['likely', 'Likely: rooms read so far pass'], ['probable', 'Probably fits: estimated from unit size, plans not read yet']]
+    ? [['match', 'Rooms read from floor plans: every bedroom passes'], ['likely', 'Likely: rooms read so far pass'], ['probable', 'Probably fits: estimated from unit size, plans not read yet']]
     : [['match', null]];
   const all = ranked();
   $('results').replaceChildren(...groups.flatMap(([st, title]) => {
@@ -296,7 +296,8 @@ function resultItem(s) {
   const st = states.get(s.id);
   const p = priceFor(s, crit.mode, crit.bhk);
   const money = p ? `${p.estimated ? '~' : ''}${formatINR(p.value)}${crit.mode === 'rent' ? '/mo' : ''}` : '';
-  li.innerHTML = `<span class="nm">${myList.includes(s.id) ? '★ ' : ''}${esc(s.name)}<small>${esc(s.locality || '')}${s.verified ? ' · verified' : ''}</small></span>
+  const how = s.verified ? ' · checked by hand' : s.ai_read ? ' · AI-read plans' : '';
+  li.innerHTML = `<span class="nm">${myList.includes(s.id) ? '★ ' : ''}${esc(s.name)}<small>${esc(s.locality || '')}${how}</small></span>
     <span class="tag ${st}">${money}${s.score != null ? `<small>score ${s.score}</small>` : ''}</span>`;
   li.onclick = () => { stopTour(); openSociety(s.id); };
   return li;
@@ -342,10 +343,14 @@ function renderCard(s) {
   const unitRows = s.unit_types.filter((u) => !crit.bhk.length || crit.bhk.includes(u.bhk)).slice(0, 14).map((u) => {
     const v = rooms || crit.minSqft ? matchUnit(u, crit) : null;
     const bad = (r) => (crit.roomArea ? r[0] * r[1] < crit.roomArea : crit.room && !roomPasses(r, crit.room));
-    const roomText = u.bedrooms?.length
+    const ai = u.ai && [u.ai.min_short != null && `narrowest bedroom ${feetLabel(u.ai.min_short)}`, u.ai.long_lb != null && `every bedroom at least ${feetLabel(u.ai.long_lb)} long`,
+      u.ai.area_lb != null && `at least ${u.ai.area_lb} sq ft`].filter(Boolean).join(', ');
+    const roomText = u.ai ? `${ai || 'partly read'} <span class="fine">(AI estimate from the plan, not confirmed)</span>` : u.bedrooms?.length
       ? u.bedrooms.map((r) => `<span class="${bad(r) ? 'fail' : ''}">${feetLabel(r[0])} × ${feetLabel(r[1])}</span>`).join(', ') + (u.rooms_complete ? '' : ' <span class="fine">(not all rooms read)</span>')
+        + (u.confidence === 'ocr' ? ` <span class="fine">(read from the plan by ${esc(u.checked_by || 'OCR')})</span>` : '')
       : u.est_short ? `<span class="fine">plans not read · estimated at least ${feetLabel(u.est_short)} wide, ~${u.est_area} sq ft</span>` : '<span class="fine">room sizes not read yet</span>';
-    const src = u.source ? `<a href="${esc(u.source)}" target="_blank" rel="noopener">${u.confidence === 'primary' ? 'plan' : 'portal'}${u.page ? ' p.' + esc(u.page) : ''}</a>` : '';
+    const srcLabel = u.confidence === 'ai' || u.confidence === 'ocr' ? 'plan image' : u.confidence === 'primary' ? `plan${u.page ? ' p.' + esc(u.page) : ''}` : `portal${u.page ? ' p.' + esc(u.page) : ''}`;
+    const src = u.source ? `<a href="${esc(u.source)}" target="_blank" rel="noopener">${srcLabel}</a>` : '';
     const size = u.super_sqft ? `${u.super_sqft.toLocaleString()} super` : u.carpet_sqft ? `${u.carpet_sqft.toLocaleString()} carpet` : u.size_sqft ? `${u.size_sqft.toLocaleString()}` : '';
     const vl = { unknown: 'unread', probable: 'probably' }[v] || v;
     return `<tr><td>${esc(u.label)}<div class="fine">${size ? size + ' sq ft' : ''}</div></td><td>${roomText}</td><td>${v ? `<span class="badge ${v}">${vl}</span>` : ''}</td><td>${src}</td></tr>`;
@@ -377,7 +382,7 @@ function renderCard(s) {
   const inList = myList.includes(s.id);
   $('card').innerHTML = `
     <div class="card-head">
-      <div><span class="badge ${st}">${STATE_LABEL[st]}</span> ${s.verified ? '<span class="badge match">verified rows</span>' : ''}</div>
+      <div><span class="badge ${st}">${STATE_LABEL[st]}</span> ${s.verified ? '<span class="badge match">checked by hand</span>' : ''}${s.ai_read ? '<span class="badge likely">AI-read plans</span>' : ''}</div>
       <div class="row-gap"><button class="iconbtn star ${inList ? 'on' : ''}" id="c-star" title="${inList ? 'Remove from my list' : 'Add to my list'}">${inList ? '★' : '☆'}</button><button class="iconbtn" id="c-close" aria-label="Close">×</button></div>
     </div>
     <h2>${esc(s.name)}</h2>

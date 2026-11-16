@@ -41,6 +41,10 @@ Explain the verdicts: **match** (every bedroom read and passes), **likely** (roo
 4. Run tests: `cd pipeline && uv run --with pytest pytest` and `cd web && npx vitest run --root .. cli web/src`.
 5. Open a pull request with the new data files. Do not commit `pipeline/cache/` or `osm_buildings.geojson`.
 
+## Job 2b: read every floor plan image in a city with Jev (fast, cheap)
+
+`python3 pipeline/jev_reader.py <city>` sends each Magicbricks floor plan image to Jev (TypeSafe, key `JEV_KEY` in `~/.claude/.env`, images need the `TypeSafe-Danger-Zone-Images: true` header). Jev answers typed questions only, so sizes are asked as multiple choice (narrowest bedroom side, 3-inch steps) and as yes/no ladders ("every bedroom's long side is at least 12'?", "at least 130 sq ft?"). Only confident answers count (choice confidence 0.75, yes 0.75, no 0.3); the result is a cautious lower bound, never an overstatement. Images that are 3D renders without printed sizes are skipped. Spot-check a sample by eye before publishing, then rebuild with `build_city.py`. Hand checks (Job 3) always outrank AI reads.
+
 ## Job 3: verify a society
 
 1. **Find the primary sources.** Search for the builder brochure PDF (developer site, then mirrors) and the state RERA filing (Haryana: haryanarera.gov.in, Karnataka: rera.karnataka.gov.in, Maharashtra: maharera.maharashtra.gov.in). The Magicbricks `brochure_url` in the city JSON is a good start. Firecrawl works well for finding and fetching these.

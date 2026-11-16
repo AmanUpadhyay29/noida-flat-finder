@@ -101,3 +101,20 @@ describe('room estimates, area mode, nearby, lists', () => {
     expect(matchSociety(soc({ amenities: ['Banquet Hall'] }), crit({ amenities: ['n:banquet hall'] }))).toBe('match');
   });
 });
+
+describe('units read by Jev from floor plans', () => {
+  const ai = (o) => soc({ unit_types: [{ bhk: 3, bedrooms: [], ai: { min_short: 11.5, long_lb: 12.5, long_ub: null, area_lb: 140, area_ub: 160, ...o } }] });
+  it('passes only when every confirmed bound clears the need', () => {
+    expect(matchSociety(ai(), crit({ room: ROOM }))).toBe('likely');
+    expect(matchSociety(ai({ long_lb: 12 }), crit({ room: ROOM }))).toBe('unknown');
+  });
+  it('fails on a narrower read side or a denied step', () => {
+    expect(matchSociety(ai({ min_short: 10.5 }), crit({ room: ROOM }))).toBe('no');
+    expect(matchSociety(ai({ long_lb: null, long_ub: 12 }), crit({ room: ROOM }))).toBe('no');
+  });
+  it('area mode uses the confirmed area steps', () => {
+    expect(matchSociety(ai(), crit({ roomArea: 135 }))).toBe('likely');
+    expect(matchSociety(ai(), crit({ roomArea: 150 }))).toBe('unknown');
+    expect(matchSociety(ai(), crit({ roomArea: 170 }))).toBe('no');
+  });
+});

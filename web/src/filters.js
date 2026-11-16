@@ -62,8 +62,32 @@ export function unitSize(u) {
   return u.super_sqft || u.size_sqft || u.carpet_sqft || null;
 }
 
+// A unit read by Jev from its floor plan: exact narrowest side, plus confirmed "at least" / "below" steps.
+function matchAiUnit(u, c) {
+  const a = u.ai;
+  let verdict = 'likely'; // Jev alone can overstate a room (about 1 in 10 in spot checks): never a full match
+  if (c.minSqft > 0 && u.size_range) {
+    if (u.size_range[1] < c.minSqft) return 'no';
+    if (u.size_range[0] < c.minSqft) verdict = 'likely'; // which listed size this plan is, is not known
+  }
+  if (c.roomArea) {
+    if (a.area_ub != null && a.area_ub <= c.roomArea) return 'no';
+    return a.area_lb != null && a.area_lb >= c.roomArea ? verdict : 'unknown';
+  }
+  if (c.room) {
+    const short = Math.min(c.room.a, c.room.b), long = Math.max(c.room.a, c.room.b);
+    if (a.min_short != null && a.min_short < short - 1e-6) return 'no';
+    if (a.long_ub != null && a.long_ub <= long) return 'no';
+    return a.min_short != null && a.min_short >= short - 1e-6 && a.long_lb != null && a.long_lb >= long - 1e-6 ? verdict : 'unknown';
+  }
+  return verdict;
+}
+
 export function matchUnit(u, c) {
-  if (c.minSqft > 0) {
+  if (u.ai) return matchAiUnit(u, c);
+  if (c.minSqft > 0 && u.size_range && !unitSize(u)) {
+    if (u.size_range[1] < c.minSqft) return 'no';
+  } else if (c.minSqft > 0) {
     const size = unitSize(u);
     if (size == null) return 'unknown';
     if (size < c.minSqft) return 'no';
