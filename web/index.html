@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Flat Finder</title>
+  <meta name="description" content="Every housing society in Gurugram on one map. Filter by the smallest bedroom you can live with, size, amenities and budget.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="map"></div>
+
+  <div class="topbar">
+    <button id="btn-replay" title="Replay the intro">Replay</button>
+    <button id="btn-tour" title="Fly through the matches">Tour</button>
+    <button id="btn-hide" title="Hide panels for recording">Hide panels</button>
+  </div>
+
+  <aside class="panel left" id="filters">
+    <div class="k">Flat Finder · <span id="city-name">Gurugram</span></div>
+    <h1 class="ttl">Find the flat that fits.</h1>
+    <button class="preset" id="preset-divy">Load Divy's search</button>
+
+    <section>
+      <div class="k">Type</div>
+      <div class="chips" id="f-kind"></div>
+    </section>
+    <section>
+      <div class="k">BHK</div>
+      <div class="chips" id="f-bhk"></div>
+    </section>
+    <section>
+      <div class="k row">Smallest bedroom <label class="sw"><input type="checkbox" id="f-room-on"> on</label></div>
+      <div class="room" id="f-room">
+        <select id="ra-ft"></select><select id="ra-in"></select>
+        <span class="x">×</span>
+        <select id="rb-ft"></select><select id="rb-in"></select>
+      </div>
+      <div class="hint">Every bedroom must clear both sides.</div>
+    </section>
+    <section>
+      <div class="k row">Home size <span class="val" id="v-size">Any</span></div>
+      <input type="range" id="f-size" min="0" max="6000" step="50" value="0">
+    </section>
+    <section>
+      <div class="k row">Budget <span class="val" id="v-price">Any</span></div>
+      <input type="range" id="f-price" min="0.5" max="20" step="0.5" value="20">
+    </section>
+    <section>
+      <div class="k">Amenities</div>
+      <div class="chips" id="f-amen"></div>
+    </section>
+    <section>
+      <label class="sw"><input type="checkbox" id="f-ready"> Ready to move only</label>
+    </section>
+
+    <div class="count">
+      <div class="k">Matching societies</div>
+      <div class="n" id="count">0</div>
+      <div class="sub" id="count-sub"></div>
+    </div>
+    <ol class="results" id="results"></ol>
+  </aside>
+
+  <aside class="panel right" id="log">
+    <div class="k row">Research log <span class="val" id="log-mode">replay</span></div>
+    <div class="feed" id="feed"></div>
+  </aside>
+
+  <article class="card" id="card" hidden></article>
+
+  <div class="note" id="note"></div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
