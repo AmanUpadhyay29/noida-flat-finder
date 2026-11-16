@@ -118,3 +118,15 @@ describe('units read by Jev from floor plans', () => {
     expect(matchSociety(ai(), crit({ roomArea: 170 }))).toBe('no');
   });
 });
+
+describe('ranges', () => {
+  const s = soc({ unit_types: [{ bhk: 3, size_sqft: 2000, bedrooms: [] }], prices: { 3: { buy: { median: 3e7 }, rent: { median: 70000 } } } });
+  it('home size upper end', () => {
+    expect(matchSociety(s, crit({ maxSqft: 1800 }))).toBe('no');
+    expect(matchSociety(s, crit({ minSqft: 1500, maxSqft: 2500 }))).toBe('match');
+  });
+  it('price and rent lower end', () => {
+    expect(matchSociety(s, crit({ minPrice: 4e7 }))).toBe('no');
+    expect(matchSociety(s, crit({ mode: 'rent', minRent: 50000, maxRent: 80000 }))).toBe('match');
+  });
+});

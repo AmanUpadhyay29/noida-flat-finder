@@ -50,6 +50,19 @@ def _num(v):
         return None
 
 
+def photo_links(paths, n=8):
+    """Magicbricks photo paths -> [{thumb, full}] (thumbnails are a resized copy Magicbricks serves)."""
+    out = []
+    for p in (paths or "").split(","):
+        p = p.strip()
+        if not p or "." not in p or "Floor-Plan" in p:
+            continue
+        stem, ext = p.rsplit(".", 1)
+        base = "https://img.staticmb.com/mbimages/project/"
+        out.append({"thumb": f"{base}Photo_h310_w462/{stem}_310_462.{ext}", "full": base + p})
+    return out[:n]
+
+
 def card_to_project(c):
     return {
         "mb_id": c.get("psmid"),
@@ -67,6 +80,7 @@ def card_to_project(c):
         "prop_types": c.get("psmcndproptypes"),
         "brochure_url": c.get("sblink"),
         "card_units": parse_unit_info(c.get("unitInfo") or ""),
+        "images": photo_links(c.get("image")),
         "type_codes": [t.strip() for t in str(c.get("ty") or "").split(",") if t.strip()],
         "url": "https://www.magicbricks.com/" + c["pdpUrl"],
     }

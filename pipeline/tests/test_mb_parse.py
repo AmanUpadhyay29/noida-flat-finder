@@ -55,3 +55,9 @@ def test_reviews_are_unique():
     d = mb_parse.parse_project_page(read("mb_project_flat.html"))
     keys = [r["text"][:60] for r in d["reviews"]]
     assert len(keys) == len(set(keys))
+
+
+def test_photo_links_skip_floor_plans():
+    links = mb_parse.photo_links("2025/09/18/Project-Photo-9-X-5021659_410_1440.jpg,2025/07/01/Floor-Plan-36-X_505_661.jpg")
+    assert links == [{"thumb": "https://img.staticmb.com/mbimages/project/Photo_h310_w462/2025/09/18/Project-Photo-9-X-5021659_410_1440_310_462.jpg",
+                      "full": "https://img.staticmb.com/mbimages/project/2025/09/18/Project-Photo-9-X-5021659_410_1440.jpg"}]

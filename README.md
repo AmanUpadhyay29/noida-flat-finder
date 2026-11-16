@@ -13,6 +13,17 @@ Gurugram is first: about 2,700 projects from Magicbricks, building outlines from
 
 Building shapes come from OpenStreetMap where they are mapped. Where they are not, towers are drawn from the listed tower count and say "approximate shape" on the card. Shapes are visual only; data numbers are never estimated.
 
+## How bedroom sizes are read
+
+Four sources, most trusted first. Each unit on a card says which one it came from.
+
+1. **Checked by hand**: rooms read from builder brochures or HRERA plans by a person, page cited (`data/verified/<city>.json`).
+2. **OCR of a floor plan image**: macOS's built-in text recognition reads every printed size on the plan; code pairs each size with its own room label and takes the smallest bedroom. Free and local (`pipeline/plan_ocr.py`). Where Jev also read the plan, the two must agree within 2 inches.
+3. **OCR of brochures and HRERA filings**: the same reading on brochure pages and HRERA "approved building plans" (`pipeline/brochure_ocr.py`, `pipeline/hrera.py`). A page can hold two unit plans, so these are never "complete": a failing room still fails, passing rooms only make a society "likely".
+4. **Jev (TypeSafe)**: a fast typed-decision model that answers multiple-choice and yes/no questions about the plan image (`pipeline/jev_reader.py`). Used as a cross-check and a fallback. In spot checks it overstated a room about 1 time in 10, so a Jev-only reading is never more than "likely".
+
+Bedrooms under 8 ft wide are dropped as mis-pairings. Plans that are 3D renders without printed sizes are skipped.
+
 ## Buy or rent
 
 Every society shows buy prices and monthly rents per BHK: medians, ranges and counts of live Magicbricks listings (22,018 homes for sale and 7,371 for rent in Gurugram). Where a society has no listings, the site shows **our estimate, marked "~"**, with the working shown:

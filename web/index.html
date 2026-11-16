@@ -18,7 +18,10 @@
     <button id="btn-theme" title="Light or dark" aria-label="Switch light or dark"></button>
     <button id="btn-log" title="Show or hide the right panel">Research log</button>
     <button id="btn-hide" title="Hide panels for recording">Hide panels</button>
+    <button id="btn-mhide" class="mobile-only" title="Show or hide the panel">Hide panel</button>
   </div>
+
+  <div class="mtabs" id="mtabs"><button data-t="search" class="on">Search</button><button data-t="society" id="mt-society" disabled>Society</button><button class="collapse" id="m-collapse" aria-label="Collapse panel">⌄</button></div>
 
   <aside class="panel left" id="filters">
     <div class="k">Flat Finder · <select id="city-pick" aria-label="City"></select></div>
@@ -43,12 +46,7 @@
       <div class="chips" id="f-bhk"></div>
     </section>
     <section>
-      <div class="k row">Smallest bedroom <span class="seg small" id="f-room-mode"><button data-r="off">Any</button><button data-r="sides">Sides</button><button data-r="area">Area</button></span></div>
-      <div class="room" id="f-room">
-        <select id="ra-ft" aria-label="Short side feet"></select><select id="ra-in" aria-label="Short side inches"></select>
-        <span class="x">×</span>
-        <select id="rb-ft" aria-label="Long side feet"></select><select id="rb-in" aria-label="Long side inches"></select>
-      </div>
+      <div class="k row">Smallest bedroom <span class="seg small" id="f-room-mode"><button data-r="off">Any</button><button data-r="area">Area</button></span></div>
       <div id="f-area">
         <div class="k row"><span class="seg small" id="f-area-unit"><button data-u="gaj">Gaj</button><button data-u="sqft">Sq ft</button></span><span class="val" id="v-area"></span></div>
         <input type="range" id="f-area-range" min="8" max="30" step="0.25" value="15.3">
@@ -58,11 +56,11 @@
     </section>
     <section>
       <div class="k row">Home size <span class="val" id="v-size">Any</span></div>
-      <input type="range" id="f-size" min="0" max="8000" step="50" value="0">
+      <div id="f-size"></div>
     </section>
     <section>
       <div class="k row"><span id="l-price">Budget</span> <span class="val" id="v-price">Any</span></div>
-      <input type="range" id="f-price" min="0.25" max="20" step="0.25" value="20">
+      <div id="f-price"></div>
     </section>
     <section>
       <div class="k">Amenities</div>

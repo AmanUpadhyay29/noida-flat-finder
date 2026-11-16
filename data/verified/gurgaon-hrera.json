@@ -1,0 +1,1252 @@
+{
+"societies": {
+"s5232153": {
+"status": "matched",
+"project": "https://haryanarera.gov.in/view_project/project_preview_open/1563",
+"hrera_name": "INDEPENDENT FLOORS AT DLF GARDENCITY SECTOR 91/92",
+"docs": [
+"A COMPLETE SET OF THE LAST APPROVED BUILDING PLANS",
+"BUILDING PLAN (ELEVATION, SECTION, FLOOR, APARTMENT, SITE, PARKING)"
+],
+"read": [
+{
+"doc": "A COMPLETE SET OF THE LAST APPROVED BUILDING PLANS",
+"status": "no unit plans found",
+"pages": []
+},
+{
+"doc": "BUILDING PLAN (ELEVATION, SECTION, FLOOR, APARTMENT, SITE, PARKING)",
+"status": "no unit plans found",
+"pages": []
+}
+]
+},
+"s5022478": {
+"status": "matched",
+"project": "https://haryanarera.gov.in/view_project/project_preview_open/1302",
+"hrera_name": "EMERALD HILLS",
+"docs": []
+},
+"s5393337": {
+"status": "matched",
+"project": "https://haryanarera.gov.in/view_project/project_preview_open/2289",
+"hrera_name": "M3M CROWN PHASE 1",
+"docs": [
+"A COMPLETE SET OF THE LAST APPROVED BUILDING PLANS",
+"T2 (STILT, GROUND FLOOR PLAN)",
+"BASEMENT 1 AREA DIAGRAM",
+"T13 (5TH TO 29TH FLOOR PLAN)",
+"T6 (STILT TO 30TH FLOOR PLAN)",
+"T7 (S TO 30TH FLOOR PLAN) &T10; (S TO 32ND FLOOR)"
+],
+"read": [
+{
+"doc": "A COMPLETE SET OF THE LAST APPROVED BUILDING PLANS",
+"status": "no unit plans found",
+"pages": []
+},
+{
+"doc": "T2 (STILT, GROUND FLOOR PLAN)",
+"status": "no unit plans found",
+"pages": []
+},
+{
+"doc": "BASEMENT 1 AREA DIAGRAM",
+"status": "no unit plans found",
+"pages": []
+},
+{
+"doc": "T13 (5TH TO 29TH FLOOR PLAN)",
+"status": "no unit plans found",
+"pages": []
+}
+]
+},
+"s5000594": {
+"status": "no HRERA match"
+},
+"s5377301": {
+"status": "matched",
+"project": "https://haryanarera.gov.in/view_project/project_preview_open/2177",
+"hrera_name": "ELAN THE PRESIDENTIAL",
+"docs": [
+"FLOOR PLAN TOWER 1 & 2",
+"APARTMENT PLAN TOWER 1 & 2",
+"APARTMENT PLAN TOWER 3, 4, 5 & 6",
+"APARTMENT PLAN TOWER 14 &15;",
+"FLOOR PLAN EWS",
+"FLOOR PLAN NURSERY SCHOOL",
+"FLOOR PLAN T 14 &15;",
+"FLOOR PLAN T-14",
+"FLOOR PLAN TOWER 3,4,5& 6"
+],
+"read": [
+{
+"doc": "FLOOR PLAN TOWER 1 & 2",
+"status": "no unit plans found",
+"pages": []
+},
+{
+"doc": "APARTMENT PLAN TOWER 1 & 2",
+"status": "read",
+"pages": [
+{
+"page": 8,
+"bhk": 3,
+"bedrooms": [
+{
+"label": "BED ROOM",
+"ft": [
+12.582,
+21.243
+]
+},
+{
+"label": "BED ROOM",
+"ft": [
+12.582,
+21.243
+]
+},
+{
+"label": "M.BED ROOM",
+"ft": [
+11.975,
+16.978
+]
+}
+]
+}
+]
+},
+{
+"doc": "APARTMENT PLAN TOWER 3, 4, 5 & 6",
+"status": "no unit plans found",
+"pages": []
+},
+{
+"doc": "APARTMENT PLAN TOWER 14 &15;",
+"status": "read",
+"pages": [
+{
+"page": 2,
+"bhk": 4,
+"bedrooms": [
+{
+"label": "BED ROOM 2",
+"ft": [
+11.483,
+15.01
+]
+},
+{
+"label": "MASTER BED ROOM",
+"ft": [
+12.959,
+20.013
+]
+},
+{
+"label": "BED ROOM",
+"ft": [
+11.483,
+15.01
+]
+},
+{
+"label": "BED ROOM 4",
+"ft": [
+11.483,
+14.026
+]
+},
+{
+"label": "MASTER BED ROOM",
+"ft": [
+12.959,
+20.013
+]
+},
+{
+"label": "BED ROOM 4",
+"ft": [
+11.483,
+11.778
+]
+}
+]
+},
+{
+"page": 10,
+"bhk": 4,
+"bedrooms": [
+{
+"label": "MASTER BED ROOM",
+"ft": [
+12.959,
+20.013
+]
+},
+{
+"label": "BED ROOM 3",
+"ft": [
+11.483,
+15.01
+]
+},
+{
+"label": "BED ROOM 4",
+"ft": [
+11.483,
+14.026
+]
+}
+]
+}
+]
+}
+]
+},
+"s5094309": {
+"status": "no HRERA match"
+},
+"s5324879": {
+"status": "matched",
+"project": "https://haryanarera.gov.in/view_project/project_preview_open/1738",
+"hrera_name": "M3M SOULITUDE",
+"docs": [
+"A COMPLETE SET OF THE LAST APPROVED BUILDING PLANS",
+"APPROVED BUILDING PLANS- 01 A - VILLA - 1001- RIGHT",
+"APPROVED BUILDING PLANS- 02 A - VILLA - 1001- RIGHT CORNER",
+"APPROVED BUILDING PLANS- 03 A - VILLA - 1001- LEFT",
+"APPROVED BUILDING PLANS- 04 A - VILLA - 1001- LEFT CORNER",
+"APPROVED BUILDING PLANS- 05 B - VILLA - 1002- LEFT",
+"APPROVED BUILDING PLANS- 06 B - VILLA - 1002- LEFT CORNER",
+"APPROVED BUILDING PLANS- 08 B - VILLA - 1002- RIGHT CORNER",
+"APPROVED BUILDING PLANS- 13 A3 - VILLA - 1005- LEFT",
+"APPROVED BUILDING PLANS- 07 B - VILLA - 1002- RIGHT",
+"APPROVED BUILDING PLANS- 14 A3 - VILLA - 1005- LEFT CORNER",
+"APPROVED BUILDING PLANS- 15 A3 - VILLA - 1005- RIGHT",
+"APPROVED BUILDING PLANS- 16 A3 - VILLA - 1005- RIGHT SIDE CORNER",
+"APPROVED BUILDING PLANS- 29 D - VILLA - 1011- LEFT",
+"APPROVED BUILDING PLANS- 30 D - VILLA - 1011- LEFT CORNER",
+"APPROVED BUILDING PLANS- 31 D - VILLA - 1011- RIGHT",
+"APPROVED BUILDING PLANS- 32 D - VILLA - 1011- RIGHT CORNER"
+],
+"read": [
+{
+"doc": "A COMPLETE SET OF THE LAST APPROVED BUILDING PLANS",
+"status": "no unit plans found",
+"pages": []
+},
+{
+"doc": "APPROVED BUILDING PLANS- 01 A - VILLA - 1001- RIGHT",
+"status": "read",
+"pages": [
+{
+"page": 1,
+"bhk": null,
+"bedrooms": [
+{
+"label": "BEDROOM-1",
+"ft": [
+10.007,
+14.042
+]
+},
+{
+"label": "BEDROOM-2",
+"ft": [
+10.4,
+11.975
+]
+},
+{
+"label": "BEDROOM-1",
+"ft": [
+10.007,
+14.042
+]
+},
+{
+"label": "BEDROOM-2",
+"ft": [
+10.4,
+11.975
+]
+},
+{
+"label": "BED ROOM",
+"ft": [
+9.121,
+10.007
+]
+},
+{
+"label": "BED ROOM",
+"ft": [
+9.121,
+10.007
+]
+}
+]
+}
+]
+},
+{
+"doc": "APPROVED BUILDING PLANS- 02 A - VILLA - 1001- RIGHT CORNER",
+"status": "read",
+"pages": [
+{
+"page": 1,
+"bhk": null,
+"bedrooms": [
+{
+"label": "BEDROOM-1",
+"ft": [
+10.007,
+14.042
+]
+},
+{
+"label": "BEDROOM-2",
+"ft": [
+10.236,
+11.975
+]
+},
+{
+"label": "BEDROOM-1",
+"ft": [
+10.007,
+14.042
+]
+},
+{
+"label": "BEDROOM-2",
+"ft": [
+10.236,
+11.975
+]
+},
+{
+"label": "BED ROOM",
+"ft": [
+9.121,
+10.007
+]
+},
+{
+"label": "BED ROOM",
+"ft": [
+9.121,
+10.007
+]
+}
+]
+}
+]
+},
+{
+"doc": "APPROVED BUILDING PLANS- 03 A - VILLA - 1001- LEFT",
+"status": "read",
+"pages": [
+{
+"page": 1,
+"bhk": null,
+"bedrooms": [
+{
+"label": "BEDROOM-2",
+"ft": [
+10.4,
+11.975
+]
+},
+{
+"label": "BEDROOM-1",
+"ft": [
+10.007,
+14.042
+]
+},
+{
+"label": "BEDROOM-2",
+"ft": [
+10.4,
+11.975
+]
+},
+{
+"label": "BEDROOM-1",
+"ft": [
+10.007,
+14.042
+]
+},
+{
+"label": "BED ROOM",
+"ft": [
+9.121,
+10.007
+]
+},
+{
+"label": "BED ROOM",
+"ft": [
+9.121,
+10.007
+]
+}
+]
+}
+]
+}
+]
+},
+"s5414919": {
+"status": "matched",
+"project": "https://haryanarera.gov.in/view_project/project_preview_open/2518",
+"hrera_name": "URBAN OASIS - PHASE 1 & 2",
+"docs": [
+"A COMPLETE SET OF THE LAST APPROVED BUILDING PLANS",
+"ENT GATE FLOOR PLAN AND SECTION ELEVATION",
+"TOWER 1 22 23 24 25 FLOOR PLAN",
+"TOWER 1 TERRACE AND FLOOR PLAN",
+"TOWER 1 27 TO 30 AREA FLOOR PLAN",
+"TOWER 2 & 4 18 26 27 TERRACE FLOOR PLAN",
+"TOWER 3 22 23 24 25 FLOOR PLAN",
+"TOWER 3 GROUND TO 21ST FLOOR PLAN"
+],
+"read": [
+{
+"doc": "A COMPLETE SET OF THE LAST APPROVED BUILDING PLANS",
+"status": "no unit plans found",
+"pages": []
+},
+{
+"doc": "ENT GATE FLOOR PLAN AND SECTION ELEVATION",
+"status": "no unit plans found",
+"pages": []
+},
+{
+"doc": "TOWER 1 22 23 24 25 FLOOR PLAN",
+"status": "error",
+"pages": []
+},
+{
+"doc": "TOWER 1 TERRACE AND FLOOR PLAN",
+"status": "error",
+"pages": []
+}
+]
+},
+"s5394265": {
+"status": "matched",
+"project": "https://haryanarera.gov.in/view_project/project_preview_open/2076",
+"hrera_name": "THE SIXTY THREE",
+"docs": [
+"TOWER E ALL FLOOR PLAN & AREA CALCULATION",
+"TOWER C ALL FLOOR PLAN & AREA CALCULATION",
+"TOWER B ALL FLOOR PLAN & AREA CALCULATION",
+"TOWER D ALL FLOOR PLAN & AREA CALCULATION"
+],
+"read": [
+{
+"doc": "TOWER E ALL FLOOR PLAN & AREA CALCULATION",
+"status": "no unit plans found",
+"pages": []
+},
+{
+"doc": "TOWER C ALL FLOOR PLAN & AREA CALCULATION",
+"status": "read",
+"pages": [
+{
+"page": 3,
+"bhk": null,
+"bedrooms": [
+{
+"label": "BED ROOM",
+"ft": [
+11.975,
+16.814
+]
+},
+{
+"label": "BED ROOM",
+"ft": [
+11.975,
+15.01
+]
+},
+{
+"label": "BED ROOM",
+"ft": [
+14.026,
+19.275
+]
+}
+]
+},
+{
+"page": 4,
+"bhk": null,
+"bedrooms": [
+{
+"label": "BED ROOM",
+"ft": [
+15.01,
+18.537
+]
+},
+{
+"label": "BED ROOM",
+"ft": [
+11.975,
+16.814
+]
+},
+{
+"label": "BED ROOM",
+"ft": [
+11.975,
+15.01
+]
+}
+]
+}
+]
+},
+{
+"doc": "TOWER B ALL FLOOR PLAN & AREA CALCULATION",
+"status": "read",
+"pages": [
+{
+"page": 4,
+"bhk": null,
+"bedrooms": [
+{
+"label": "BED ROOM",
+"ft": [
+14.026,
+19.275
+]
+},
+{
+"label": "BED ROOM",
+"ft": [
+11.975,
+15.01
+]
+},
+{
+"label": "BED ROOM",
+"ft": [
+11.975,
+15.01
+]
+},
+{
+"label": "BED ROOM",
+"ft": [
+14.091,
+19.275
+]
+}
+]
+}
+]
+},
+{
+"doc": "TOWER D ALL FLOOR PLAN & AREA CALCULATION",
+"status": "no unit plans found",
+"pages": []
+}
+]
+},
+"s5072066": {
+"status": "no HRERA match"
+},
+"s5186045": {
+"status": "no HRERA match"
+},
+"s5393721": {
+"status": "matched",
+"project": "https://haryanarera.gov.in/view_project/project_preview_open/2322",
+"hrera_name": "SIGNATURE GLOBAL CITY 93",
+"docs": [
+"A COMPLETE SET OF THE LAST APPROVED BUILDING PLANS",
+"BUILDING PLAN-TYPE-K",
+"BUILDING PLAN-TYPE-E",
+"BUILDING PLAN-TYPE-C",
+"BUILDING PLAN-TYPE-D",
+"BUILDING PLAN-TYPE-A",
+"BUILDING PLAN-TYPE-D",
+"BUILDING PLAN-TYPE-J",
+"BUILDING PLAN-TYPE-G",
+"BUILDING PLAN-TYPE-M4",
+"BUILDING PLAN-TYPE-M3",
+"BUILDING PLAN-TYPE-M2",
+"BUILDING PLAN-TYPE-M5",
+"BUILDING PLAN-TYPE-E",
+"BUILDING PLAN-TYPE-K",
+"BUILDING PLAN-TYPE-J",
+"BUILDING PLAN-TYPE-F",
+"BUILDING PLAN-TYPE-C",
+"BUILDING PLAN-TYPE-L",
+"BUILDING PLAN-TYPE-L",
+"BUILDING PLAN-TYPE-H",
+"BUILDING PLAN-TYPE-H",
+"BUILDING PLAN-TYPE-G",
+"BUILDING PLAN-TYPE-F",
+"BUILDING PLAN-TYPE-B",
+"BUILDING PLAN-TYPE-B",
+"BUILDING PLAN-TYPE-A"
+],
+"read": [
+{
+"doc": "A COMPLETE SET OF THE LAST APPROVED BUILDING PLANS",
+"status": "no unit plans found",
+"pages": []
+},
+{
+"doc": "BUILDING PLAN-TYPE-K",
+"status": "read",
+"pages": [
+{
+"page": 1,
+"bhk": null,
+"bedrooms": [
+{
+"label": "BEDROOM-01",
+"ft": [
+9.619,
+12.631
+]
+}
+]
+}
+]
+},
+{
+"doc": "BUILDING PLAN-TYPE-E",
+"status": "read",
+"pages": [
+{
+"page": 1,
+"bhk": null,
+"bedrooms": [
+{
+"label": "BED ROOM-03",
+"ft": [
+10.335,
+11.319
+]
+},
+{
+"label": "BED ROOM-01",
+"ft": [
+10.663,
+11.155
+]
+}
+]
+}
+]
+},
+{
+"doc": "BUILDING PLAN-TYPE-C",
+"status": "read",
+"pages": [
+{
+"page": 1,
+"bhk": null,
+"bedrooms": [
+{
+"label": "BED ROOM-2",
+"ft": [
+10.171,
+11.155
+]
+},
+{
+"label": "BED ROOM-3",
+"ft": [
+10.945,
+11.155
+]
+},
+{
+"label": "BED ROOM-1",
+"ft": [
+11.155,
+13.78
+]
+}
+]
+}
+]
+}
+]
+},
+"s5336443": {
+"status": "matched",
+"project": "https://haryanarera.gov.in/view_project/project_preview_open/1739",
+"hrera_name": "THE GROVE",
+"docs": [
+"A COMPLETE SET OF THE LAST APPROVED BUILDING PLANS",
+"FLOOR PLANS, ELEVATION, SECTION DRAWING 6",
+"FLOOR PLANS, ELEVATION, SECTION DRAWING 2",
+"FLOOR PLANS, ELEVATION, SECTION DRAWING 3",
+"FLOOR PLANS, ELEVATION, SECTION DRAWING 4",
+"FLOOR PLANS, ELEVATION, SECTION DRAWING 5",
+"FLOOR PLANS, ELEVATION, SECTION DRAWING 7",
+"FLOOR PLANS, ELEVATION, SECTION DRAWING 8",
+"FLOOR PLANS, ELEVATION, SECTION DRAWING 9",
+"FLOOR PLANS, ELEVATION, SECTION DRAWING 10",
+"FLOOR PLANS, ELEVATION, SECTION DRAWING 11",
+"FLOOR PLANS, ELEVATION, SECTION DRAWING 12",
+"FLOOR PLANS, ELEVATION, SECTION DRAWING 13"
+],
+"read": [
+{
+"doc": "A COMPLETE SET OF THE LAST APPROVED BUILDING PLANS",
+"status": "no unit plans found",
+"pages": []
+},
+{
+"doc": "FLOOR PLANS, ELEVATION, SECTION DRAWING 6",
+"status": "read",
+"pages": [
+{
+"page": 2,
+"bhk": null,
+"bedrooms": [
+{
+"label": "BED ROOM -2",
+"ft": [
+10.171,
+11.483
+]
+},
+{
+"label": "BED ROOM -4",
+"ft": [
+10.007,
+12.057
+]
+},
+{
+"label": "BED ROOM -3",
+"ft": [
+11.155,
+11.319
+]
+},
+{
+"label": "M.BED ROOM -1",
+"ft": [
+11.089,
+16.568
+]
+}
+]
+},
+{
+"page": 3,
+"bhk": null,
+"bedrooms": [
+{
+"label": "BED ROOM -3",
+"ft": [
+11.155,
+11.319
+]
+},
+{
+"label": "BED ROOM -4",
+"ft": [
+10.007,
+12.057
+]
+},
+{
+"label": "BED ROOM -2",
+"ft": [
+10.335,
+11.483
+]
+},
+{
+"label": "M.BED ROOM -1",
+"ft": [
+11.089,
+16.568
+]
+}
+]
+},
+{
+"page": 4,
+"bhk": null,
+"bedrooms": [
+{
+"label": "BED ROOM -4",
+"ft": [
+10.007,
+12.057
+]
+},
+{
+"label": "BED ROOM -2",
+"ft": [
+10.335,
+11.483
+]
+},
+{
+"label": "BED ROOM -3",
+"ft": [
+11.155,
+11.319
+]
+},
+{
+"label": "M.BED ROOM -1",
+"ft": [
+11.089,
+16.568
+]
+}
+]
+},
+{
+"page": 5,
+"bhk": null,
+"bedrooms": [
+{
+"label": "BED ROOM -3",
+"ft": [
+11.155,
+11.319
+]
+},
+{
+"label": "BED ROOM -4",
+"ft": [
+10.007,
+12.057
+]
+},
+{
+"label": "BED ROOM -2",
+"ft": [
+10.335,
+11.483
+]
+},
+{
+"label": "M.BED ROOM -1",
+"ft": [
+11.089,
+16.568
+]
+}
+]
+}
+]
+},
+{
+"doc": "FLOOR PLANS, ELEVATION, SECTION DRAWING 2",
+"status": "read",
+"pages": [
+{
+"page": 1,
+"bhk": null,
+"bedrooms": [
+{
+"label": "BED ROOM - 04",
+"ft": [
+12.024,
+13.517
+]
+},
+{
+"label": "BED ROOM - 03",
+"ft": [
+10.663,
+13.517
+]
+},
+{
+"label": "BED ROOM - 02",
+"ft": [
+12.467,
+12.927
+]
+},
+{
+"label": "MASTER BED ROOM - 01",
+"ft": [
+12.188,
+18.406
+]
+}
+]
+},
+{
+"page": 2,
+"bhk": null,
+"bedrooms": [
+{
+"label": "BED ROOM - 03",
+"ft": [
+10.991,
+13.517
+]
+},
+{
+"label": "BED ROOM - 04",
+"ft": [
+12.024,
+13.517
+]
+},
+{
+"label": "MASTER BED ROOM - 01",
+"ft": [
+12.516,
+18.406
+]
+},
+{
+"label": "1ASTER BED ROOM - 01",
+"ft": [
+12.516,
+18.406
+]
+},
+{
+"label": "BED ROOM - 02",
+"ft": [
+12.467,
+12.927
+]
+}
+]
+},
+{
+"page": 3,
+"bhk": null,
+"bedrooms": [
+{
+"label": "BED ROOM - 04",
+"ft": [
+12.024,
+13.517
+]
+},
+{
+"label": "BED ROOM - 03",
+"ft": [
+10.991,
+13.517
+]
+},
+{
+"label": "BED ROOM - 02",
+"ft": [
+12.467,
+12.927
+]
+},
+{
+"label": "MASTER BED ROOM - 01",
+"ft": [
+12.516,
+18.406
+]
+}
+]
+},
+{
+"page": 4,
+"bhk": null,
+"bedrooms": [
+{
+"label": "BED ROOM - 03",
+"ft": [
+10.991,
+13.517
+]
+},
+{
+"label": "BED ROOM - 04",
+"ft": [
+12.024,
+13.517
+]
+},
+{
+"label": "MASTER BED ROOM - 01",
+"ft": [
+12.516,
+18.406
+]
+},
+{
+"label": "1ASTER BED ROOM - 01",
+"ft": [
+12.516,
+18.406
+]
+},
+{
+"label": "BED ROOM - 02",
+"ft": [
+12.467,
+12.927
+]
+}
+]
+},
+{
+"page": 5,
+"bhk": null,
+"bedrooms": [
+{
+"label": "BED ROOM - 04",
+"ft": [
+12.024,
+13.517
+]
+},
+{
+"label": "BED ROOM - 03",
+"ft": [
+10.663,
+13.517
+]
+},
+{
+"label": "BED ROOM - 02",
+"ft": [
+12.467,
+12.927
+]
+},
+{
+"label": "MASTER BED ROOM - 01",
+"ft": [
+12.68,
+18.406
+]
+}
+]
+}
+]
+},
+{
+"doc": "FLOOR PLANS, ELEVATION, SECTION DRAWING 3",
+"status": "read",
+"pages": [
+{
+"page": 1,
+"bhk": null,
+"bedrooms": [
+{
+"label": "BED ROOM - 03",
+"ft": [
+10.663,
+13.517
+]
+},
+{
+"label": "BED ROOM - 04",
+"ft": [
+12.024,
+13.517
+]
+},
+{
+"label": "MASTER BED ROOM - 01",
+"ft": [
+12.188,
+18.406
+]
+},
+{
+"label": "1ASTER BED ROOM - 01",
+"ft": [
+12.188,
+18.406
+]
+},
+{
+"label": "BED ROOM - 02",
+"ft": [
+12.467,
+12.927
+]
+}
+]
+},
+{
+"page": 2,
+"bhk": null,
+"bedrooms": [
+{
+"label": "BED ROOM - 03",
+"ft": [
+10.663,
+13.517
+]
+},
+{
+"label": "BED ROOM - 04",
+"ft": [
+12.024,
+13.517
+]
+},
+{
+"label": "MASTER BED ROOM - 01",
+"ft": [
+12.188,
+18.406
+]
+},
+{
+"label": "1ASTER BED ROOM - 01",
+"ft": [
+12.188,
+18.406
+]
+},
+{
+"label": "BED ROOM - 02",
+"ft": [
+12.467,
+12.927
+]
+}
+]
+},
+{
+"page": 3,
+"bhk": null,
+"bedrooms": [
+{
+"label": "BED ROOM - 04",
+"ft": [
+12.024,
+13.517
+]
+},
+{
+"label": "BED ROOM - 02",
+"ft": [
+12.467,
+12.927
+]
+},
+{
+"label": "MASTER BED ROOM - 01",
+"ft": [
+12.516,
+18.406
+]
+}
+]
+},
+{
+"page": 4,
+"bhk": null,
+"bedrooms": [
+{
+"label": "BED ROOM - 03",
+"ft": [
+10.991,
+13.517
+]
+},
+{
+"label": "BED ROOM - 04",
+"ft": [
+12.024,
+13.517
+]
+},
+{
+"label": "MASTER BED ROOM - 01",
+"ft": [
+12.516,
+18.406
+]
+},
+{
+"label": "BED ROOM - 02",
+"ft": [
+12.467,
+12.927
+]
+}
+]
+},
+{
+"page": 5,
+"bhk": null,
+"bedrooms": [
+{
+"label": "BED ROOM - 03",
+"ft": [
+10.663,
+13.517
+]
+},
+{
+"label": "BED ROOM - 04",
+"ft": [
+12.024,
+13.517
+]
+},
+{
+"label": "MASTER BED ROOM - 01",
+"ft": [
+12.188,
+18.406
+]
+},
+{
+"label": "1ASTER BED ROOM - 01",
+"ft": [
+12.188,
+18.406
+]
+},
+{
+"label": "BED ROOM - 02",
+"ft": [
+12.467,
+12.927
+]
+}
+]
+}
+]
+}
+]
+},
+"s5185743": {
+"status": "matched",
+"project": "https://haryanarera.gov.in/view_project/project_preview_open/1315",
+"hrera_name": "PYRAMID ALTIA",
+"docs": [
+"A COMPLETE SET OF THE LAST APPROVED BUILDING PLANS"
+]
+},
+"s5285797": {
+"status": "no HRERA match"
+}
+}
+}

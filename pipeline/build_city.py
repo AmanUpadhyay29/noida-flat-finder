@@ -248,7 +248,7 @@ def main(city="gurgaon"):
              "config_text": p.get("config_text"), "amenities": p.get("amenities") or [], "amen_facts": {},
              "unit_types": portal_units(p), "url": p["url"], "brochure_url": p.get("brochure_url"),
              "plan_links": {b: v["plan_images"] for b, v in ((p.get("configs") or {}).get("by_bhk") or {}).items() if v["plan_images"]},
-             "verified": False, "note": None,
+             "verified": False, "note": None, "images": p.get("images") or [],
              "rating": p.get("rating"), "rating_count": p.get("rating_count"), "review_count": p.get("review_count"),
              "ratings": p.get("ratings") or {}, "reviews": p.get("reviews") or [], "locality_rating": p.get("locality_rating"),
              "sale_count": p.get("sale_count"), "rent_count": p.get("rent_count"), "psf_now": p.get("psf_now"),
@@ -302,6 +302,25 @@ def main(city="gurgaon"):
             continue
         s["unit_types"].append(unit)
         s["ai_read"] = True
+
+    # bedroom sizes OCR'd from builder brochure pages. A page can hold two unit plans side by side, so a
+    # brochure reading is never "complete": a failing room still fails, passing rooms only make it "likely".
+    br_file = vdir / f"{city}-brochures.json"
+    brochures = json.loads(br_file.read_text())["brochures"] if br_file.exists() else {}
+    for sid, b in brochures.items():
+        s = by_sid.get(sid)
+        if not s or s.get("verified") or b.get("status") != "read":
+            continue
+        seen = set()
+        for pg in b["pages"]:
+            beds = sorted(tuple(x["ft"]) for x in pg["bedrooms"])
+            if not beds or tuple(beds) in seen:
+                continue
+            seen.add(tuple(beds))
+            s["unit_types"].append({"label": f"{pg['bhk']} BHK plan" if pg.get("bhk") else "Unit plan", "bhk": pg.get("bhk"),
+                                    "bedrooms": [list(x) for x in beds], "rooms_complete": False, "confidence": "ocr",
+                                    "checked_by": "OCR of the brochure", "source": b["url"], "page": str(pg["page"])})
+            s["ai_read"] = True
 
     # smallest-bedroom lower bounds from unit size, for units whose plans are unread
     room_model = rooms_model.fit(ver)
@@ -388,7 +407,7 @@ def main(city="gurgaon"):
             "societies": societies, "events": events}
     details = {}
     for s in societies:  # heavy per-society text, loaded only when a card opens
-        details[s["id"]] = {k: s.pop(k) for k in ("reviews", "description", "trend", "ratings")}
+        details[s["id"]] = {k: s.pop(k) for k in ("reviews", "description", "trend", "ratings", "images")}
     (WEB / f"{city}.json").write_text(json.dumps(doc, separators=(",", ":")))
     (WEB / f"{city}-details.json").write_text(json.dumps(details, separators=(",", ":")))
     for s in societies:

@@ -41,6 +41,19 @@ Explain the verdicts: **match** (every bedroom read and passes), **likely** (roo
 4. Run tests: `cd pipeline && uv run --with pytest pytest` and `cd web && npx vitest run --root .. cli web/src`.
 5. Open a pull request with the new data files. Do not commit `pipeline/cache/` or `osm_buildings.geojson`.
 
+## Job 2a: read every floor plan, brochure and HRERA filing with local OCR (free)
+
+On a Mac (uses the built-in Vision framework, no upload):
+```bash
+cd pipeline
+OCR="uv run --with pyobjc-framework-Vision --with pyobjc-framework-Quartz python"
+$OCR plan_ocr.py <city>       # Magicbricks floor plan images (needs jev_reader.py run first for the cross-check, optional)
+$OCR brochure_ocr.py <city>   # brochure PDFs: quick scan for plan pages, then 300 dpi tiled OCR
+$OCR hrera.py <city>          # Haryana only for now: matches HRERA filings, reads approved building plans
+python3 build_city.py <city>
+```
+Spot-check a few results by eye (open the plan, compare the bedrooms). Pairing bugs show up as tiny "bedrooms".
+
 ## Job 2b: read every floor plan image in a city with Jev (fast, cheap)
 
 `python3 pipeline/jev_reader.py <city>` sends each Magicbricks floor plan image to Jev (TypeSafe, key `JEV_KEY` in `~/.claude/.env`, images need the `TypeSafe-Danger-Zone-Images: true` header). Jev answers typed questions only, so sizes are asked as multiple choice (narrowest bedroom side, 3-inch steps) and as yes/no ladders ("every bedroom's long side is at least 12'?", "at least 130 sq ft?"). Only confident answers count (choice confidence 0.75, yes 0.75, no 0.3); the result is a cautious lower bound, never an overstatement. Images that are 3D renders without printed sizes are skipped. Spot-check a sample by eye before publishing, then rebuild with `build_city.py`. Hand checks (Job 3) always outrank AI reads.

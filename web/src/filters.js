@@ -12,6 +12,9 @@ export const DEFAULT_CRITERIA = {
   q: '',            // name filter from search
   only: null,       // array of society ids (my list) or null
   minSqft: 0,
+  maxSqft: null,
+  minPrice: null,   // rupees, buying
+  minRent: null,    // rupees per month
   mode: 'buy',      // 'buy' or 'rent'
   maxPrice: null,   // rupees, buying
   maxRent: null,    // rupees per month, renting
@@ -84,6 +87,10 @@ function matchAiUnit(u, c) {
 }
 
 export function matchUnit(u, c) {
+  if (c.maxSqft) {
+    const size = unitSize(u) ?? u.size_range?.[0];
+    if (size != null && size > c.maxSqft) return 'no';
+  }
   if (u.ai) return matchAiUnit(u, c);
   if (c.minSqft > 0 && u.size_range && !unitSize(u)) {
     if (u.size_range[1] < c.minSqft) return 'no';
@@ -119,13 +126,15 @@ export function matchSociety(s, c) {
   for (const key of c.near || []) if (!isNear(s, key)) return 'no';
   if (c.ready && !/ready/i.test(s.status || '')) return 'no';
   const budget = c.mode === 'rent' ? c.maxRent : c.maxPrice;
-  if (budget) {
+  const floor = c.mode === 'rent' ? c.minRent : c.minPrice;
+  if (budget || floor) {
     const p = priceFor(s, c.mode, c.bhk);
-    if (p && p.value > budget) return 'no';
+    if (p && budget && p.value > budget) return 'no';
+    if (p && floor && p.value < floor) return 'no';
   }
   for (const key of c.amenities) if (!hasAmenity(s, key)) return 'no';
 
-  const unitFilters = c.bhk.length || c.minSqft > 0 || c.room || c.roomArea;
+  const unitFilters = c.bhk.length || c.minSqft > 0 || c.maxSqft || c.room || c.roomArea;
   if (!unitFilters) return 'match';
   const units = s.unit_types.filter((u) => !c.bhk.length || c.bhk.includes(u.bhk));
   if (!units.length) return s.unit_types.length ? 'no' : 'unknown';

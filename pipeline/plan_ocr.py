@@ -28,7 +28,7 @@ M_PAIR = re.compile(r"\b(\d{1,2}\.\d{2})\s*(?:M\s*)?X\s*(\d{1,2}\.\d{2})\b")
 
 def clean(t):
     t = t.upper()
-    for a, b in (("Х", "X"), ("×", "X"), ("*", '"'), ("’", "'"), ("‘", "'"), ("”", '"'), ("“", '"'), ("''", '"'), ("`", "'")):
+    for a, b in (("Х", "X"), ("×", "X"), ("*", '"'), ("’", "'"), ("‘", "'"), ("”", '"'), ("“", '"'), ("''", '"'), ("`", "'"), ("°", "'"), ("º", "'")):
         t = t.replace(a, b)
     return t
 
@@ -87,7 +87,8 @@ def bedrooms_from_boxes(boxes):
             owner[j] = best[1]
             if BED.search(best[2]) and not NOT_BED.search(best[2]):
                 beds.append({"label": best[2].strip(), "ft": sz})
-    return beds
+    # no real bedroom is under 8 ft wide: a narrower one is a size given to the wrong label
+    return [b for b in beds if b["ft"][0] >= 8]
 
 
 def read_image(args):

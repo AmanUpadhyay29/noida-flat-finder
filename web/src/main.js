@@ -23,11 +23,11 @@ const KINDS = [
 ];
 const AMEN_LABELS = { squash: 'Squash', pool: 'Pool', gym: 'Gym', club: 'Clubhouse', tennis: 'Tennis', badminton: 'Badminton', jogging: 'Jogging track', kids: 'Kids play' };
 const DIVY = { // Divy's own Gurugram search, shown as the example
-  ...structuredClone(DEFAULT_CRITERIA), kinds: ['apartment'], bhk: [2, 3, 4], room: { a: 11.25, b: 12.25 }, minSqft: 1620, amenities: ['squash'] };
+  ...structuredClone(DEFAULT_CRITERIA), kinds: ['apartment'], bhk: [2, 3, 4], roomArea: 138, minSqft: 1620, amenities: ['squash'] }; // 11'3" x 12'3" = 138 sq ft
 const STATE_LABEL = { match: 'Matches your search', likely: 'Likely match', probable: 'Probably fits (estimated)', unknown: 'Not checked yet', no: 'Does not match' };
 
 let crit = structuredClone(DEFAULT_CRITERIA);
-let baseMode = BASE_MODES.includes(params.get('map')) ? params.get('map') : 'night';
+let baseMode = BASE_MODES.includes(params.get('map')) ? params.get('map') : 'streets';
 let roomMode = 'off', areaUnit = 'gaj', sortBy = 'best';
 let data, byId, map, feed, selected = null, states = new Map(), tourTimer = null, cityId = 'gurgaon', details = null;
 let myList = [], allAmenities = [];
@@ -65,6 +65,8 @@ async function boot() {
   buildList();
   buildControls();
   buildOnboarding();
+  buildMobile();
+  hintTilt();
   try {
     map = createMap('map', { mobile });
     window.__map = map; // handy for debugging in the console
@@ -127,23 +129,45 @@ function chip(label, on, onClick, cls = 'chip') {
 }
 const range = (a, b) => Array.from({ length: b - a + 1 }, (_, i) => a + i);
 const toggle = (arr, v) => { const i = arr.indexOf(v); i >= 0 ? arr.splice(i, 1) : arr.push(v); };
-const setFtIn = (p, ft) => { $(`${p}-ft`).value = Math.floor(ft + 1e-6); $(`${p}-in`).value = Math.round((ft - Math.floor(ft + 1e-6)) * 12); };
-const getFtIn = (p) => +$(`${p}-ft`).value + +$(`${p}-in`).value / 12;
+// Two-handle slider: a low and a high end, with a value bubble on the handle being moved or hovered.
+function dualRange(el, { min, max, step, fmt, onChange }) {
+  el.classList.add('dual');
+  el.innerHTML = '<div class="track"><i></i></div><input type="range" class="lo" aria-label="Lowest"><input type="range" class="hi" aria-label="Highest"><b class="bubble blo"></b><b class="bubble bhi"></b>';
+  const lo = el.querySelector('.lo'), hi = el.querySelector('.hi'), fill = el.querySelector('.track i');
+  const api = {
+    cfg: { min, max, step, fmt },
+    set(a, b) { lo.value = a; hi.value = b; api.paint(); },
+    get() { return [+lo.value, +hi.value]; },
+    reconfig(c) { Object.assign(api.cfg, c); for (const r of [lo, hi]) { r.min = api.cfg.min; r.max = api.cfg.max; r.step = api.cfg.step; } },
+    paint() {
+      const { min: a, max: b, fmt: f } = api.cfg;
+      const pa = ((+lo.value - a) / (b - a)) * 100, pb = ((+hi.value - a) / (b - a)) * 100;
+      fill.style.left = pa + '%'; fill.style.width = (pb - pa) + '%';
+      const [l, h] = el.querySelectorAll('.bubble');
+      l.style.left = pa + '%'; h.style.left = pb + '%';
+      l.textContent = f(+lo.value, 'lo'); h.textContent = f(+hi.value, 'hi');
+    },
+  };
+  api.reconfig({});
+  const move = (which) => () => {
+    if (+lo.value > +hi.value) (which === 'lo' ? lo : hi).value = which === 'lo' ? hi.value : lo.value;
+    el.classList.add('active'); api.paint(); onChange(...api.get());
+  };
+  lo.oninput = move('lo'); hi.oninput = move('hi');
+  for (const r of [lo, hi]) r.onpointerup = r.onblur = () => el.classList.remove('active');
+  return api;
+}
 
 function useCriteria(c) {
   crit = structuredClone(c);
-  roomMode = crit.roomArea ? 'area' : crit.room ? 'sides' : 'off';
+  roomMode = crit.roomArea ? 'area' : 'off';
   redrawFilters();
   applyFilters();
 }
 
 let redrawFilters = () => {};
+let sizeSlider, priceSlider;
 function buildFilters() {
-  for (const p of ['ra', 'rb']) {
-    $(`${p}-ft`).replaceChildren(...range(7, 20).map((f) => new Option(`${f}'`, f)));
-    $(`${p}-in`).replaceChildren(...range(0, 11).map((i) => new Option(`${i}"`, i)));
-    for (const s of ['ft', 'in']) $(`${p}-${s}`).onchange = readRoom;
-  }
   const amenList = () => {
     const q = $('amen-q').value.toLowerCase();
     $('amen-list').replaceChildren(...allAmenities.filter((a) => !q || a.name.toLowerCase().includes(q)).slice(0, 80).map((a) => {
@@ -154,6 +178,14 @@ function buildFilters() {
       return l;
     }));
   };
+  sizeSlider = dualRange($('f-size'), { min: 0, max: 8000, step: 50, fmt: (v, end) => (end === 'hi' && v >= 8000 ? 'Any' : `${v.toLocaleString()} sq ft · ${Math.round(v / 9)} gaj`),
+    onChange: (a, b) => { crit.minSqft = a; crit.maxSqft = b >= 8000 ? null : b; labels(); applyFilters(); } });
+  priceSlider = dualRange($('f-price'), { min: 0, max: 20, step: 0.25, fmt: (v) => v, onChange: (a, b) => {
+    const top = priceSlider.cfg.max, unit = crit.mode === 'rent' ? 1000 : 1e7;
+    if (crit.mode === 'rent') { crit.minRent = a > 0 ? a * unit : null; crit.maxRent = b >= top ? null : b * unit; }
+    else { crit.minPrice = a > 0 ? a * unit : null; crit.maxPrice = b >= top ? null : b * unit; }
+    labels(); applyFilters();
+  } });
   redrawFilters = () => {
     $('f-kind').replaceChildren(...KINDS.map(([k, l, icon]) => chip(`<svg viewBox="0 0 24 24">${icon}</svg><span>${l}</span>`, crit.kinds.includes(k), () => { toggle(crit.kinds, k); redrawFilters(); applyFilters(); }, 'tile')));
     $('f-bhk').replaceChildren(...[1, 2, 3, 4, 5].map((n) => chip(n === 5 ? '5+' : String(n), crit.bhk.includes(n), () => {
@@ -167,36 +199,36 @@ function buildFilters() {
     document.querySelectorAll('#f-mode button').forEach((b) => b.classList.toggle('on', b.dataset.m === crit.mode));
     document.querySelectorAll('#f-room-mode button').forEach((b) => b.classList.toggle('on', b.dataset.r === roomMode));
     document.querySelectorAll('#f-area-unit button').forEach((b) => b.classList.toggle('on', b.dataset.u === areaUnit));
-    $('f-room').hidden = roomMode !== 'sides';
     $('f-area').hidden = roomMode !== 'area';
     $('room-hint').hidden = roomMode === 'off';
     $('f-est').parentElement.hidden = roomMode === 'off';
     $('f-est').checked = crit.estimates !== false;
-    setFtIn('ra', crit.room?.a ?? 11.25); setFtIn('rb', crit.room?.b ?? 12.25);
     if (crit.roomArea) $('f-area-range').value = crit.roomArea / 9;
-    $('f-size').value = crit.minSqft;
-    const el = $('f-price');
-    if (crit.mode === 'rent') { el.min = 10; el.max = 500; el.step = 5; el.value = crit.maxRent ? crit.maxRent / 1000 : 500; }
-    else { el.min = 0.25; el.max = 20; el.step = 0.25; el.value = crit.maxPrice ? crit.maxPrice / 1e7 : 20; }
+    sizeSlider.set(crit.minSqft || 0, crit.maxSqft ?? 8000);
+    const rent = crit.mode === 'rent';
+    priceSlider.reconfig(rent ? { min: 0, max: 500, step: 5, fmt: (v, end) => (end === 'hi' && v >= 500 ? 'Any' : v ? `${formatINR(v * 1000)}/mo` : '₹0') }
+      : { min: 0, max: 20, step: 0.25, fmt: (v, end) => (end === 'hi' && v >= 20 ? 'Any' : v ? formatINR(v * 1e7) : '₹0') });
+    priceSlider.set(rent ? (crit.minRent || 0) / 1000 : (crit.minPrice || 0) / 1e7, rent ? (crit.maxRent ? crit.maxRent / 1000 : 500) : (crit.maxPrice ? crit.maxPrice / 1e7 : 20));
     $('f-ready').checked = crit.ready;
     $('f-only').checked = !!crit.only;
     if (!$('amen-more').hidden) amenList();
     labels();
   };
   function readRoom() {
-    crit.room = roomMode === 'sides' ? { a: getFtIn('ra'), b: getFtIn('rb') } : null;
+    crit.room = null;
     crit.roomArea = roomMode === 'area' ? Math.round(+$('f-area-range').value * 9) : null;
     labels();
     applyFilters();
   }
   function labels() {
-    $('v-size').textContent = crit.minSqft ? `${crit.minSqft.toLocaleString()} sq ft · ${Math.round(crit.minSqft / 9)} gaj` : 'Any';
-    const b = crit.mode === 'rent' ? crit.maxRent : crit.maxPrice;
-    $('v-price').textContent = b ? `up to ${formatINR(b)}${crit.mode === 'rent' ? '/month' : ''}` : 'Any';
-    $('l-price').textContent = crit.mode === 'rent' ? 'Monthly rent' : 'Budget';
+    const range = (a, b, f) => (a && b ? `${f(a)} to ${f(b)}` : a ? `from ${f(a)}` : b ? `up to ${f(b)}` : 'Any');
+    $('v-size').textContent = range(crit.minSqft, crit.maxSqft, (v) => `${v.toLocaleString()} sq ft`);
+    const rent = crit.mode === 'rent';
+    $('v-price').textContent = range(rent ? crit.minRent : crit.minPrice, rent ? crit.maxRent : crit.maxPrice, (v) => formatINR(v) + (rent ? '/mo' : ''));
+    $('l-price').textContent = rent ? 'Monthly rent' : 'Budget';
     const g = +$('f-area-range').value;
     $('v-area').textContent = areaUnit === 'gaj' ? `at least ${g.toFixed(2).replace(/\.?0+$/, '')} gaj (${Math.round(g * 9)} sq ft)` : `at least ${Math.round(g * 9)} sq ft (${g.toFixed(1)} gaj)`;
-    $('room-hint').textContent = roomMode === 'area' ? 'Every bedroom must be at least this big (length × width).' : 'Every bedroom must clear both sides.';
+    $('room-hint').textContent = 'Every bedroom must be at least this big (length × width).';
   }
   document.querySelectorAll('#f-mode button').forEach((b) => (b.onclick = () => { crit.mode = b.dataset.m; redrawFilters(); applyFilters(); }));
   document.querySelectorAll('#f-room-mode button').forEach((b) => (b.onclick = () => { roomMode = b.dataset.r; redrawFilters(); readRoom(); }));
@@ -204,12 +236,6 @@ function buildFilters() {
   $('f-area-range').oninput = readRoom;
   $('f-est').onchange = () => { crit.estimates = $('f-est').checked; applyFilters(); };
   $('amen-q').oninput = amenList;
-  $('f-size').oninput = () => { crit.minSqft = +$('f-size').value; labels(); applyFilters(); };
-  $('f-price').oninput = () => {
-    const v = +$('f-price').value, top = +$('f-price').max;
-    if (crit.mode === 'rent') crit.maxRent = v >= top ? null : v * 1000; else crit.maxPrice = v >= top ? null : v * 1e7;
-    labels(); applyFilters();
-  };
   $('f-ready').onchange = () => { crit.ready = $('f-ready').checked; applyFilters(); };
   $('f-sort').onchange = () => { sortBy = $('f-sort').value; renderResults(); };
   $('preset-divy').onclick = () => useCriteria(DIVY);
@@ -323,6 +349,7 @@ function openSociety(sid, { fly = true } = {}) {
   if (fly && map) map.flyTo({ center: [s.lng, s.lat], zoom: mobile ? 15.4 : 16.2, pitch: is3d ? 55 : 0, bearing: 0, duration: 2600, essential: true,
     offset: mobile ? [0, -80] : [-180, 0] });
   document.body.classList.add('has-card');
+  if (mobile) showMobile('society');
   renderCard(s);
   feed.play(sid);
 }
@@ -330,6 +357,7 @@ function openSociety(sid, { fly = true } = {}) {
 function closeCard() {
   $('card').hidden = true;
   document.body.classList.remove('has-card');
+  if (mobile) showMobile('search');
   if (map && selected) setSelected(map, null, selected);
   selected = null;
   feed?.ambient();
@@ -380,11 +408,13 @@ function renderCard(s) {
   const trend = d?.trend?.length > 1 ? sparkline(d.trend) : '';
   const about = d?.description ? `<details><summary>About this project</summary><p class="fine">${esc(d.description)}</p></details>` : '';
   const inList = myList.includes(s.id);
+  const photos = d?.images?.length ? `<div class="photos">${d.images.map((im) => `<a href="${esc(im.full)}" target="_blank" rel="noopener"><img src="${esc(im.thumb)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.remove()"></a>`).join('')}</div><div class="fine">Photos: Magicbricks, opens full size</div>` : '';
   $('card').innerHTML = `
     <div class="card-head">
       <div><span class="badge ${st}">${STATE_LABEL[st]}</span> ${s.verified ? '<span class="badge match">checked by hand</span>' : ''}${s.ai_read ? '<span class="badge likely">AI-read plans</span>' : ''}</div>
       <div class="row-gap"><button class="iconbtn star ${inList ? 'on' : ''}" id="c-star" title="${inList ? 'Remove from my list' : 'Add to my list'}">${inList ? '★' : '☆'}</button><button class="iconbtn" id="c-close" aria-label="Close">×</button></div>
     </div>
+    ${photos}
     <h2>${esc(s.name)}</h2>
     <div class="meta">${esc(s.developer || '')}${s.locality ? ' · ' + esc(s.locality) : ''} · ${esc(s.config_text || s.kind)}${s.kind_inferred ? ' <span class="fine">(type inferred from name)</span>' : ''}</div>
     <div class="meta">${esc(facts2)}</div>
@@ -427,6 +457,36 @@ function sparkline(trend) {
   const ch = ((vals.at(-1) - vals[0]) / vals[0]) * 100;
   return `<div class="trend"><svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" aria-hidden="true"><polyline points="${pts}" fill="none" stroke="currentColor" stroke-width="2"/></svg>
     <span class="fine">Average price per sq ft ${trend[0][0]} to ${trend.at(-1)[0]}: ₹${vals[0].toLocaleString()} to ₹${vals.at(-1).toLocaleString()} (${ch >= 0 ? '+' : ''}${ch.toFixed(0)}%)</span></div>`;
+}
+
+// ---------- phone: one bottom sheet, two tabs (search | society) ----------
+function showMobile(tab) {
+  document.body.classList.toggle('m-society', tab === 'society');
+  document.body.classList.remove('m-collapsed');
+  document.querySelectorAll('#mtabs [data-t]').forEach((b) => b.classList.toggle('on', b.dataset.t === tab));
+  $('mt-society').disabled = !selected && tab !== 'society';
+}
+
+function buildMobile() {
+  document.querySelectorAll('#mtabs [data-t]').forEach((b) => (b.onclick = () => showMobile(b.dataset.t)));
+  const collapse = () => {
+    const c = document.body.classList.toggle('m-collapsed');
+    $('m-collapse').textContent = c ? '⌃' : '⌄';
+    $('btn-mhide').textContent = c ? 'Show panel' : 'Hide panel';
+  };
+  $('m-collapse').onclick = collapse;
+  $('btn-mhide').onclick = collapse;
+}
+
+// ---------- first visit: point out the 2D / 3D switch ----------
+function hintTilt() {
+  if (store.get('ff-tilt-seen', false)) return;
+  const b = $('ctl-tilt');
+  b.classList.add('pulse');
+  b.dataset.tip = 'Flat map or 3D';
+  const done = () => { b.classList.remove('pulse'); store.set('ff-tilt-seen', true); };
+  b.addEventListener('click', done, { once: true });
+  setTimeout(done, 15000);
 }
 
 // ---------- my list ----------
@@ -505,7 +565,7 @@ function setBase(mode) {
   $('btn-theme').innerHTML = mode === 'light' ? MOON : SUN;
   $('btn-theme').title = mode === 'light' ? 'Dark mode' : 'Light mode';
   const q = new URLSearchParams(location.search);
-  mode === 'night' ? q.delete('map') : q.set('map', mode);
+  mode === 'streets' ? q.delete('map') : q.set('map', mode);
   history.replaceState(null, '', q.toString() ? `?${q}` : location.pathname);
 }
 
@@ -527,7 +587,7 @@ function buildControls() {
   };
   $('layers-btn').onclick = () => $('layers').classList.toggle('open');
   document.querySelectorAll('#layers button[data-mode]').forEach((b) => (b.onclick = () => { setBase(b.dataset.mode); $('layers').classList.remove('open'); }));
-  $('btn-theme').onclick = () => setBase(baseMode === 'light' ? 'night' : 'light');
+  $('btn-theme').onclick = () => setBase(baseMode === 'light' ? 'streets' : 'light');
   for (const k of ['glow', 'bounds', 'labels']) {
     const box = $(`hl-${k}`);
     box.checked = highlights[k];
