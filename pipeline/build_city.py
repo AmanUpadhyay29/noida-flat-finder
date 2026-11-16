@@ -322,6 +322,44 @@ def main(city="gurgaon"):
                                     "checked_by": "OCR of the brochure", "source": b["url"], "page": str(pg["page"])})
             s["ai_read"] = True
 
+    # bedroom sizes OCR'd from HRERA filings (approved building plans, floor plan drawings); same caution as brochures
+    hr_file = vdir / f"{city}-hrera.json"
+    hrera = json.loads(hr_file.read_text())["societies"] if hr_file.exists() else {}
+    for sid, h in hrera.items():
+        s = by_sid.get(sid)
+        if not s or s.get("verified"):
+            continue
+        seen = set()
+        for doc in h.get("read", []):
+            for pg in doc.get("pages", []):
+                beds = sorted(tuple(x["ft"]) for x in pg["bedrooms"])
+                if not beds or tuple(beds) in seen:
+                    continue
+                seen.add(tuple(beds))
+                s["unit_types"].append({"label": f"{pg['bhk']} BHK plan" if pg.get("bhk") else "Unit plan", "bhk": pg.get("bhk"),
+                                        "bedrooms": [list(x) for x in beds], "rooms_complete": False, "confidence": "ocr",
+                                        "checked_by": f"OCR of HRERA filing: {doc['doc'].title()[:60]}", "source": h["project"], "page": str(pg["page"])})
+                s["ai_read"] = True
+
+    # floor plans found on other sites by the plan finder, then OCR'd (found_ocr.py)
+    fd_file = vdir / f"{city}-found.json"
+    found = json.loads(fd_file.read_text())["societies"] if fd_file.exists() else {}
+    for sid, reads in found.items():
+        s = by_sid.get(sid)
+        if not s or s.get("verified"):
+            continue
+        for r in reads:
+            pages = r.get("pages") or ([{"page": None, "bhk": r.get("bhk"), "bedrooms": r.get("bedrooms") or []}] if r.get("bedrooms") else [])
+            for pg in pages:
+                beds = sorted(tuple(x["ft"]) for x in pg["bedrooms"])
+                if not beds:
+                    continue
+                s["unit_types"].append({"label": f"{pg['bhk']} BHK plan" if pg.get("bhk") else "Unit plan", "bhk": pg.get("bhk"),
+                                        "bedrooms": [list(x) for x in beds], "rooms_complete": r.get("status") == "read" and r["kind"] == "image",
+                                        "confidence": "ocr", "checked_by": "OCR of a plan found online", "source": r.get("found_on") or r["url"],
+                                        "page": str(pg["page"]) if pg.get("page") else "plan image"})
+                s["ai_read"] = True
+
     # smallest-bedroom lower bounds from unit size, for units whose plans are unread
     room_model = rooms_model.fit(ver)
     for s in societies:

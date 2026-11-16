@@ -656,7 +656,7 @@ function buildSearch() {
     list.replaceChildren(...rows);
     list.hidden = false;
   };
-  const pick = (s) => { stopTour(); input.value = s.name; close(); input.blur(); openSociety(s.id); };
+  const pick = (s) => { stopTour(); input.value = s.name; close(); input.blur(); if (mobile) window.scrollTo(0, 0); openSociety(s.id); };
   input.oninput = () => { active = -1; render(); };
   input.onfocus = render;
   input.onblur = close;
