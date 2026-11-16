@@ -127,7 +127,7 @@ def parse_configs(state):
         plans[b] = {
             "price_min": min((r.get("minPriceD") or 0) for r in rows) or None,
             "price_max": max((r.get("maxPriceD") or 0) for r in rows) or None,
-            "plan_images": sorted({"https://img.staticmb.com/mbimages/project/Photo_h0_w0/" + r["unitFlrPlanImg"]
+            "plan_images": sorted({"https://img.staticmb.com/mbimages/project/" + r["unitFlrPlanImg"]
                                    for r in rows if r.get("unitFlrPlanImg")}),
         }
     return {"units": units, "by_bhk": plans}

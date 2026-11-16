@@ -182,3 +182,12 @@ export function setBaseMode(map, mode) {
     ? { 'sky-color': '#cfe3f5', 'horizon-color': '#eef3f7', 'fog-color': '#f5f3ef', 'sky-horizon-blend': 0.6, 'horizon-fog-blend': 0.6, 'fog-ground-blend': 0.2, 'atmosphere-blend': ['interpolate', ['linear'], ['zoom'], 0, 1, 10, 0] }
     : { 'sky-color': '#07080b', 'horizon-color': '#1a1712', 'fog-color': '#07080b', 'sky-horizon-blend': 0.6, 'horizon-fog-blend': 0.6, 'fog-ground-blend': 0.2, 'atmosphere-blend': ['interpolate', ['linear'], ['zoom'], 0, 1, 10, 0] });
 }
+
+// Let people switch off the glow, the society boundaries or the name labels when they get too busy.
+export function setHighlights(map, { glow = true, bounds = true, labels = true } = {}) {
+  if (!map.getLayer('glow')) return;
+  map.setLayoutProperty('glow', 'visibility', glow ? 'visible' : 'none');
+  map.setLayoutProperty('site-fill', 'visibility', bounds ? 'visible' : 'none');
+  map.setLayoutProperty('site-line', 'visibility', bounds ? 'visible' : 'none');
+  map.setLayoutProperty('labels', 'visibility', labels ? 'visible' : 'none');
+}

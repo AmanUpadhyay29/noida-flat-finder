@@ -1,6 +1,6 @@
 import './style.css';
 import maplibregl from 'maplibre-gl';
-import { addBaseLayers, addSocietyLayers, BASE_MODES, createMap, OVERVIEW, setBaseMode, setSelected, setStates, startPulse } from './map.js';
+import { addBaseLayers, addSocietyLayers, BASE_MODES, createMap, OVERVIEW, setBaseMode, setHighlights, setSelected, setStates, startPulse } from './map.js';
 import { searchSocieties } from './search.js';
 import { createFeed } from './feed.js';
 import { AMENITY_KEYS, DEFAULT_CRITERIA, NEAR, RANK, feetLabel, formatINR, matchSociety, matchUnit, priceFor, roomPasses } from './filters.js';
@@ -31,6 +31,7 @@ let baseMode = BASE_MODES.includes(params.get('map')) ? params.get('map') : 'nig
 let roomMode = 'off', areaUnit = 'gaj', sortBy = 'best';
 let data, byId, map, feed, selected = null, states = new Map(), tourTimer = null, cityId = 'gurgaon', details = null;
 let myList = [], allAmenities = [];
+const highlights = { glow: true, bounds: true, labels: true, ...store.get('ff-highlights', {}) };
 
 async function boot() {
   const cities = await fetch('/data/cities.json').then((r) => r.json()).catch(() => ({ gurgaon: { name: 'Gurugram' } }));
@@ -79,9 +80,12 @@ async function boot() {
     addSocietyLayers(map, shapes, points);
     addBaseLayers(map);
     setBaseMode(map, baseMode);
+    setHighlights(map, highlights);
     startPulse(map);
+    // any hand on the map stops a running tour
+    for (const ev of ['dragstart', 'wheel', 'touchstart']) map.on(ev, (e) => { if (e.originalEvent) stopTour(); });
     for (const l of ['bld', 'site-fill', 'glow']) {
-      map.on('click', l, (e) => openSociety(e.features[0].properties.sid));
+      map.on('click', l, (e) => { stopTour(); openSociety(e.features[0].properties.sid); });
       map.on('mouseenter', l, () => (map.getCanvas().style.cursor = 'pointer'));
       map.on('mouseleave', l, () => (map.getCanvas().style.cursor = ''));
     }
@@ -294,7 +298,7 @@ function resultItem(s) {
   const money = p ? `${p.estimated ? '~' : ''}${formatINR(p.value)}${crit.mode === 'rent' ? '/mo' : ''}` : '';
   li.innerHTML = `<span class="nm">${myList.includes(s.id) ? '★ ' : ''}${esc(s.name)}<small>${esc(s.locality || '')}${s.verified ? ' · verified' : ''}</small></span>
     <span class="tag ${st}">${money}${s.score != null ? `<small>score ${s.score}</small>` : ''}</span>`;
-  li.onclick = () => openSociety(s.id);
+  li.onclick = () => { stopTour(); openSociety(s.id); };
   return li;
 }
 
@@ -401,7 +405,7 @@ function renderCard(s) {
     </div>
     <div class="fine">${s.rera_id ? 'RERA ' + esc(s.rera_id) + ' · ' : ''}${s.shape === 'osm' ? 'Buildings from OpenStreetMap' : s.shape === 'osm-site' ? 'Boundary from OpenStreetMap, towers drawn approximately' : 'Approximate shape: towers drawn from the listed tower count'}</div>`;
   $('card').hidden = false;
-  $('c-close').onclick = closeCard;
+  $('c-close').onclick = () => { stopTour(); closeCard(); };
   $('c-star').onclick = () => { toggle(myList, s.id); saveList(); renderCard(s); renderResults(); };
   if (!details) loadDetails().then(() => { if (selected === s.id) renderCard(s); });
 }
@@ -519,6 +523,11 @@ function buildControls() {
   $('layers-btn').onclick = () => $('layers').classList.toggle('open');
   document.querySelectorAll('#layers button[data-mode]').forEach((b) => (b.onclick = () => { setBase(b.dataset.mode); $('layers').classList.remove('open'); }));
   $('btn-theme').onclick = () => setBase(baseMode === 'light' ? 'night' : 'light');
+  for (const k of ['glow', 'bounds', 'labels']) {
+    const box = $(`hl-${k}`);
+    box.checked = highlights[k];
+    box.onchange = () => { highlights[k] = box.checked; store.set('ff-highlights', highlights); if (map) setHighlights(map, highlights); };
+  }
   if (store.get('ff-log', true) === false) toggleLog(false);
   setBase(baseMode);
 }
@@ -582,7 +591,7 @@ function buildSearch() {
     list.replaceChildren(...rows);
     list.hidden = false;
   };
-  const pick = (s) => { input.value = s.name; close(); input.blur(); openSociety(s.id); };
+  const pick = (s) => { stopTour(); input.value = s.name; close(); input.blur(); openSociety(s.id); };
   input.oninput = () => { active = -1; render(); };
   input.onfocus = render;
   input.onblur = close;
@@ -616,17 +625,32 @@ function setQuery(q) {
 }
 
 // ---------- tour ----------
-function tour() {
+let touring = false;
+function stopTour() {
+  if (!touring) return;
+  touring = false;
   clearTimeout(tourTimer);
+  map?.stop();
+  $('btn-tour').textContent = 'Tour';
+  $('btn-tour').classList.remove('live');
+}
+
+function tour() {
+  if (touring) { stopTour(); return; }
   const list = ranked().slice(0, 10);
-  if (!list.length) return;
+  if (!list.length) { toast('No matches to tour. Loosen your filters.'); return; }
+  touring = true;
+  $('btn-tour').textContent = 'Stop tour';
+  $('btn-tour').classList.add('live');
   let i = 0;
   const next = () => {
-    if (i >= list.length) { closeCard(); map.flyTo({ ...OVERVIEW, pitch: is3d ? OVERVIEW.pitch : 0, duration: 4000 }); return; }
+    if (!touring) return;
+    if (i >= list.length) { stopTour(); closeCard(); map.flyTo({ ...OVERVIEW, pitch: is3d ? OVERVIEW.pitch : 0, duration: 4000 }); return; }
     openSociety(list[i++].id);
     tourTimer = setTimeout(next, 7000);
   };
   next();
 }
+addEventListener('keydown', (e) => { if (e.key === 'Escape') stopTour(); });
 
 boot().catch((e) => { console.error(e); document.title = 'ERR ' + e.message; });

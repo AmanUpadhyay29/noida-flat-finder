@@ -228,3 +228,6 @@ body[data-base=light] .maplibregl-ctrl-scale, body[data-base=light] .maplibregl-
   .maplibregl-ctrl-bottom-right { right: 0 !important; bottom: 46vh !important; }
 }
 @media (max-width: 700px) { body.has-card .controls, body.has-card .topbar { display: none; } }
+.layer-menu .hl { display: flex; flex-direction: column; justify-content: center; gap: 6px; padding-left: 10px; margin-left: 2px; border-left: 1px solid var(--line); }
+.layer-menu .hl .sw { font-size: 11.5px; white-space: nowrap; }
+.topbar button.live { border-color: var(--accent); color: var(--accent); }
