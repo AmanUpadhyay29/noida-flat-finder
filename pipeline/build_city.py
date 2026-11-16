@@ -15,6 +15,7 @@ import urllib.parse
 
 import geo
 import pricing
+import rooms_model
 import verified
 
 ROOT = pathlib.Path(__file__).parent
@@ -260,6 +261,48 @@ def main(city="gurgaon"):
         if v["unit_types"]:
             s["unit_types"] = v["unit_types"] + [u for u in s["unit_types"] if u["bhk"] not in {x["bhk"] for x in v["unit_types"]}]
 
+    # smallest-bedroom lower bounds from unit size, for units whose plans are unread
+    room_model = rooms_model.fit(ver)
+    for s in societies:
+        for u in s["unit_types"]:
+            if not u.get("bedrooms"):
+                lb = rooms_model.lower_bounds(room_model, u.get("super_sqft") or u.get("size_sqft"), u.get("bhk"))
+                if lb:
+                    u["est_short"], u["est_area"] = lb
+
+    # nearby places from OpenStreetMap
+    pois_file = out / "osm_pois.json"
+    pois = json.loads(pois_file.read_text()) if pois_file.exists() else []
+    poi_grid = Grid(pois, lambda q: (q["lng"], q["lat"]))
+    for s in societies:
+        here = (s["lng"], s["lat"])
+        near = {}
+        for q in poi_grid.near(here, r=3):
+            d = geo.dist_m(here, (q["lng"], q["lat"]))
+            if d > 3000:
+                continue
+            k = q["k"]
+            if k not in near or d < near[k]["m"]:
+                near[k] = {"m": round(d, -1), "name": q["name"], "n": near.get(k, {}).get("n", 0)}
+            if d <= 1000:
+                near[k]["n"] = near[k].get("n", 0) + 1
+        s["nearby"] = near
+
+    # Flat Finder score (0-10): residents' rating, what is nearby, amenities. Shown with its parts.
+    for s in societies:
+        parts = {}
+        if s.get("rating"):
+            parts["residents"] = round(s["rating"] * 2, 1)
+        nb = s["nearby"]
+        reach = [nb.get("park", {}).get("m", 9e9) <= 500, nb.get("metro", {}).get("m", 9e9) <= 1500 or nb.get("rail", {}).get("m", 9e9) <= 1500,
+                 nb.get("school", {}).get("m", 9e9) <= 1000, nb.get("hospital", {}).get("m", 9e9) <= 2000, nb.get("shopping", {}).get("m", 9e9) <= 1500]
+        parts["nearby"] = round(10 * sum(reach) / len(reach), 1)
+        parts["amenities"] = round(min(10, len(s["amenities"]) / 3), 1)
+        w = {"residents": 0.5, "nearby": 0.3, "amenities": 0.2}
+        tot = sum(w[k] for k in parts)
+        s["score"] = round(sum(parts[k] * w[k] for k in parts) / tot, 1)
+        s["score_parts"] = parts
+
     # prices: real listing medians first, then labelled estimates
     model = pricing.fit_yields(societies)
     loc_psf = defaultdict(list)
@@ -294,6 +337,7 @@ def main(city="gurgaon"):
     WEB.mkdir(parents=True, exist_ok=True)
     doc = {"city": {"id": city, "name": cfg["name"], "center": cfg["center"], "zoom": cfg["zoom"]},
             "price_model": model,
+            "room_model": room_model,
             "counts": {"listed": len(raw), "on_map": len(societies), "not_located": not_located,
                        "for_sale": sum(s["sale_count"] or 0 for s in societies), "for_rent": sum(s["rent_count"] or 0 for s in societies),
                        "verified": sum(s["verified"] for s in societies)},

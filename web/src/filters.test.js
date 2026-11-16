@@ -75,3 +75,29 @@ describe('buy and rent', () => {
     expect(formatINR(250000)).toBe('₹2.5 L');
   });
 });
+
+describe('room estimates, area mode, nearby, lists', () => {
+  const big = soc({ id: 'c', unit_types: [{ bhk: 4, size_sqft: 7400, bedrooms: [], est_short: 11.81, est_area: 190 }] });
+  it('a big unread unit is "probable" only, and only when estimates are allowed', () => {
+    expect(matchSociety(big, crit({ room: ROOM }))).toBe('probable');
+    expect(matchSociety(big, crit({ room: ROOM, estimates: false }))).toBe('unknown');
+    expect(matchSociety(big, crit({ room: { a: 12, b: 13 } }))).toBe('unknown');
+  });
+  it('area mode checks every bedroom area', () => {
+    const s = soc({ unit_types: [{ bhk: 3, bedrooms: [[11, 13], [12, 14]], rooms_complete: true }] });
+    expect(matchSociety(s, crit({ roomArea: 140 }))).toBe('match');
+    expect(matchSociety(s, crit({ roomArea: 150 }))).toBe('no');
+    expect(matchSociety(big, crit({ roomArea: 180 }))).toBe('probable');
+  });
+  it('nearby, name search and my list', () => {
+    const s = soc({ id: 'x', name: 'M3M Golf Estate', nearby: { park: { m: 300 }, metro: { m: 4000 } } });
+    expect(matchSociety(s, crit({ near: ['park'] }))).toBe('match');
+    expect(matchSociety(s, crit({ near: ['metro'] }))).toBe('no');
+    expect(matchSociety(s, crit({ q: 'golf' }))).toBe('match');
+    expect(matchSociety(s, crit({ q: 'heritage' }))).toBe('no');
+    expect(matchSociety(s, crit({ only: ['y'] }))).toBe('no');
+  });
+  it('custom amenity names from the full list', () => {
+    expect(matchSociety(soc({ amenities: ['Banquet Hall'] }), crit({ amenities: ['n:banquet hall'] }))).toBe('match');
+  });
+});

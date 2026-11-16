@@ -28,6 +28,10 @@ Cards also show resident ratings by category, review snippets, the 5-year price 
 - `/data/gurgaon-units.csv`: one row per unit type, with bedroom sizes and sources.
 - "Export these results" on the site downloads whatever your filters currently match.
 
+## Use it inside Claude (connector)
+
+Flat Finder is an MCP server at `https://flat-finder.pages.dev/mcp`. In Claude, add a custom connector with that URL, then ask things like "3 BHK in Gurgaon under ₹80k rent, every bedroom at least 11 by 12, park within 500 m". Tools: `search_societies`, `get_society`, `compare_societies`.
+
 ## Search from a terminal
 
 ```bash

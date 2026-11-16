@@ -1,11 +1,16 @@
 // Pure filter logic. A society is "match", "likely", "unknown" (not checked yet) or "no".
 
-const RANK = { match: 3, likely: 2, unknown: 1, no: 0 };
+export const RANK = { match: 4, likely: 3, probable: 2, unknown: 1, no: 0 };
 
 export const DEFAULT_CRITERIA = {
   kinds: ['apartment'],
   bhk: [],          // empty = any
   room: null,       // { a, b } in feet, orientation-free
+  roomArea: null,   // sq ft: every bedroom at least this big (used instead of room when set)
+  estimates: true,  // allow "probable" from unit-size estimates when plans are unread
+  near: [],         // nearby keys, see NEAR
+  q: '',            // name filter from search
+  only: null,       // array of society ids (my list) or null
   minSqft: 0,
   mode: 'buy',      // 'buy' or 'rent'
   maxPrice: null,   // rupees, buying
@@ -26,7 +31,22 @@ export const AMENITY_KEYS = {
   kids: ['kids play', "children's play", 'kids club'],
 };
 
+// Nearby filters: OSM place kind and the distance it must be within (metres).
+export const NEAR = {
+  park: { label: 'Park', kinds: ['park'], m: 500 },
+  metro: { label: 'Metro or rail', kinds: ['metro', 'rail'], m: 1500 },
+  school: { label: 'School', kinds: ['school'], m: 1000 },
+  hospital: { label: 'Hospital', kinds: ['hospital'], m: 2000 },
+  shopping: { label: 'Mall or supermarket', kinds: ['shopping'], m: 1500 },
+};
+
+export function isNear(s, key) {
+  const n = NEAR[key];
+  return n.kinds.some((k) => (s.nearby?.[k]?.m ?? Infinity) <= n.m);
+}
+
 export function hasAmenity(s, key) {
+  if (key.startsWith('n:')) return s.amenities.some((a) => a.toLowerCase() === key.slice(2));
   const fact = s.amen_facts?.[key];
   if (fact) return fact.value === 'yes';
   const words = AMENITY_KEYS[key] || [key];
@@ -48,14 +68,31 @@ export function matchUnit(u, c) {
     if (size == null) return 'unknown';
     if (size < c.minSqft) return 'no';
   }
-  if (!c.room) return 'match';
-  if (!u.bedrooms?.length) return 'unknown';
-  if (u.bedrooms.some((r) => !roomPasses(r, c.room))) return 'no';
+  const area = c.roomArea;
+  if (!c.room && !area) return 'match';
+  if (!u.bedrooms?.length) {
+    // plans unread: a cautious lower bound from unit size can say "probably fits", never "fits"
+    if (c.estimates !== false && u.est_short != null) {
+      const ok = area ? u.est_area >= area : u.est_short >= Math.min(c.room.a, c.room.b) && u.est_area >= c.room.a * c.room.b;
+      if (ok) return 'probable';
+    }
+    return 'unknown';
+  }
+  const fails = area ? u.bedrooms.some(([a, b]) => a * b < area - 1e-6) : u.bedrooms.some((r) => !roomPasses(r, c.room));
+  if (fails) return 'no';
   return u.rooms_complete ? 'match' : 'likely';
 }
 
+const norm = (t) => (t || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+
 export function matchSociety(s, c) {
+  if (c.only && !c.only.includes(s.id)) return 'no';
+  if (c.q) {
+    const hay = `${norm(s.name)} ${norm(s.developer)} ${norm(s.locality)}`;
+    if (!norm(c.q).split(' ').every((w) => hay.includes(w))) return 'no';
+  }
   if (c.kinds.length && !c.kinds.includes(s.kind)) return 'no';
+  for (const key of c.near || []) if (!isNear(s, key)) return 'no';
   if (c.ready && !/ready/i.test(s.status || '')) return 'no';
   const budget = c.mode === 'rent' ? c.maxRent : c.maxPrice;
   if (budget) {
@@ -64,7 +101,7 @@ export function matchSociety(s, c) {
   }
   for (const key of c.amenities) if (!hasAmenity(s, key)) return 'no';
 
-  const unitFilters = c.bhk.length || c.minSqft > 0 || c.room;
+  const unitFilters = c.bhk.length || c.minSqft > 0 || c.room || c.roomArea;
   if (!unitFilters) return 'match';
   const units = s.unit_types.filter((u) => !c.bhk.length || c.bhk.includes(u.bhk));
   if (!units.length) return s.unit_types.length ? 'no' : 'unknown';

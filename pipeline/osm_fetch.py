@@ -116,5 +116,47 @@ def main():
     print("buildings", len(bf))
 
 
+POI_QUERY = """[out:json][timeout:280];(
+  way["leisure"="park"]{bb};relation["leisure"="park"]{bb};node["leisure"="park"]{bb};
+  node["railway"="station"]{bb};node["station"="subway"]{bb};node["railway"="halt"]{bb};
+  node["amenity"="school"]{bb};way["amenity"="school"]{bb};
+  node["amenity"="hospital"]{bb};way["amenity"="hospital"]{bb};
+  node["shop"="mall"]{bb};way["shop"="mall"]{bb};way["shop"="supermarket"]{bb};node["shop"="supermarket"]{bb};
+);out center tags;"""
+
+
+def poi_kind(t):
+    if t.get("leisure") == "park":
+        return "park"
+    if t.get("station") == "subway" or "metro" in (t.get("name") or "").lower() or t.get("subway") == "yes":
+        return "metro"
+    if t.get("railway") in ("station", "halt"):
+        return "rail"
+    if t.get("amenity") in ("school", "hospital"):
+        return t["amenity"]
+    if t.get("shop") in ("mall", "supermarket"):
+        return "shopping"
+    return None
+
+
+def fetch_pois():
+    s, w, n, e = BBOX
+    data = overpass(POI_QUERY.replace("{bb}", f"({s},{w},{n},{e})"), "pois")
+    out = []
+    for el in data["elements"]:
+        c = el.get("center") or ({"lat": el["lat"], "lon": el["lon"]} if "lat" in el else None)
+        k = poi_kind(el.get("tags", {}))
+        if c and k:
+            out.append({"k": k, "name": el.get("tags", {}).get("name"), "lng": round(c["lon"], 5), "lat": round(c["lat"], 5)})
+    OUT.mkdir(parents=True, exist_ok=True)
+    (OUT / "osm_pois.json").write_text(json.dumps(out))
+    from collections import Counter
+    print("pois", Counter(p["k"] for p in out))
+
+
 if __name__ == "__main__":
-    main()
+    if "pois" in sys.argv:
+        fetch_pois()
+    else:
+        main()
+        fetch_pois()
