@@ -9,7 +9,12 @@ import re
 import sys
 from collections import defaultdict
 
+import csv
+import statistics
+import urllib.parse
+
 import geo
+import pricing
 import verified
 
 ROOT = pathlib.Path(__file__).parent
@@ -229,7 +234,13 @@ def main(city="gurgaon"):
              "config_text": p.get("config_text"), "amenities": p.get("amenities") or [], "amen_facts": {},
              "unit_types": portal_units(p), "url": p["url"], "brochure_url": p.get("brochure_url"),
              "plan_links": {b: v["plan_images"] for b, v in ((p.get("configs") or {}).get("by_bhk") or {}).items() if v["plan_images"]},
-             "verified": False, "note": None}
+             "verified": False, "note": None,
+             "rating": p.get("rating"), "rating_count": p.get("rating_count"), "review_count": p.get("review_count"),
+             "ratings": p.get("ratings") or {}, "reviews": p.get("reviews") or [], "locality_rating": p.get("locality_rating"),
+             "sale_count": p.get("sale_count"), "rent_count": p.get("rent_count"), "psf_now": p.get("psf_now"),
+             "trend": p.get("trend") or [], "description": p.get("description"),
+             "gmaps": "https://www.google.com/maps/search/?api=1&query=" + urllib.parse.quote(f"{p['name']}, {p.get('locality') or ''}, {cfg['name']}"),
+             "prices": pricing.listing_stats(p)}
         if s["towers"] and s["towers"] > 60:  # portal typo (e.g. 1500 towers): not plausible, drop it
             s["towers"] = None
         p["_s"] = s
@@ -249,6 +260,25 @@ def main(city="gurgaon"):
         if v["unit_types"]:
             s["unit_types"] = v["unit_types"] + [u for u in s["unit_types"] if u["bhk"] not in {x["bhk"] for x in v["unit_types"]}]
 
+    # prices: real listing medians first, then labelled estimates
+    model = pricing.fit_yields(societies)
+    loc_psf = defaultdict(list)
+    for s in societies:
+        for b in s["prices"].values():
+            if b.get("psf"):
+                loc_psf[s["locality"]].append(b["psf"])
+    for s in societies:
+        sizes = defaultdict(list)
+        for u in s["unit_types"]:
+            size = u.get("super_sqft") or u.get("size_sqft")
+            if u.get("bhk") and size:
+                sizes[u["bhk"]].append(size)
+        own = [b["psf"] for b in s["prices"].values() if b.get("psf")]
+        psf = statistics.median(own) if own else s.get("psf_now") or (statistics.median(loc_psf[s["locality"]]) if len(loc_psf[s["locality"]]) >= 3 else None)
+        if s["kind"] in ("apartment", "builder floor", "villa"):
+            pricing.add_estimates(s, model, {b: statistics.median(v) for b, v in sizes.items()}, psf)
+        s["prices"] = {str(b): v for b, v in sorted(s["prices"].items())}
+
     for i, s in enumerate(societies):
         area = match_area(s, area_grid)
         if area and area["properties"]["osm"] in used_areas:
@@ -263,11 +293,20 @@ def main(city="gurgaon"):
 
     WEB.mkdir(parents=True, exist_ok=True)
     doc = {"city": {"id": city, "name": cfg["name"], "center": cfg["center"], "zoom": cfg["zoom"]},
+            "price_model": model,
             "counts": {"listed": len(raw), "on_map": len(societies), "not_located": not_located,
+                       "for_sale": sum(s["sale_count"] or 0 for s in societies), "for_rent": sum(s["rent_count"] or 0 for s in societies),
                        "verified": sum(s["verified"] for s in societies)},
             "sources": ["Magicbricks project pages", "OpenStreetMap contributors", "HRERA Gurugram", "Builder brochures (verified rows)"],
             "societies": societies, "events": events}
+    details = {}
+    for s in societies:  # heavy per-society text, loaded only when a card opens
+        details[s["id"]] = {k: s.pop(k) for k in ("reviews", "description", "trend", "ratings")}
     (WEB / f"{city}.json").write_text(json.dumps(doc, separators=(",", ":")))
+    (WEB / f"{city}-details.json").write_text(json.dumps(details, separators=(",", ":")))
+    for s in societies:
+        s.update(details[s["id"]])
+    write_csv(WEB / f"{city}-societies.csv", WEB / f"{city}-units.csv", societies)
     for f in shapes:
         f["geometry"]["coordinates"] = [[[round(x, 5), round(y, 5)] for x, y in r] for r in f["geometry"]["coordinates"]]
         if "h" in f["properties"]:
@@ -278,6 +317,38 @@ def main(city="gurgaon"):
     all_cfg = json.loads((ROOT.parent / "data" / "cities.json").read_text())
     (WEB / "cities.json").write_text(json.dumps({c: {"name": all_cfg[c]["name"]} for c in built if c in all_cfg}))
     print(doc["counts"], Counter(s["shape"] for s in societies), Counter(s["kind"] for s in societies), "features", len(shapes))
+
+
+def write_csv(soc_path, unit_path, societies):
+    """Flat exports: one row per society, and one row per unit type with bedroom sizes."""
+    cols = ["id", "name", "developer", "locality", "type", "lat", "lng", "status", "possession", "rera_id", "towers", "units", "acres",
+            "listings_for_sale", "listings_for_rent", "price_range_min", "price_range_max", "price_per_sqft"]
+    for b in range(1, 6):
+        cols += [f"buy_{b}bhk_median", f"buy_{b}bhk_estimate", f"rent_{b}bhk_median", f"rent_{b}bhk_estimate"]
+    cols += ["rating", "rating_count", "review_count", "amenities", "verified", "smallest_bedroom_ft", "magicbricks_url", "google_maps_url"]
+    with open(soc_path, "w", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(cols)
+        for s in societies:
+            rooms = [r for u in s["unit_types"] for r in (u.get("bedrooms") or [])]
+            smallest = min(rooms, key=lambda r: r[0]) if rooms else None
+            row = [s["id"], s["name"], s["developer"], s["locality"], s["kind"], s["lat"], s["lng"], s["status"], s["possession"], s["rera_id"],
+                   s["towers"], s["units"], s["acres"], s["sale_count"], s["rent_count"], s["price_min"], s["price_max"], s["psf_now"]]
+            for b in range(1, 6):
+                p = s["prices"].get(str(b), {})
+                row += [(p.get("buy") or {}).get("median"), (p.get("buy_est") or {}).get("value"),
+                        (p.get("rent") or {}).get("median"), (p.get("rent_est") or {}).get("value")]
+            row += [s["rating"], s["rating_count"], s["review_count"], "; ".join(s["amenities"]), s["verified"],
+                    f"{smallest[0]:.2f} x {smallest[1]:.2f}" if smallest else None, s["url"], s["gmaps"]]
+            w.writerow(row)
+    with open(unit_path, "w", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["society_id", "society", "unit", "bhk", "super_sqft", "carpet_sqft", "listed_sqft", "bedrooms_ft", "all_bedrooms_read", "confidence", "source", "page"])
+        for s in societies:
+            for u in s["unit_types"]:
+                w.writerow([s["id"], s["name"], u["label"], u.get("bhk"), u.get("super_sqft"), u.get("carpet_sqft"), u.get("size_sqft"),
+                            "; ".join(f"{a:.2f} x {b:.2f}" for a, b in u.get("bedrooms") or []), u.get("rooms_complete"),
+                            u.get("confidence"), u.get("source"), u.get("page")])
 
 
 if __name__ == "__main__":

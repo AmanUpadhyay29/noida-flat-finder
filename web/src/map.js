@@ -2,7 +2,7 @@ import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 const COLORS = { match: '#ffd9a0', likely: '#c99a5c', unknown: '#55545c', no: '#1b1b1e' };
-export const OVERVIEW = { center: [77.065, 28.425], zoom: 12.4, pitch: 52, bearing: -18 };
+export const OVERVIEW = { center: [77.065, 28.425], zoom: 12.4, pitch: 50, bearing: 0 };
 
 const stateColor = (fallback) => ['case',
   ['boolean', ['feature-state', 'sel'], false], '#ffffff',
@@ -15,8 +15,11 @@ export function createMap(container, { mobile }) {
     center: mobile ? OVERVIEW.center : [78.5, 22.5],
     zoom: mobile ? 11.6 : 2.2,
     pitch: mobile ? 45 : 0,
-    bearing: mobile ? OVERVIEW.bearing : 0,
-    maxPitch: 80,
+    bearing: 0,
+    maxPitch: 70,
+    dragRotate: false,      // north stays up, like Google Maps
+    pitchWithRotate: false,
+    touchPitch: false,
     style: {
       version: 8,
       projection: { type: 'globe' },
@@ -40,6 +43,9 @@ export function createMap(container, { mobile }) {
       ],
     },
   });
+  map.touchZoomRotate.disableRotation();
+  map.keyboard.disableRotation();
+  map.addControl(new maplibregl.ScaleControl({ unit: 'metric', maxWidth: 90 }), 'bottom-right');
   return map;
 }
 
@@ -130,11 +136,49 @@ export function addBaseLayers(map) {
   for (const l of LABEL_LAYERS) map.addLayer(l); // above everything, including societies
 }
 
+// Building colours per base map. Light needs darker "match" colours and pale "no" colours.
+const PALETTES = {
+  night: { match: '#ffd9a0', likely: '#c99a5c', unknown: '#55545c', no: '#1b1b1e', sel: '#ffffff', city: '#17171a', label: '#f2f0ec', halo: 'rgba(0,0,0,.85)' },
+  streets: { match: '#ffd9a0', likely: '#c99a5c', unknown: '#5d5c64', no: '#2c2d31', sel: '#ffffff', city: '#2a2b30', label: '#f2f0ec', halo: 'rgba(0,0,0,.85)' },
+  light: { match: '#e8710a', likely: '#f2a93b', unknown: '#a9a6a0', no: '#e4e1db', sel: '#1a73e8', city: '#e8e5df', label: '#202124', halo: 'rgba(255,255,255,.95)' },
+};
+const LIGHT = { // Google-like day map
+  'st-bg': { 'background-color': '#f5f3ef' }, 'st-green': { 'fill-color': '#d8ead2' }, 'st-park': { 'fill-color': '#c8e6c4' },
+  'st-water': { 'fill-color': '#aadaff' }, 'st-casing': { 'line-color': '#d6d3cd' },
+  'st-road': { 'line-color': ['match', ['get', 'class'], ['motorway', 'trunk'], '#fbd277', ['primary', 'secondary'], '#ffffff', '#ffffff'] },
+  'st-rail': { 'line-color': '#b0aeb8' },
+  'lbl-road': { 'text-color': '#4d5156', 'text-halo-color': '#ffffff' }, 'lbl-place': { 'text-color': '#5f6368', 'text-halo-color': '#ffffff' },
+  'lbl-metro': { 'text-color': '#1a73e8', 'text-halo-color': '#ffffff' },
+};
+const DARK = {
+  'st-bg': { 'background-color': '#202124' }, 'st-green': { 'fill-color': '#1f2a22' }, 'st-park': { 'fill-color': '#22311f' },
+  'st-water': { 'fill-color': '#15233a' }, 'st-casing': { 'line-color': '#0f0f11' },
+  'st-road': { 'line-color': ['match', ['get', 'class'], ['motorway', 'trunk'], '#a08a66', ['primary', 'secondary'], '#646a75', ['tertiary'], '#4d5159', '#3d4047'] },
+  'st-rail': { 'line-color': '#5b5b66' },
+  'lbl-road': { 'text-color': '#e4dfd5', 'text-halo-color': 'rgba(0,0,0,.9)' }, 'lbl-place': { 'text-color': '#9d988e', 'text-halo-color': 'rgba(0,0,0,.85)' },
+  'lbl-metro': { 'text-color': '#8fb4ff', 'text-halo-color': 'rgba(0,0,0,.85)' },
+};
+
+const colorBy = (c) => ['case', ['boolean', ['feature-state', 'sel'], false], c.sel,
+  ['match', ['feature-state', 'st'], 'match', c.match, 'likely', c.likely, 'unknown', c.unknown, 'no', c.no, c.match]];
+
+export const BASE_MODES = ['night', 'streets', 'light'];
+
 export function setBaseMode(map, mode) {
-  const streets = mode === 'streets';
-  for (const l of STREET_LAYERS) map.setLayoutProperty(l.id, 'visibility', streets ? 'visible' : 'none');
-  map.setLayoutProperty('sat', 'visibility', streets ? 'none' : 'visible');
-  map.setLayoutProperty('roads', 'visibility', streets ? 'none' : 'visible');
-  map.setPaintProperty('city', 'fill-extrusion-color', streets ? '#2a2b30' : '#17171a');
-  map.setLayoutProperty('lbl-metro', 'visibility', streets ? 'visible' : 'none');
+  const streetsLike = mode !== 'night';
+  for (const l of STREET_LAYERS) map.setLayoutProperty(l.id, 'visibility', streetsLike ? 'visible' : 'none');
+  map.setLayoutProperty('sat', 'visibility', streetsLike ? 'none' : 'visible');
+  map.setLayoutProperty('roads', 'visibility', streetsLike ? 'none' : 'visible');
+  map.setLayoutProperty('lbl-metro', 'visibility', streetsLike ? 'visible' : 'none');
+  for (const [id, props] of Object.entries(mode === 'light' ? LIGHT : DARK)) for (const [k, v] of Object.entries(props)) map.setPaintProperty(id, k, v);
+  const c = PALETTES[mode];
+  map.setPaintProperty('city', 'fill-extrusion-color', c.city);
+  for (const [id, prop] of [['bld', 'fill-extrusion-color'], ['site-fill', 'fill-color'], ['site-line', 'line-color'], ['glow', 'circle-color']]) map.setPaintProperty(id, prop, colorBy(c));
+  map.setPaintProperty('labels', 'text-color', c.label);
+  map.setPaintProperty('labels', 'text-halo-color', c.halo);
+  map.setPaintProperty('glow', 'circle-opacity', ['match', ['feature-state', 'st'], 'match', mode === 'light' ? 0.28 : 0.5, 'likely', mode === 'light' ? 0.2 : 0.35, 'unknown', mode === 'light' ? 0.06 : 0.14, 'no', 0, 0.2]);
+  map.setPaintProperty('site-fill', 'fill-opacity', ['match', ['feature-state', 'st'], 'match', mode === 'light' ? 0.22 : 0.13, 'likely', 0.12, 'unknown', 0.06, 'no', 0, 0.08]);
+  map.setSky(mode === 'light'
+    ? { 'sky-color': '#cfe3f5', 'horizon-color': '#eef3f7', 'fog-color': '#f5f3ef', 'sky-horizon-blend': 0.6, 'horizon-fog-blend': 0.6, 'fog-ground-blend': 0.2, 'atmosphere-blend': ['interpolate', ['linear'], ['zoom'], 0, 1, 10, 0] }
+    : { 'sky-color': '#07080b', 'horizon-color': '#1a1712', 'fog-color': '#07080b', 'sky-horizon-blend': 0.6, 'horizon-fog-blend': 0.6, 'fog-ground-blend': 0.2, 'atmosphere-blend': ['interpolate', ['linear'], ['zoom'], 0, 1, 10, 0] });
 }

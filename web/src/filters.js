@@ -7,7 +7,9 @@ export const DEFAULT_CRITERIA = {
   bhk: [],          // empty = any
   room: null,       // { a, b } in feet, orientation-free
   minSqft: 0,
-  maxPrice: null,   // rupees
+  mode: 'buy',      // 'buy' or 'rent'
+  maxPrice: null,   // rupees, buying
+  maxRent: null,    // rupees per month, renting
   amenities: [],    // amenity keys, see AMENITY_KEYS
   ready: false,     // only ready to move
 };
@@ -55,7 +57,11 @@ export function matchUnit(u, c) {
 export function matchSociety(s, c) {
   if (c.kinds.length && !c.kinds.includes(s.kind)) return 'no';
   if (c.ready && !/ready/i.test(s.status || '')) return 'no';
-  if (c.maxPrice && s.price_min && s.price_min > c.maxPrice) return 'no';
+  const budget = c.mode === 'rent' ? c.maxRent : c.maxPrice;
+  if (budget) {
+    const p = priceFor(s, c.mode, c.bhk);
+    if (p && p.value > budget) return 'no';
+  }
   for (const key of c.amenities) if (!hasAmenity(s, key)) return 'no';
 
   const unitFilters = c.bhk.length || c.minSqft > 0 || c.room;
@@ -76,4 +82,25 @@ export function feetLabel(ft) {
   let i = Math.round((ft - f) * 12);
   if (i === 12) { f += 1; i = 0; }
   return `${f}'${i}"`;
+}
+
+// Cheapest price for the chosen BHKs: listing median first, our estimate otherwise. null when unknown.
+export function priceFor(s, mode, bhk = []) {
+  let best = null;
+  for (const [b, p] of Object.entries(s.prices || {})) {
+    if (bhk.length && !bhk.includes(+b)) continue;
+    const real = p[mode]?.median;
+    const est = p[`${mode}_est`]?.value;
+    const v = real ?? est;
+    if (v && (!best || v < best.value)) best = { value: v, estimated: real == null, bhk: +b, basis: real == null ? p[`${mode}_est`].basis : null, n: p[mode]?.n };
+  }
+  if (!best && mode === 'buy' && s.price_min && !bhk.length) best = { value: s.price_min, estimated: false, bhk: null, basis: 'builder price range' };
+  return best;
+}
+
+export function formatINR(r) {
+  if (r == null) return '';
+  if (r >= 1e7) return `₹${(r / 1e7).toFixed(2).replace(/\.?0+$/, '')} Cr`;
+  if (r >= 1e5) return `₹${(r / 1e5).toFixed(1).replace(/\.0$/, '')} L`;
+  return `₹${Math.round(r / 1000)}k`;
 }

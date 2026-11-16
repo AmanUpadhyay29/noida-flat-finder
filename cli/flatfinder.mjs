@@ -2,7 +2,7 @@
 // flatfinder: search the Flat Finder data from a terminal. Same filter logic as the website.
 import { readFile, realpath } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import { DEFAULT_CRITERIA, feetLabel, matchSociety } from '../web/src/filters.js';
+import { DEFAULT_CRITERIA, feetLabel, formatINR, matchSociety, priceFor } from '../web/src/filters.js';
 
 const SITE = 'https://flat-finder.pages.dev';
 
@@ -14,7 +14,9 @@ const HELP = `flatfinder: find housing societies that fit
   --bhk 3,4              BHK types
   --min-bedroom 11'3x12'3   every bedroom must clear both sides (also 11.25x12.25)
   --min-sqft 1620        minimum unit size (super area where known)
-  --max-price 3cr        budget, e.g. 90L or 3cr
+  --max-price 3cr        budget to buy, e.g. 90L or 3cr
+  --rent                 renting instead of buying
+  --max-rent 80k         monthly rent budget
   --amenity squash,pool  squash pool gym club tennis badminton jogging kids
   --type apartment       apartment, "builder floor", villa, plot (comma separated)
   --ready                ready to move only
@@ -31,10 +33,10 @@ export function parseFeet(s) {
 }
 
 export function parsePrice(s) {
-  const m = String(s).trim().toLowerCase().match(/^(\d+(?:\.\d+)?)\s*(cr|crore|l|lac|lakh)?$/);
+  const m = String(s).trim().toLowerCase().match(/^(\d+(?:\.\d+)?)\s*(cr|crore|l|lac|lakh|k)?$/);
   if (!m) throw new Error(`cannot read price "${s}"`);
   const n = +m[1];
-  return m[2]?.startsWith('c') ? n * 1e7 : m[2] ? n * 1e5 : n;
+  return m[2]?.startsWith('c') ? n * 1e7 : m[2] === 'k' ? n * 1e3 : m[2] ? n * 1e5 : n;
 }
 
 export function parseArgs(argv) {
@@ -46,6 +48,8 @@ export function parseArgs(argv) {
     else if (a === '--min-bedroom') { const [x, y] = v().split(/x|×/i); o.crit.room = { a: parseFeet(x), b: parseFeet(y) }; }
     else if (a === '--min-sqft') o.crit.minSqft = +v();
     else if (a === '--max-price') o.crit.maxPrice = parsePrice(v());
+    else if (a === '--rent') o.crit.mode = 'rent';
+    else if (a === '--max-rent') { o.crit.mode = 'rent'; o.crit.maxRent = parsePrice(v()); }
     else if (a === '--amenity') o.crit.amenities = v().split(',');
     else if (a === '--type') o.crit.kinds = v().split(',');
     else if (a === '--ready') o.crit.ready = true;
@@ -74,7 +78,7 @@ function smallestRoom(s) {
   return `${feetLabel(r[0])} x ${feetLabel(r[1])}`;
 }
 
-const price = (r) => (!r ? '' : r >= 1e7 ? `${(r / 1e7).toFixed(2)} Cr` : `${Math.round(r / 1e5)} L`);
+const money = (p, mode) => (p ? `${p.estimated ? '~' : ''}${formatINR(p.value)}${mode === 'rent' ? '/mo' : ''}` : '');
 
 async function main() {
   const o = parseArgs(process.argv.slice(2));
@@ -85,9 +89,10 @@ async function main() {
   console.log(`${rows.length} societies in ${city.city.name}${o.likely ? ' (including likely)' : ''}\n`);
   const table = rows.slice(0, o.limit).map(({ s, v }) => ({
     society: s.name.slice(0, 32), area: (s.locality || '').slice(0, 22), verdict: v + (s.verified ? '*' : ''),
-    'smallest bedroom': smallestRoom(s), from: price(s.price_min), link: `${SITE}/?city=${o.city}&open=${s.id}`,
+    'smallest bedroom': smallestRoom(s), [o.crit.mode === 'rent' ? 'rent from' : 'price from']: money(priceFor(s, o.crit.mode, o.crit.bhk), o.crit.mode), link: `${SITE}/?city=${o.city}&open=${s.id}`,
   }));
   console.table(table);
+  console.log('~ = our estimate from the rent-to-price ratio, not a listing.');
   console.log('* verified from brochures or HRERA plans. Unit rows without room sizes are "not checked yet" and never shown as matches.');
 }
 

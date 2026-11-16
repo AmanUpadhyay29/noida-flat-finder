@@ -55,3 +55,23 @@ it('feetLabel', () => {
   expect(feetLabel(11.25)).toBe('11\'3"');
   expect(feetLabel(12.833)).toBe('12\'10"');
 });
+
+import { formatINR, priceFor } from './filters.js';
+
+describe('buy and rent', () => {
+  const s = soc({ prices: { 3: { buy: { median: 3e7, n: 4 }, rent: { median: 70000 } }, 4: { buy_est: { value: 4e7, basis: 'x' }, rent_est: { value: 80000, basis: 'y' } } } });
+  it('uses listing medians before estimates, cheapest BHK first', () => {
+    expect(priceFor(s, 'rent', [])).toMatchObject({ value: 70000, estimated: false, bhk: 3 });
+    expect(priceFor(s, 'buy', [4])).toMatchObject({ value: 4e7, estimated: true, basis: 'x' });
+  });
+  it('rent budget filters on monthly rent; unknown price never excludes', () => {
+    expect(matchSociety(s, crit({ mode: 'rent', maxRent: 60000 }))).toBe('no');
+    expect(matchSociety(s, crit({ mode: 'rent', maxRent: 75000 }))).toBe('match');
+    expect(matchSociety(soc(), crit({ mode: 'rent', maxRent: 10000 }))).toBe('match');
+  });
+  it('formats rupees', () => {
+    expect(formatINR(41500000)).toBe('₹4.15 Cr');
+    expect(formatINR(70000)).toBe('₹70k');
+    expect(formatINR(250000)).toBe('₹2.5 L');
+  });
+});

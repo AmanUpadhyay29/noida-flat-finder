@@ -17,3 +17,8 @@ it("Divy's search finds Araya and Presidia as matches", () => {
   expect(names).toContain('Pioneer Presidia');
   expect(names).not.toContain('Emaar Amaris');
 });
+
+it('reads monthly rent', () => {
+  expect(parsePrice('80k')).toBe(80000);
+  expect(parseArgs(['--max-rent', '80k']).crit).toMatchObject({ mode: 'rent', maxRent: 80000 });
+});

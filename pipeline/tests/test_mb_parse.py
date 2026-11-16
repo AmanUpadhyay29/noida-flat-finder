@@ -39,3 +39,19 @@ def test_card_units_and_type_codes():
     p = mb_parse.card_to_project(cards["Ganga Anantam"])
     assert p["card_units"][0] == {"bhk": 3, "sqft": 2050.0, "kind": "10002"}
     assert p["type_codes"] == ["10002"]
+
+
+def test_extras_ratings_reviews_listings():
+    d = mb_parse.parse_project_page(read("mb_project_flat.html"))
+    assert d["rating"] == 4.5 and d["review_count"] == 18 and d["ratings"]["maintenance"] == 4.7
+    assert d["sale_count"] == 140 and d["rent_count"] == 27
+    assert d["rent_listings"][0] == {"bhk": 2, "price": 45000.0, "sqft": 1296.0, "psf": 35.0, "furnished": "Semi-Furnished", "floor": "5", "posted": "2026-10-15"}
+    assert d["sale_listings"][0]["price"] == 24000000
+    assert d["psf_now"] == 16623 and d["trend"][0] == ["2021", 7567]
+    assert d["reviews"][0]["text"].startswith("Ireo The Corridors is a thoughtfully")
+
+
+def test_reviews_are_unique():
+    d = mb_parse.parse_project_page(read("mb_project_flat.html"))
+    keys = [r["text"][:60] for r in d["reviews"]]
+    assert len(keys) == len(set(keys))

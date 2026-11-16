@@ -13,10 +13,26 @@ Gurugram is first: about 2,700 projects from Magicbricks, building outlines from
 
 Building shapes come from OpenStreetMap where they are mapped. Where they are not, towers are drawn from the listed tower count and say "approximate shape" on the card. Shapes are visual only; data numbers are never estimated.
 
+## Buy or rent
+
+Every society shows buy prices and monthly rents per BHK: medians, ranges and counts of live Magicbricks listings (22,018 homes for sale and 7,371 for rent in Gurugram). Where a society has no listings, the site shows **our estimate, marked "~"**, with the working shown:
+
+- rent from price (or price from rent) using the rental yield measured on 960 society and BHK pairs that have both (about 2.5% of the price per year, correlation between log price and log rent 0.91), using the locality's own yield where it has at least 4 pairs;
+- when there are no listings at all, unit size x the project's price per sq ft, then rent via yield.
+
+Cards also show resident ratings by category, review snippets, the 5-year price per sq ft trend, and links to Google Maps (with Google reviews) and directions.
+
+## Download the data
+
+- `/data/gurgaon-societies.csv`: one row per society (location, type, listings, buy and rent medians and estimates per BHK, ratings, amenities, links).
+- `/data/gurgaon-units.csv`: one row per unit type, with bedroom sizes and sources.
+- "Export these results" on the site downloads whatever your filters currently match.
+
 ## Search from a terminal
 
 ```bash
 npx github:kairothq/flat-finder --bhk 3,4 --min-bedroom "11'3x12'3" --min-sqft 1620 --amenity squash --likely
+npx github:kairothq/flat-finder --bhk 3 --max-rent 80k --amenity pool
 ```
 
 ## Use it with Claude Code
@@ -42,7 +58,7 @@ Cities live in `data/cities.json`. Gurugram is built; Bengaluru and Mumbai are c
 
 Press `/` to search for a society. The Streets button switches to a street map with road and sector names.
 
-Useful links: `?city=gurgaon`, `?map=streets`, `?preset=divy` loads the example search, `?open=<society id>` opens one society, `?nointro` skips the globe fly-in.
+Useful links: `?city=gurgaon`, `?map=streets` or `?map=light`, `?preset=divy` loads the example search, `?open=<society id>` opens one society, `?nointro` skips the globe fly-in.
 
 ## Add verified research
 
@@ -50,4 +66,4 @@ Verified rows live in `data/verified/<city>.json`. Each unit type lists its bedr
 
 ## Sources
 
-Magicbricks project pages (listing facts), OpenStreetMap contributors (outlines, ODbL), Esri World Imagery (basemap), OpenFreeMap (roads and city buildings), HRERA Gurugram and builder brochures (verified rows).
+Magicbricks project pages (listing facts, live sale and rent listings, resident ratings and reviews), OpenStreetMap contributors (outlines, ODbL), Esri World Imagery (basemap), OpenFreeMap (roads and city buildings), HRERA Gurugram and builder brochures (verified rows).

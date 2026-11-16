@@ -91,6 +91,7 @@ def parse_project_page(html):
         "amenities": amen,
         "config_text": det.get("prjConfig"),
         "configs": parse_configs(state),
+        **parse_extras(html),
     }
 
 
@@ -130,3 +131,71 @@ def parse_configs(state):
                                    for r in rows if r.get("unitFlrPlanImg")}),
         }
     return {"units": units, "by_bhk": plans}
+
+
+_TAG = re.compile(r"<[^>]+>")
+
+
+def _text(html, n):
+    t = re.sub(r"\s+", " ", _TAG.sub(" ", html or "")).replace("&nbsp;", " ").replace("&amp;", "&").strip()
+    return t[:n].rsplit(" ", 1)[0] + "…" if len(t) > n else t
+
+
+def _listing(r):
+    try:
+        bhk = int(r.get("bedroomD")) if str(r.get("bedroomD") or "").isdigit() else None
+    except ValueError:
+        bhk = None
+    return {"bhk": bhk, "price": _num(r.get("price")), "sqft": _num(r.get("caSqFt")), "psf": _num(r.get("sqFtPrice")),
+            "furnished": r.get("furnishedD"), "floor": r.get("floorNo"), "posted": (r.get("postDateT") or "")[:10]}
+
+
+RATING_KEYS = {"waterRt": "water", "electricityRt": "power", "backupRt": "power backup", "securityRt": "security",
+               "maintenanceRt": "maintenance", "constQualityRt": "construction", "parkingRt": "parking", "sportsRt": "sports",
+               "gardenRt": "green areas", "shopsRt": "shops nearby", "staffRt": "staff", "sewageRt": "sewage"}
+
+
+def parse_extras(html):
+    """Ratings, resident reviews, live sale/rent listings, listing counts and price trend from a project page."""
+    state = _json_after(html, "window.SERVER_PRELOADED_STATE_") or {}
+    seo = state.get("projectPageSeoStaticData") or {}
+    mob = (state.get("projectDetailData") or {}).get("prjMobileBean") or {}
+    rb = mob.get("ratingBean") or {}
+    groups = (((seo.get("bhkDetailsDTO") or {}).get("bhkProjectDetailsMap") or {}).get("ALL") or {})
+    reviews, seen = [], set()
+    for r in (seo.get("projectReviews") or {}).get("resultList") or []:
+        if r.get("isSponsered") in (True, "Y", "true", 1) or len(reviews) >= 6:
+            continue
+        text = _text(r.get("reviewDescription"), 320)
+        key = re.sub(r"\W+", "", text.lower())[:60]
+        if text and key not in seen:
+            seen.add(key)
+            reviews.append({"title": _text(r.get("reviewTitle"), 90), "text": text, "date": r.get("reviewedOn"),
+                            "by": r.get("userType"), "rating": r.get("overAllRating")})
+    trend = []
+    for doc in (seo.get("projectTrendsGraph") or {}).get("projectSrpPriceTrendDoc") or []:
+        try:
+            data = json.loads(doc.get("jsonProjectData") or "{}")
+        except ValueError:
+            continue
+        for v in (data or {}).values():
+            for q in (((v or {}).get("yoyGrowth") or {}).get("fiveY") or []):
+                if q.get("qAvgP"):
+                    trend.append([q.get("qIdentifier"), q["qAvgP"]])
+    m = re.search(r"₹\s?([\d,]+)", mob.get("priceTrendsCont") or "")
+    loc = (seo.get("localityDetailsBean") or {}).get("localityDetailDTO") or {}
+    return {
+        "rating": _num(rb.get("psmAvgRt")),
+        "rating_count": int(rb["totalRating"]) if str(rb.get("totalRating") or "").isdigit() else None,
+        "review_count": int(rb["totalReview"]) if str(rb.get("totalReview") or "").isdigit() else None,
+        "ratings": {name: rb[k] for k, name in RATING_KEYS.items() if rb.get(k)},
+        "reviews": reviews,
+        "sale_count": int(mob["sellCountProperty"]) if str(mob.get("sellCountProperty") or "").isdigit() else None,
+        "rent_count": int(mob["rentCountProperty"]) if str(mob.get("rentCountProperty") or "").isdigit() else None,
+        "sale_listings": [_listing(r) for r in groups.get("groupedResult") or [] if r.get("price")],
+        "rent_listings": [_listing(r) for r in groups.get("groupedRentResult") or [] if r.get("price")],
+        "psf_now": float(m.group(1).replace(",", "")) if m else None,
+        "trend": trend,
+        "locality_rating": _num(loc.get("ratingAvgCount")),
+        "description": _text((mob.get("projectDescription") or {}).get("fullDesc"), 600),
+    }
