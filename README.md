@@ -13,22 +13,34 @@ Gurugram is first: about 2,700 projects from Magicbricks, building outlines from
 
 Building shapes come from OpenStreetMap where they are mapped. Where they are not, towers are drawn from the listed tower count and say "approximate shape" on the card. Shapes are visual only; data numbers are never estimated.
 
+## Search from a terminal
+
+```bash
+npx github:kairothq/flat-finder --bhk 3,4 --min-bedroom "11'3x12'3" --min-sqft 1620 --amenity squash --likely
+```
+
+## Use it with Claude Code
+
+`skills/flat-finder/SKILL.md` is a Claude Code skill. Copy it into `~/.claude/skills/flat-finder/` and ask Claude to "add Bangalore to flat finder", "verify Ireo Skyon", or "find me a 3 BHK with every bedroom at least 11 by 12 feet". It follows the same rules as this repo: primary sources first, never estimate, every number keeps its page.
+
 ## Run it
 
 ```bash
 # data
 cd pipeline
-python3 mb_crawl.py list && python3 mb_crawl.py projects   # polite, cached, resumable
-python3 osm_fetch.py
-python3 build_city.py                                       # -> web/public/data/
+python3 mb_crawl.py list gurgaon && python3 mb_crawl.py projects gurgaon   # polite, cached, resumable
+python3 osm_fetch.py gurgaon
+python3 build_city.py gurgaon                                               # -> web/public/data/
 
 # site
 cd ../web && npm install && npm run dev
 ```
 
-Tests: `cd pipeline && uv run --with pytest pytest` and `cd web && npm test`.
+Tests: `cd pipeline && uv run --with pytest pytest` and `cd web && npx vitest run --root .. cli web/src`.
 
-Useful links: `?preset=divy` loads the example search, `?open=<society id>` opens one society, `?nointro` skips the globe fly-in.
+Cities live in `data/cities.json`. Gurugram is built; Bengaluru and Mumbai are configured and need the pipeline run (see the skill, Job 2).
+
+Useful links: `?city=gurgaon`, `?preset=divy` loads the example search, `?open=<society id>` opens one society, `?nointro` skips the globe fly-in.
 
 ## Add verified research
 

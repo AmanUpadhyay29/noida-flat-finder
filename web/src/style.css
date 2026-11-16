@@ -92,3 +92,5 @@ input[type=range] { width: 100%; accent-color: var(--accent); }
   .card { left: 8px; right: 8px; bottom: calc(46vh + 56px); max-height: 38vh; }
 }
 .card[hidden] { display: none; }
+#city-pick { background: none; border: none; font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); cursor: pointer; }
+#city-pick option { background: #111; color: #eee; }

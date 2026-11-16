@@ -1,9 +1,10 @@
 """Fetch residential areas and building footprints for a city bbox from Overpass, once.
 
-usage: python osm_fetch.py   -> out/osm_areas.geojson, out/osm_buildings.geojson
+usage: python osm_fetch.py <city>  -> out/<city>/osm_areas.geojson, out/<city>/osm_buildings.geojson
 """
 import json
 import pathlib
+import sys
 import time
 import urllib.parse
 import urllib.request
@@ -11,7 +12,11 @@ import urllib.request
 ROOT = pathlib.Path(__file__).parent
 CACHE = ROOT / "cache" / "osm"
 OUT = ROOT / "out"
-BBOX = (28.33, 76.88, 28.55, 77.16)  # Gurgaon: south, west, north, east
+CITIES = json.loads((ROOT.parent / "data" / "cities.json").read_text())
+CITY = next((a for a in sys.argv[1:] if a in CITIES), "gurgaon")
+BBOX = tuple(CITIES[CITY]["bbox"])  # south, west, north, east
+OUT = OUT / CITY
+CACHE = CACHE / CITY
 MIRRORS = [
     "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
     "https://overpass-api.de/api/interpreter",
@@ -93,7 +98,7 @@ def main():
         for r in rings:
             feats.append({"type": "Feature", "properties": {"osm": f"{el['type']}/{el['id']}", "name": el["tags"]["name"]},
                           "geometry": {"type": "Polygon", "coordinates": [r]}})
-    OUT.mkdir(exist_ok=True)
+    OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "osm_areas.geojson").write_text(json.dumps({"type": "FeatureCollection", "features": feats}))
     print("areas", len(feats))
 

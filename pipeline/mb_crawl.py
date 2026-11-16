@@ -1,7 +1,8 @@
 """Polite, cached, resumable Magicbricks crawler.
 
-usage: python mb_crawl.py list      # all list pages -> out/mb_index.json
-       python mb_crawl.py projects  # every project page -> out/mb_projects.json
+usage: python mb_crawl.py list <city>      # all list pages -> out/<city>/mb_index.json
+       python mb_crawl.py projects <city>  # every project page -> out/<city>/mb_projects.json
+<city> is a key in data/cities.json (default gurgaon).
 """
 import hashlib
 import json
@@ -15,7 +16,11 @@ import mb_parse
 ROOT = pathlib.Path(__file__).parent
 CACHE = ROOT / "cache" / "mb"
 OUT = ROOT / "out"
-LIST_URL = "https://www.magicbricks.com/residential-projects-in-gurgaon-nprid/page-{}"
+CITIES = json.loads((ROOT.parent / "data" / "cities.json").read_text())
+CITY = next((a for a in sys.argv[1:] if a in CITIES), "gurgaon")
+CFG = CITIES[CITY]
+LIST_URL = "https://www.magicbricks.com/residential-projects-in-" + CFG["magicbricks"] + "-nprid/page-{}"
+OUT = OUT / CITY
 UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36"
 DELAY = 1.0
 
@@ -50,7 +55,7 @@ def crawl_list():
         for c in mb_parse.parse_list_page(html):
             projects[c["psmid"]] = mb_parse.card_to_project(c)
         print(f"list {n}/{pages}: {len(projects)} projects", flush=True)
-    OUT.mkdir(exist_ok=True)
+    OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "mb_index.json").write_text(json.dumps(list(projects.values()), indent=0))
     print("total reported", total, "collected", len(projects))
 

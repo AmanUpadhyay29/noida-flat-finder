@@ -1,11 +1,12 @@
 """Merge Magicbricks projects, OSM shapes and verified research into the web data files.
 
-usage: python build_city.py  -> web/public/data/gurgaon.json, gurgaon-shapes.geojson
+usage: python build_city.py <city>  -> web/public/data/<city>.json, <city>-shapes.geojson, cities.json
 """
 import json
 import math
 import pathlib
 import re
+import sys
 from collections import defaultdict
 
 import geo
@@ -202,19 +203,22 @@ def shapes_for(s, area, bld_grid, sid_seed):
     return feats, shape
 
 
-def main():
-    raw = json.loads((OUT / "mb_projects.json").read_text())
+def main(city="gurgaon"):
+    cfg = json.loads((ROOT.parent / "data" / "cities.json").read_text())[city]
+    out = OUT / city
+    raw = json.loads((out / "mb_projects.json").read_text())
     located = [p for p in raw if p.get("lat") and p.get("lng") and 28.2 < p["lat"] < 28.7 and 76.7 < p["lng"] < 77.3]
     not_located = len(raw) - len(located)
     projects = dedupe(located)
-    areas = json.loads((OUT / "osm_areas.geojson").read_text())["features"]
+    areas = json.loads((out / "osm_areas.geojson").read_text())["features"]
     area_grid = Grid(areas, lambda a: geo.centroid(a["geometry"]["coordinates"][0]))
-    blds = json.loads((OUT / "osm_buildings.geojson").read_text())["features"]
+    blds = json.loads((out / "osm_buildings.geojson").read_text())["features"]
     for b in blds:
         b["_c"] = geo.centroid(b["geometry"]["coordinates"][0])
     bld_grid = Grid(blds, lambda b: b["_c"])
 
-    ver = verified.load_verified()
+    vfile = verified.ROOT / "data" / "verified" / f"{city}.json"
+    ver = verified.load_verified(vfile) if vfile.exists() else []
     societies, shapes, events, used_areas = [], [], [], set()
     for i, p in enumerate(projects):
         s = {"id": f"s{p['mb_id']}", "name": p["name"], "developer": p.get("developer"), "locality": p.get("locality"),
@@ -258,20 +262,23 @@ def main():
         events.extend(events_for(s))
 
     WEB.mkdir(parents=True, exist_ok=True)
-    city = {"city": {"id": "gurgaon", "name": "Gurugram", "center": [77.06, 28.43]},
+    doc = {"city": {"id": city, "name": cfg["name"], "center": cfg["center"], "zoom": cfg["zoom"]},
             "counts": {"listed": len(raw), "on_map": len(societies), "not_located": not_located,
                        "verified": sum(s["verified"] for s in societies)},
             "sources": ["Magicbricks project pages", "OpenStreetMap contributors", "HRERA Gurugram", "Builder brochures (verified rows)"],
             "societies": societies, "events": events}
-    (WEB / "gurgaon.json").write_text(json.dumps(city, separators=(",", ":")))
+    (WEB / f"{city}.json").write_text(json.dumps(doc, separators=(",", ":")))
     for f in shapes:
         f["geometry"]["coordinates"] = [[[round(x, 5), round(y, 5)] for x, y in r] for r in f["geometry"]["coordinates"]]
         if "h" in f["properties"]:
             f["properties"]["h"] = round(f["properties"]["h"])
-    (WEB / "gurgaon-shapes.geojson").write_text(json.dumps({"type": "FeatureCollection", "features": shapes}, separators=(",", ":")))
+    (WEB / f"{city}-shapes.geojson").write_text(json.dumps({"type": "FeatureCollection", "features": shapes}, separators=(",", ":")))
     from collections import Counter
-    print(city["counts"], Counter(s["shape"] for s in societies), Counter(s["kind"] for s in societies), "features", len(shapes))
+    built = sorted(p.stem for p in WEB.glob("*.json") if p.stem != "cities")
+    all_cfg = json.loads((ROOT.parent / "data" / "cities.json").read_text())
+    (WEB / "cities.json").write_text(json.dumps({c: {"name": all_cfg[c]["name"]} for c in built if c in all_cfg}))
+    print(doc["counts"], Counter(s["shape"] for s in societies), Counter(s["kind"] for s in societies), "features", len(shapes))
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1] if len(sys.argv) > 1 else "gurgaon")

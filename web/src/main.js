@@ -11,7 +11,8 @@ const RANK = { match: 3, likely: 2, unknown: 1, no: 0 };
 
 const KINDS = [['apartment', 'Apartments'], ['builder floor', 'Builder floors'], ['villa', 'Villas'], ['plot', 'Plots']];
 const AMEN_LABELS = { squash: 'Squash', pool: 'Pool', gym: 'Gym', club: 'Clubhouse', tennis: 'Tennis', badminton: 'Badminton', jogging: 'Jogging track', kids: 'Kids play' };
-const DIVY = { kinds: ['apartment'], bhk: [2, 3, 4], room: { a: 11.25, b: 12.25 }, minSqft: 1620, maxPrice: null, amenities: ['squash'], ready: false };
+const DIVY = { // Divy's own Gurugram search, shown as the example
+  kinds: ['apartment'], bhk: [2, 3, 4], room: { a: 11.25, b: 12.25 }, minSqft: 1620, maxPrice: null, amenities: ['squash'], ready: false };
 
 let crit = structuredClone(DEFAULT_CRITERIA);
 let data, byId, map, feed, selected = null, states = new Map(), tourTimer = null;
@@ -19,13 +20,20 @@ let data, byId, map, feed, selected = null, states = new Map(), tourTimer = null
 const fmtPrice = (r) => (r >= 1e7 ? `₹${(r / 1e7).toFixed(r >= 1e8 ? 0 : 2).replace(/\.?0+$/, '')} Cr` : `₹${Math.round(r / 1e5)} L`);
 
 async function boot() {
+  const cities = await fetch('/data/cities.json').then((r) => r.json()).catch(() => ({ gurgaon: { name: 'Gurugram' } }));
+  const want = new URLSearchParams(location.search).get('city');
+  const cityId = cities[want] ? want : 'gurgaon';
   const [city, shapes] = await Promise.all([
-    fetch('/data/gurgaon.json').then((r) => r.json()),
-    fetch('/data/gurgaon-shapes.geojson').then((r) => r.json()),
+    fetch(`/data/${cityId}.json`).then((r) => r.json()),
+    fetch(`/data/${cityId}-shapes.geojson`).then((r) => r.json()),
   ]);
   data = city;
+  OVERVIEW.center = city.city.center;
+  OVERVIEW.zoom = city.city.zoom || OVERVIEW.zoom;
+  const pick = $('city-pick');
+  pick.replaceChildren(...Object.entries(cities).map(([id, c]) => new Option(c.name, id, false, id === cityId)));
+  pick.onchange = () => { location.search = `?city=${pick.value}`; };
   byId = new Map(city.societies.map((s) => [s.id, s]));
-  $('city-name').textContent = city.city.name;
   $('note').textContent = `${city.counts.on_map.toLocaleString()} societies from Magicbricks · ${city.counts.verified} verified from brochures and HRERA plans · buildings from OpenStreetMap, approximate where unmapped`;
 
   feed = createFeed($('feed'), $('log-mode'), { events: city.events, byId });
