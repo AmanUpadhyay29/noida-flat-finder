@@ -66,6 +66,8 @@ def card_to_project(c):
         "price_max": _num(c.get("seoSMaxPrice")),
         "prop_types": c.get("psmcndproptypes"),
         "brochure_url": c.get("sblink"),
+        "card_units": parse_unit_info(c.get("unitInfo") or ""),
+        "type_codes": [t.strip() for t in str(c.get("ty") or "").split(",") if t.strip()],
         "url": "https://www.magicbricks.com/" + c["pdpUrl"],
     }
 
@@ -92,10 +94,8 @@ def parse_project_page(html):
     }
 
 
-def parse_configs(state):
-    """Unit types from mUnitInfo: [{bhk:int|None, sqft:float, kind:str}], plus per-BHK prices and plan image links."""
-    pdd = state.get("projectDetailData") or {}
-    raw = pdd.get("mUnitInfo") or ""
+def parse_unit_info(raw):
+    """'2 , 10002 , 1484  Sq-ft | ...' -> [{bhk, sqft, kind}]; entries without a size are dropped."""
     units = []
     for part in raw.split("|"):
         bits = [b.strip() for b in part.split(",")]
@@ -109,6 +109,13 @@ def parse_configs(state):
             "sqft": float(m.group(1)),
             "kind": bits[1],
         })
+    return units
+
+
+def parse_configs(state):
+    """Unit types from mUnitInfo plus per-BHK prices and plan image links."""
+    pdd = state.get("projectDetailData") or {}
+    units = parse_unit_info(pdd.get("mUnitInfo") or "")
     pricing = (state.get("projectPageSeoStaticData") or {}).get("pdpUnitPricing") or {}
     plans = {}
     for key, rows in pricing.items():

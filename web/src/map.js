@@ -1,7 +1,7 @@
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
-const COLORS = { match: '#ffd9a0', likely: '#c99a5c', unknown: '#3a3a41', no: '#1b1b1e' };
+const COLORS = { match: '#ffd9a0', likely: '#c99a5c', unknown: '#55545c', no: '#1b1b1e' };
 export const OVERVIEW = { center: [77.065, 28.425], zoom: 12.4, pitch: 52, bearing: -18 };
 
 const stateColor = (fallback) => ['case',
@@ -52,11 +52,11 @@ export function addSocietyLayers(map, shapes, points) {
   map.addLayer({ id: 'site-line', type: 'line', source: 'shapes', filter: ['==', ['get', 'role'], 'site'],
     paint: { 'line-color': stateColor(COLORS.match), 'line-blur': 1.5,
       'line-width': ['interpolate', ['linear'], ['zoom'], 11, 0.6, 16, 2],
-      'line-opacity': ['match', ['feature-state', 'st'], 'match', 0.9, 'likely', 0.7, 'unknown', 0.35, 'no', 0.05, 0.5] } });
+      'line-opacity': ['match', ['feature-state', 'st'], 'match', 0.9, 'likely', 0.7, 'unknown', 0.5, 'no', 0.05, 0.5] } });
   map.addLayer({ id: 'glow', type: 'circle', source: 'pts', maxzoom: 15.5,
     paint: { 'circle-color': stateColor(COLORS.match), 'circle-blur': 1,
-      'circle-radius': ['interpolate', ['linear'], ['zoom'], 9, 3, 12, 9, 15, 26],
-      'circle-opacity': ['match', ['feature-state', 'st'], 'match', 0.55, 'likely', 0.35, 'unknown', 0.08, 'no', 0, 0.25] } });
+      'circle-radius': ['interpolate', ['linear'], ['zoom'], 9, 2, 12, 6, 15, 24],
+      'circle-opacity': ['match', ['feature-state', 'st'], 'match', 0.5, 'likely', 0.35, 'unknown', 0.14, 'no', 0, 0.25] } });
   map.addLayer({ id: 'bld', type: 'fill-extrusion', source: 'shapes', minzoom: 11.5, filter: ['==', ['get', 'role'], 'bld'],
     paint: { 'fill-extrusion-color': stateColor(COLORS.match), 'fill-extrusion-height': ['get', 'h'], 'fill-extrusion-opacity': 0.95,
       'fill-extrusion-vertical-gradient': true } });
@@ -73,7 +73,7 @@ export function startPulse(map) {
   setInterval(() => {
     if (!map.getLayer('glow')) return;
     const k = 1 + 0.35 * Math.sin(performance.now() / 420);
-    map.setPaintProperty('glow', 'circle-radius', ['interpolate', ['linear'], ['zoom'], 9, 3 * k, 12, 9 * k, 15, 26 * k]);
+    map.setPaintProperty('glow', 'circle-radius', ['interpolate', ['linear'], ['zoom'], 9, 2 * k, 12, 6 * k, 15, 24 * k]);
   }, 80);
 }
 

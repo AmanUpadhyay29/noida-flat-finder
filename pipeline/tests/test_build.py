@@ -42,4 +42,26 @@ def test_neighbourhood_sized_area_is_not_a_society_site():
 def test_kind_from_unit_codes_when_text_missing():
     assert build_city.kind_of({"configs": {"units": [{"kind": "10000"}]}}) == "plot"
     assert build_city.kind_of({"configs": {"units": [{"kind": "10008"}, {"kind": "10002"}]}}) == "apartment"
-    assert build_city.kind_of({}) == "other"
+    assert build_city.kind_of({}) == "apartment~"
+
+
+def test_kind_from_card_type_codes():
+    assert build_city.kind_of({"type_codes": ["10000"]}) == "plot"
+    assert build_city.kind_of({"card_units": [{"kind": "10003", "bhk": 3, "sqft": 1900.0}]}) == "builder floor"
+
+
+def test_infer_kind_from_name():
+    assert build_city.kind_of({"name": "Sai Ram Apartment"}) == "apartment~"
+    assert build_city.kind_of({"name": "Rzone Land Plot"}) == "plot~"
+    assert build_city.kind_of({"name": "Emaar Business District 114"}) == "commercial~"
+    assert build_city.kind_of({"name": "Ashiana Villas"}) == "villa~"
+
+
+def test_match_verified_needs_whole_name_and_sector():
+    ps = [{"mb_id": 1, "name": "M3M", "locality": "Sector 65"},
+          {"mb_id": 2, "name": "M3M Heights", "locality": "Sector 65"},
+          {"mb_id": 3, "name": "M3M St Andrews at SCDA", "locality": "Sector 113"},
+          {"mb_id": 4, "name": "M3M St. Andrews", "locality": "Sector 65"}]
+    assert build_city.match_verified({"match": ["M3M Heights"], "sector": "65"}, ps)["mb_id"] == 2
+    assert build_city.match_verified({"match": ["M3M St Andrews"], "sector": "65"}, ps)["mb_id"] == 4
+    assert build_city.match_verified({"match": ["M3M Heights"], "sector": "65"}, ps, taken={2}) is None

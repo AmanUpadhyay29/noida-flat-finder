@@ -32,3 +32,10 @@ def test_flat_project_page():
     sizes = sorted((u["bhk"], u["sqft"]) for u in d["configs"]["units"])
     assert (4, 2740.0) in sizes and (2, 1296.0) in sizes
     assert d["configs"]["by_bhk"][3]["plan_images"][0].endswith(".jpg")
+
+
+def test_card_units_and_type_codes():
+    cards = {c["psmName"]: c for c in mb_parse.parse_list_page(read("mb_list.html"))}
+    p = mb_parse.card_to_project(cards["Ganga Anantam"])
+    assert p["card_units"][0] == {"bhk": 3, "sqft": 2050.0, "kind": "10002"}
+    assert p["type_codes"] == ["10002"]

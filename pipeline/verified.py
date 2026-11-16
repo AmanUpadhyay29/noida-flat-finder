@@ -50,7 +50,8 @@ def load_verified(path=FILE):
     for s in data["societies"]:
         out.append({
             "name": s["name"],
-            "match": [m.lower() for m in s.get("match", [s["name"]])],
+            "match": s.get("match", [s["name"]]),
+            "sector": s.get("sector"),
             "note": s.get("note"),
             "amen_facts": s.get("amenities", {}),
             "unit_types": [unit_from_verified(u) for u in s.get("unit_types", [])],

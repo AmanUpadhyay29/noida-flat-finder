@@ -25,18 +25,19 @@ def tokens(name):
 
 
 UNIT_KIND = {"10002": "apartment", "10021": "apartment", "10003": "builder floor", "10000": "plot", "10017": "villa",
-             "10007": "commercial", "10008": "commercial", "10009": "commercial", "10022": "commercial"}
+             "10007": "commercial", "10008": "commercial", "10009": "commercial", "10022": "apartment"}
 
 
 def kind_of(p):
     t = (p.get("config_text") or "").lower()
     if not t:
-        kinds = [UNIT_KIND.get(u["kind"], "other") for u in (p.get("configs") or {}).get("units", [])]
+        codes = [u["kind"] for u in (p.get("configs") or {}).get("units", []) or p.get("card_units") or []] + (p.get("type_codes") or [])
+        kinds = [UNIT_KIND.get(c, "other") for c in codes]
         if kinds:
             for k in ("apartment", "builder floor", "villa", "plot", "commercial"):
                 if k in kinds:
                     return k
-        return "other"
+        return infer_kind_from_name(p)
     if "apartment" in t or "penthouse" in t or "studio" in t or "flat" in t:
         return "apartment"
     if "floor" in t:
@@ -46,6 +47,22 @@ def kind_of(p):
     if "plot" in t or "land" in t:
         return "plot"
     return "apartment" if re.search(r"\bbhk\b", t) else "other"
+
+
+def infer_kind_from_name(p):
+    """Last resort when the portal gives no type. Marked as inferred on the card."""
+    n = " " + (p.get("name") or "").lower() + " "
+    if re.search(r"\b(plots?|land)\b", n):
+        return "plot~"
+    if re.search(r"\b(villas?|kothi|bungalows?)\b", n):
+        return "villa~"
+    if re.search(r"\bfloors?\b", n):
+        return "builder floor~"
+    if re.search(r"\b(business|centre|center|mall|plaza|office|offices|commercial|corporate|hotel|hub|arcade|market|retail|square|district|spaces?)\b", n) and not p.get("units"):
+        return "commercial~"
+    if re.search(r"\b(business|corporate|mall|office|commercial|district)\b", n):
+        return "commercial~"
+    return "apartment~"
 
 
 class Grid:
@@ -105,18 +122,27 @@ def dedupe(projects):
 
 def portal_units(p):
     units = []
-    for u in (p.get("configs") or {}).get("units", []):
+    for u in (p.get("configs") or {}).get("units", []) or p.get("card_units") or []:
         units.append({"label": f"{u['bhk']} BHK {int(u['sqft']):,} sq ft" if u["bhk"] else f"{int(u['sqft']):,} sq ft",
                       "bhk": u["bhk"], "size_sqft": u["sqft"], "bedrooms": [], "rooms_complete": False,
                       "confidence": "portal", "source": p["url"], "page": None})
     return units
 
 
-def match_verified(v, projects):
+def norm(name):
+    return " ".join(re.findall(r"[a-z0-9]+", (name or "").lower()))
+
+
+def match_verified(v, projects, taken=()):
+    """Portal project for a verified society: a match name must appear whole in the portal name, same sector if known."""
     best = None
     for p in projects:
-        n = p["name"].lower()
-        if any(m in n or n in m for m in v["match"]):
+        if p["mb_id"] in taken:
+            continue
+        if v.get("sector") and not re.search(rf"\b{v['sector']}\b", p.get("locality") or ""):
+            continue
+        n = f" {norm(p['name'])} "
+        if any(f" {norm(m)} " in n for m in v["match"]):
             if best is None or len(p["name"]) < len(best["name"]):
                 best = p
     return best
@@ -194,19 +220,24 @@ def main():
         s = {"id": f"s{p['mb_id']}", "name": p["name"], "developer": p.get("developer"), "locality": p.get("locality"),
              "lat": round(p["lat"], 6), "lng": round(p["lng"], 6), "status": p.get("status"), "possession": p.get("possession"),
              "rera_id": p.get("rera_id"), "units": p.get("units"), "towers": p.get("towers"), "acres": p.get("acres"),
-             "price_min": p.get("price_min"), "price_max": p.get("price_max"), "kind": kind_of(p),
+             "price_min": p.get("price_min"), "price_max": p.get("price_max"), "kind": kind_of(p).rstrip("~"),
+             "kind_inferred": kind_of(p).endswith("~"),
              "config_text": p.get("config_text"), "amenities": p.get("amenities") or [], "amen_facts": {},
              "unit_types": portal_units(p), "url": p["url"], "brochure_url": p.get("brochure_url"),
              "plan_links": {b: v["plan_images"] for b, v in ((p.get("configs") or {}).get("by_bhk") or {}).items() if v["plan_images"]},
              "verified": False, "note": None}
+        if s["towers"] and s["towers"] > 60:  # portal typo (e.g. 1500 towers): not plausible, drop it
+            s["towers"] = None
         p["_s"] = s
         societies.append(s)
 
+    taken = set()
     for v in ver:
-        p = match_verified(v, projects)
+        p = match_verified(v, projects, taken)
         if not p:
             print("verified society not found in portal data:", v["name"])
             continue
+        taken.add(p["mb_id"])
         s = p["_s"]
         s["verified"] = bool(v["unit_types"])
         s["note"] = v["note"]
@@ -233,6 +264,10 @@ def main():
             "sources": ["Magicbricks project pages", "OpenStreetMap contributors", "HRERA Gurugram", "Builder brochures (verified rows)"],
             "societies": societies, "events": events}
     (WEB / "gurgaon.json").write_text(json.dumps(city, separators=(",", ":")))
+    for f in shapes:
+        f["geometry"]["coordinates"] = [[[round(x, 5), round(y, 5)] for x, y in r] for r in f["geometry"]["coordinates"]]
+        if "h" in f["properties"]:
+            f["properties"]["h"] = round(f["properties"]["h"])
     (WEB / "gurgaon-shapes.geojson").write_text(json.dumps({"type": "FeatureCollection", "features": shapes}, separators=(",", ":")))
     from collections import Counter
     print(city["counts"], Counter(s["shape"] for s in societies), Counter(s["kind"] for s in societies), "features", len(shapes))

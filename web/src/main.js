@@ -244,7 +244,7 @@ function renderCard(s) {
     <button class="close" aria-label="Close">×</button>
     <div><span class="badge ${st}">${label}</span> ${s.verified ? '<span class="badge match">verified rows</span>' : ''}</div>
     <h2>${esc(s.name)}</h2>
-    <div class="meta">${esc(s.developer || '')}${s.locality ? ' · ' + esc(s.locality) : ''} · ${esc(s.config_text || s.kind)}</div>
+    <div class="meta">${esc(s.developer || '')}${s.locality ? ' · ' + esc(s.locality) : ''} · ${esc(s.config_text || s.kind)}${s.kind_inferred ? ' <span class="fine">(type inferred from name)</span>' : ''}</div>
     <div class="meta">${esc(facts2)} · ${esc(price)}</div>
     ${s.note ? `<div class="fine">${esc(s.note)}</div>` : ''}
     ${rows ? `<table><tr><th>Unit</th><th>Bedrooms</th><th></th><th>Source</th></tr>${rows}</table>` : '<div class="fine">No unit types listed.</div>'}
