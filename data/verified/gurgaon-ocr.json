@@ -253,7 +253,7 @@
 },
 "https://img.staticmb.com/mbimages/project/2024/04/30/Floor-Plan-24-AMBROSIA-Gurgaon-5420575_600_800.jpg": {
 "bedrooms": [],
-"n_sizes": 2,
+"n_sizes": 3,
 "bhk_listed": 4,
 "sid": "s5420575",
 "status": "bedrooms not found"
@@ -274,10 +274,10 @@
 },
 "https://img.staticmb.com/mbimages/project/2019/09/18/Floor-Plan-6-The-Meridian-Gurgaon-5126355_600_800.jpg": {
 "bedrooms": [],
-"n_sizes": 0,
+"n_sizes": 1,
 "bhk_listed": 2,
 "sid": "s5126355",
-"status": "no sizes printed"
+"status": "bedrooms not found"
 },
 "https://img.staticmb.com/mbimages/project/2022/09/26/Floor-Plan-24-Shapoorji-Pallonji-Joyville-Gurgaon-5119853_1200_1600.jpg": {
 "bedrooms": [],
@@ -294,11 +294,20 @@
 "status": "no sizes printed"
 },
 "https://img.staticmb.com/mbimages/project/2022/09/26/Floor-Plan-26-Shapoorji-Pallonji-Joyville-Gurgaon-5119853_1200_1600.jpg": {
-"bedrooms": [],
-"n_sizes": 0,
+"bedrooms": [
+{
+"label": "BED ROOM - 2",
+"ft": [
+11.25,
+18.0
+]
+}
+],
+"n_sizes": 1,
 "bhk_listed": 3,
 "sid": "s5119853",
-"status": "no sizes printed"
+"min_short": 11.25,
+"status": "found 1 bedrooms for 3 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2022/09/26/Floor-Plan-27-Shapoorji-Pallonji-Joyville-Gurgaon-5119853_1200_1600.jpg": {
 "bedrooms": [],
@@ -308,11 +317,21 @@
 "status": "no sizes printed"
 },
 "https://img.staticmb.com/mbimages/project/2019/03/25/Floor-Plan-9-Rof-Ananda-Gurgaon-5096753_600_800.jpg": {
-"bedrooms": [],
-"n_sizes": 0,
+"bedrooms": [
+{
+"label": "BED ROOM",
+"ft": [
+10.083,
+12.167
+]
+}
+],
+"n_sizes": 1,
 "bhk_listed": 1,
 "sid": "s5096753",
-"status": "no sizes printed"
+"min_short": 10.083,
+"status": "read",
+"checked_by": "OCR + Jev"
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-3-Rof-Ananda-Gurgaon-5096753_600_800.jpg": {
 "bedrooms": [],
@@ -359,21 +378,11 @@
 "status": "bedrooms not found"
 },
 "https://img.staticmb.com/mbimages/project/2025/05/07/Floor-Plan-18-Breez-Global-Heights-Gurgaon-5079077_475_544.jpg": {
-"bedrooms": [
-{
-"label": "BED ROOM",
-"ft": [
-6.627,
-9.268
-]
-}
-],
+"bedrooms": [],
 "n_sizes": 1,
 "bhk_listed": 1,
 "sid": "s5079077",
-"min_short": 6.627,
-"status": "read",
-"checked_by": "OCR"
+"status": "bedrooms not found"
 },
 "https://img.staticmb.com/mbimages/project/2025/05/07/Floor-Plan-20-Breez-Global-Heights-Gurgaon-5079077_447_575.jpg": {
 "bedrooms": [],
@@ -480,7 +489,7 @@
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-6-Urban-Homes-Gurgaon-5073116_600_800.jpg": {
 "bedrooms": [],
-"n_sizes": 2,
+"n_sizes": 3,
 "bhk_listed": 1,
 "sid": "s5073116",
 "status": "bedrooms not found"
@@ -902,7 +911,7 @@
 ]
 }
 ],
-"n_sizes": 3,
+"n_sizes": 4,
 "bhk_listed": 3,
 "sid": "s5421725",
 "min_short": 10.991,
@@ -1251,11 +1260,20 @@
 "status": "found 3 bedrooms for 4 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2025/01/31/Floor-Plan-70-Paras-Dews-Gurgaon-5010303_561_511.jpg": {
-"bedrooms": [],
-"n_sizes": 2,
+"bedrooms": [
+{
+"label": "BEDROOM",
+"ft": [
+10.0,
+11.792
+]
+}
+],
+"n_sizes": 3,
 "bhk_listed": 2,
 "sid": "s5010303",
-"status": "bedrooms not found"
+"min_short": 10.0,
+"status": "found 1 bedrooms for 2 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2025/01/31/Floor-Plan-71-Paras-Dews-Gurgaon-5010303_592_597.jpg": {
 "bedrooms": [
@@ -1299,7 +1317,7 @@
 ]
 }
 ],
-"n_sizes": 4,
+"n_sizes": 5,
 "bhk_listed": 3,
 "sid": "s5010303",
 "min_short": 11.25,
@@ -1668,11 +1686,20 @@
 "status": "found 1 bedrooms for 2 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2025/12/17/Floor-Plan-29-Suncity-Vatsal-Valley-Gurgaon-5331401_838_1297.jpg": {
-"bedrooms": [],
+"bedrooms": [
+{
+"label": "Bedroom-2",
+"ft": [
+10.333,
+12.083
+]
+}
+],
 "n_sizes": 2,
 "bhk_listed": 2,
 "sid": "s5331401",
-"status": "bedrooms not found"
+"min_short": 10.333,
+"status": "found 1 bedrooms for 2 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2022/07/19/Floor-Plan-3-Suncity-Vatsal-Valley-Gurgaon-5331401_1200_1600.jpg": {
 "bedrooms": [
@@ -1682,13 +1709,20 @@
 10.958,
 13.878
 ]
+},
+{
+"label": "Bedroom-3",
+"ft": [
+8.833,
+9.833
+]
 }
 ],
 "n_sizes": 8,
 "bhk_listed": 3,
 "sid": "s5331401",
-"min_short": 10.958,
-"status": "found 1 bedrooms for 3 BHK"
+"min_short": 8.833,
+"status": "found 2 bedrooms for 3 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2025/12/17/Floor-Plan-1-Ashiana-Mulberry-Phase-4-Gurgaon-5440863_1200_1600.jpg": {
 "bedrooms": [
@@ -1714,7 +1748,7 @@
 ]
 }
 ],
-"n_sizes": 6,
+"n_sizes": 8,
 "bhk_listed": 3,
 "sid": "s5440863",
 "min_short": 10.5,
@@ -1895,7 +1929,7 @@
 },
 "https://img.staticmb.com/mbimages/project/2024/10/11/Floor-Plan-19-4S-The-Aurrum-Gurgaon-5423379_1200_1600.jpg": {
 "bedrooms": [],
-"n_sizes": 2,
+"n_sizes": 4,
 "bhk_listed": 4,
 "sid": "s5423379",
 "status": "bedrooms not found"
@@ -1964,7 +1998,7 @@
 },
 "https://img.staticmb.com/mbimages/project/2025/09/13/Floor-Plan-45-Adani-Samsara-Vilasa-Gurgaon-5123147_611_884.jpg": {
 "bedrooms": [],
-"n_sizes": 6,
+"n_sizes": 7,
 "bhk_listed": 3,
 "sid": "s5123147",
 "status": "bedrooms not found"
@@ -2250,8 +2284,8 @@
 {
 "label": "Bedroom 1",
 "ft": [
-12.959,
-14.026
+13.0,
+19.333
 ]
 },
 {
@@ -2459,11 +2493,21 @@
 "checked_by": "OCR"
 },
 "https://img.staticmb.com/mbimages/project/2026/10/14/Floor-Plan-84-Manor-One-Gurgaon-5021309_438_516.JPG": {
-"bedrooms": [],
-"n_sizes": 1,
+"bedrooms": [
+{
+"label": "BEDROOM",
+"ft": [
+9.0,
+15.0
+]
+}
+],
+"n_sizes": 2,
 "bhk_listed": 1,
 "sid": "s5021309",
-"status": "bedrooms not found"
+"min_short": 9.0,
+"status": "OCR and Jev disagree",
+"jev_min_short": 11.75
 },
 "https://img.staticmb.com/mbimages/project/2026/10/14/Floor-Plan-85-Manor-One-Gurgaon-5021309_445_324.JPG": {
 "bedrooms": [],
@@ -3008,7 +3052,7 @@
 ]
 }
 ],
-"n_sizes": 8,
+"n_sizes": 9,
 "bhk_listed": 3,
 "sid": "s5428265",
 "min_short": 10.991,
@@ -3265,20 +3309,11 @@
 "status": "bedrooms not found"
 },
 "https://img.staticmb.com/mbimages/project/2022/08/27/Floor-Plan-7-ROF-Ambliss-Gurgaon-5335483_383_586.jpg": {
-"bedrooms": [
-{
-"label": "BEDROOM 2",
-"ft": [
-10.0,
-10.25
-]
-}
-],
-"n_sizes": 2,
+"bedrooms": [],
+"n_sizes": 3,
 "bhk_listed": 2,
 "sid": "s5335483",
-"min_short": 10.0,
-"status": "found 1 bedrooms for 2 BHK"
+"status": "bedrooms not found"
 },
 "https://img.staticmb.com/mbimages/project/2022/08/27/Floor-Plan-3-ROF-Ambliss-Gurgaon-5335483_386_578.jpg": {
 "bedrooms": [],
@@ -3508,7 +3543,7 @@
 },
 "https://img.staticmb.com/mbimages/project/2026/05/07/Floor-Plan-14-Revanta-Gurgaon-5019236_782_800.jpg": {
 "bedrooms": [],
-"n_sizes": 1,
+"n_sizes": 2,
 "bhk_listed": 1,
 "sid": "s5019236",
 "status": "bedrooms not found"
@@ -3523,7 +3558,7 @@
 ]
 }
 ],
-"n_sizes": 2,
+"n_sizes": 3,
 "bhk_listed": 2,
 "sid": "s5019236",
 "min_short": 10.667,
@@ -4181,11 +4216,20 @@
 "status": "found 2 bedrooms for 4 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2025/09/02/Floor-Plan-101-SS-Almeria-Gurgaon-5017703_745_1150.jpg": {
-"bedrooms": [],
-"n_sizes": 1,
+"bedrooms": [
+{
+"label": "M. BED ROOM",
+"ft": [
+12.0,
+16.333
+]
+}
+],
+"n_sizes": 2,
 "bhk_listed": 3,
 "sid": "s5017703",
-"status": "bedrooms not found"
+"min_short": 12.0,
+"status": "found 1 bedrooms for 5 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2024/07/01/Floor-Plan-3-Vatika-India-Next-2--Gurgaon-5336819_600_354.jpg": {
 "status": "no image",
@@ -4251,10 +4295,10 @@
 },
 "https://img.staticmb.com/mbimages/project/2025/05/01/Floor-Plan-12-Conscient-Elaira-Residences-Phase-1-Gurgaon-5431123_1200_1600.jpg": {
 "bedrooms": [],
-"n_sizes": 0,
+"n_sizes": 1,
 "bhk_listed": 3,
 "sid": "s5431123",
-"status": "no sizes printed"
+"status": "bedrooms not found"
 },
 "https://img.staticmb.com/mbimages/project/2025/05/01/Floor-Plan-13-Conscient-Elaira-Residences-Phase-1-Gurgaon-5431123_1200_1600.jpg": {
 "bedrooms": [
@@ -5021,7 +5065,7 @@
 ]
 }
 ],
-"n_sizes": 10,
+"n_sizes": 12,
 "bhk_listed": 3,
 "sid": "s5206445",
 "min_short": 10.007,
@@ -5163,7 +5207,7 @@
 ]
 }
 ],
-"n_sizes": 2,
+"n_sizes": 3,
 "bhk_listed": 3,
 "sid": "s5230193",
 "min_short": 10.167,
@@ -5720,13 +5764,6 @@
 "https://img.staticmb.com/mbimages/project/2024/10/25/Floor-Plan-6-Godrej-Miraya-Gurgaon-5424303_1200_1600.jpg": {
 "bedrooms": [
 {
-"label": "BEDROOM-1",
-"ft": [
-12.484,
-15.83
-]
-},
-{
 "label": "M. BEDROOM",
 "ft": [
 13.173,
@@ -5745,8 +5782,7 @@
 "bhk_listed": 3,
 "sid": "s5424303",
 "min_short": 11.975,
-"status": "read",
-"checked_by": "OCR"
+"status": "found 2 bedrooms for 3 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2024/10/25/Floor-Plan-4-Godrej-Miraya-Gurgaon-5424303_1200_1600.jpg": {
 "bedrooms": [
@@ -5796,13 +5832,6 @@
 ]
 },
 {
-"label": "M. BEDROOM",
-"ft": [
-6.667,
-10.5
-]
-},
-{
 "label": "BEDROOM-2",
 "ft": [
 12.139,
@@ -5820,9 +5849,8 @@
 "n_sizes": 26,
 "bhk_listed": 4,
 "sid": "s5424303",
-"min_short": 6.667,
-"status": "read",
-"checked_by": "OCR"
+"min_short": 12.083,
+"status": "found 3 bedrooms for 4 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2024/05/18/Floor-Plan-13-GLS-Avenue-51-Gurgaon-5098499_518_470.jpg": {
 "bedrooms": [
@@ -6058,20 +6086,11 @@
 "status": "no sizes printed"
 },
 "https://img.staticmb.com/mbimages/project/2025/10/23/Floor-Plan-26-Elevate-Gurgaon-5124839_1732_1500.jpg": {
-"bedrooms": [
-{
-"label": "BEDROOM-2",
-"ft": [
-10.833,
-14.833
-]
-}
-],
+"bedrooms": [],
 "n_sizes": 4,
 "bhk_listed": 3,
 "sid": "s5124839",
-"min_short": 10.833,
-"status": "found 1 bedrooms for 3 BHK"
+"status": "bedrooms not found"
 },
 "https://img.staticmb.com/mbimages/project/2025/10/23/Floor-Plan-27-Elevate-Gurgaon-5124839_1732_1500.jpg": {
 "bedrooms": [
@@ -6146,7 +6165,7 @@
 ]
 }
 ],
-"n_sizes": 1,
+"n_sizes": 3,
 "bhk_listed": 3,
 "sid": "s5130041",
 "min_short": 10.0,
@@ -6176,7 +6195,7 @@
 ]
 }
 ],
-"n_sizes": 13,
+"n_sizes": 14,
 "bhk_listed": 3,
 "sid": "s5419857",
 "min_short": 10.991,
@@ -6195,8 +6214,8 @@
 {
 "label": "M.BEDROOM",
 "ft": [
-10.991,
-14.009
+11.0,
+12.0
 ]
 },
 {
@@ -6269,7 +6288,7 @@
 ]
 }
 ],
-"n_sizes": 6,
+"n_sizes": 7,
 "bhk_listed": 2,
 "sid": "s5099887",
 "min_short": 10.007,
@@ -6348,7 +6367,7 @@
 ]
 }
 ],
-"n_sizes": 8,
+"n_sizes": 10,
 "bhk_listed": 3,
 "sid": "s5099887",
 "min_short": 9.055,
@@ -6707,7 +6726,7 @@
 ]
 }
 ],
-"n_sizes": 2,
+"n_sizes": 3,
 "bhk_listed": 2,
 "sid": "s5124659",
 "min_short": 10.991,
@@ -7007,18 +7026,43 @@
 "status": "bedrooms not found"
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-47-The-Peaceful-Homes-Gurgaon-5024060_718_1200.jpg": {
-"bedrooms": [],
+"bedrooms": [
+{
+"label": "G. M. Bedroom",
+"ft": [
+12.083,
+13.75
+]
+},
+{
+"label": "M. Bedroom 03",
+"ft": [
+11.083,
+13.167
+]
+}
+],
 "n_sizes": 4,
 "bhk_listed": 3,
 "sid": "s5024060",
-"status": "bedrooms not found"
+"min_short": 11.083,
+"status": "found 2 bedrooms for 3 BHK"
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-43-The-Peaceful-Homes-Gurgaon-5024060_713_1200.jpg": {
-"bedrooms": [],
-"n_sizes": 6,
+"bedrooms": [
+{
+"label": "Bedroom 04",
+"ft": [
+11.083,
+13.167
+]
+}
+],
+"n_sizes": 7,
 "bhk_listed": 4,
 "sid": "s5024060",
-"status": "bedrooms not found"
+"min_short": 11.083,
+"status": "found 1 bedrooms for 4 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2023/01/18/Floor-Plan-20-Smart-World-One-DXP-Gurgaon-5390339_1200_1600.jpg": {
 "bedrooms": [
@@ -7144,10 +7188,10 @@
 },
 "https://img.staticmb.com/mbimages/project/2024/03/05/Floor-Plan-38-Aradhya-Homes-Gurgaon-5241907_501_300.jpg": {
 "bedrooms": [],
-"n_sizes": 0,
+"n_sizes": 1,
 "bhk_listed": 4,
 "sid": "s5241907",
-"status": "no sizes printed"
+"status": "bedrooms not found"
 },
 "https://img.staticmb.com/mbimages/project/2025/04/03/Floor-Plan-27-M3M-Antalya-Hills-Phase-I-Gurgaon-5390251_636_373.jpg": {
 "bedrooms": [
@@ -7625,7 +7669,7 @@
 ]
 }
 ],
-"n_sizes": 6,
+"n_sizes": 7,
 "bhk_listed": 2,
 "sid": "s5185227",
 "min_short": 10.991,
@@ -7656,7 +7700,7 @@
 ]
 }
 ],
-"n_sizes": 7,
+"n_sizes": 8,
 "bhk_listed": 3,
 "sid": "s5185227",
 "min_short": 10.991,
@@ -7865,10 +7909,10 @@
 },
 "https://img.staticmb.com/mbimages/project/2025/02/20/Floor-Plan-107-Emaar-MGF-Palm-Hills-Gurgaon-5022491_733_424.jpg": {
 "bedrooms": [],
-"n_sizes": 0,
+"n_sizes": 1,
 "bhk_listed": 3,
 "sid": "s5022491",
-"status": "no sizes printed"
+"status": "bedrooms not found"
 },
 "https://img.staticmb.com/mbimages/project/2025/09/15/Floor-Plan-86-Emaar-MGF-Palm-Hills-Gurgaon-5022491_709_573.jpg": {
 "bedrooms": [],
@@ -7887,7 +7931,7 @@
 ]
 }
 ],
-"n_sizes": 1,
+"n_sizes": 2,
 "bhk_listed": 4,
 "sid": "s5022491",
 "min_short": 12.667,
@@ -8087,11 +8131,20 @@
 "status": "no sizes printed"
 },
 "https://img.staticmb.com/mbimages/project/2025/09/29/Floor-Plan-30-Ashiana-Mulberry-Gurgaon-5078819_605_747.jpg": {
-"bedrooms": [],
-"n_sizes": 3,
+"bedrooms": [
+{
+"label": "M.BEDROOM",
+"ft": [
+11.0,
+14.0
+]
+}
+],
+"n_sizes": 4,
 "bhk_listed": 2,
 "sid": "s5078819",
-"status": "bedrooms not found"
+"min_short": 11.0,
+"status": "found 1 bedrooms for 2 BHK"
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-60-Ashiana-Mulberry-Gurgaon-5078819_652_675.JPG": {
 "bedrooms": [],
@@ -8124,13 +8177,6 @@
 ]
 },
 {
-"label": "M.BEDROOM",
-"ft": [
-6.333,
-8.167
-]
-},
-{
 "label": "BEDROOM",
 "ft": [
 11.04,
@@ -8141,9 +8187,8 @@
 "n_sizes": 16,
 "bhk_listed": 3,
 "sid": "s5010556",
-"min_short": 6.333,
-"status": "read",
-"checked_by": "OCR"
+"min_short": 11.04,
+"status": "found 2 bedrooms for 3 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2026/04/30/Floor-Plan-40-Sovereign-Park-Gurgaon-5010556_2000_1414.jpg": {
 "bedrooms": [
@@ -8327,14 +8372,14 @@
 },
 "https://img.staticmb.com/mbimages/project/2018/04/19/Floor-Plan-31-HCBS-Sports-Ville-Gurgaon-5078597_500_850.jpg": {
 "bedrooms": [],
-"n_sizes": 1,
+"n_sizes": 2,
 "bhk_listed": 2,
 "sid": "s5078597",
 "status": "bedrooms not found"
 },
 "https://img.staticmb.com/mbimages/project/2018/04/19/Floor-Plan-32-HCBS-Sports-Ville-Gurgaon-5078597_500_850.jpg": {
 "bedrooms": [],
-"n_sizes": 1,
+"n_sizes": 2,
 "bhk_listed": 2,
 "sid": "s5078597",
 "status": "bedrooms not found"
@@ -8445,20 +8490,13 @@
 },
 "https://img.staticmb.com/mbimages/project/2025/11/24/Floor-Plan-75-Godrej-Meridien-Gurgaon-5115823_1275_1650.jpg": {
 "bedrooms": [],
-"n_sizes": 5,
+"n_sizes": 6,
 "bhk_listed": 2,
 "sid": "s5115823",
 "status": "bedrooms not found"
 },
 "https://img.staticmb.com/mbimages/project/2025/11/24/Floor-Plan-76-Godrej-Meridien-Gurgaon-5115823_1275_1650.jpg": {
 "bedrooms": [
-{
-"label": "BED ROOM 2",
-"ft": [
-6.75,
-6.75
-]
-},
 {
 "label": "MASTER BED ROOM",
 "ft": [
@@ -8477,9 +8515,8 @@
 "n_sizes": 17,
 "bhk_listed": 3,
 "sid": "s5115823",
-"min_short": 6.75,
-"status": "read",
-"checked_by": "OCR"
+"min_short": 11.0,
+"status": "found 2 bedrooms for 3 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2024/06/13/Floor-Plan-18-Krisumi-Waterside-Residences-Gurgaon-5421483_1200_1600.jpg": {
 "bedrooms": [],
@@ -9209,7 +9246,7 @@
 ]
 }
 ],
-"n_sizes": 19,
+"n_sizes": 20,
 "bhk_listed": 3,
 "sid": "s5111897",
 "min_short": 11.5,
@@ -9397,7 +9434,7 @@
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-7-BPTP-Spacio-Gurgaon-5001120_515_777.jpg": {
 "bedrooms": [],
-"n_sizes": 2,
+"n_sizes": 3,
 "bhk_listed": 3,
 "sid": "s5001120",
 "status": "bedrooms not found"
@@ -9538,6 +9575,37 @@
 "label": "BEDROOM",
 "ft": [
 10.0,
+13.0
+]
+},
+{
+"label": "BEDROOM",
+"ft": [
+10.0,
+12.0
+]
+},
+{
+"label": "BEDROOM",
+"ft": [
+10.0,
+14.0
+]
+}
+],
+"n_sizes": 6,
+"bhk_listed": 3,
+"sid": "s5028210",
+"min_short": 10.0,
+"status": "read",
+"checked_by": "OCR + Jev"
+},
+"https://img.staticmb.com/mbimages/project/2021/03/05/Floor-Plan-45-Mapsko-Mountville-Gurgaon-5028210_3901_3920.jpg": {
+"bedrooms": [
+{
+"label": "BEDROOM",
+"ft": [
+10.0,
 12.0
 ]
 },
@@ -9562,13 +9630,6 @@
 "min_short": 10.0,
 "status": "read",
 "checked_by": "OCR + Jev"
-},
-"https://img.staticmb.com/mbimages/project/2021/03/05/Floor-Plan-45-Mapsko-Mountville-Gurgaon-5028210_3901_3920.jpg": {
-"bedrooms": [],
-"n_sizes": 3,
-"bhk_listed": 3,
-"sid": "s5028210",
-"status": "bedrooms not found"
 },
 "https://img.staticmb.com/mbimages/project/2021/03/05/Floor-Plan-48-Mapsko-Mountville-Gurgaon-5028210_3885_4072.jpg": {
 "bedrooms": [
@@ -9598,6 +9659,13 @@
 {
 "label": "BEDROOM",
 "ft": [
+10.0,
+13.0
+]
+},
+{
+"label": "BEDROOM",
+"ft": [
 11.0,
 14.0
 ]
@@ -9608,19 +9676,12 @@
 12.0,
 18.0
 ]
-},
-{
-"label": "BEDROOM",
-"ft": [
-11.0,
-15.0
-]
 }
 ],
 "n_sizes": 7,
 "bhk_listed": 4,
 "sid": "s5028210",
-"min_short": 11.0,
+"min_short": 10.0,
 "status": "found 3 bedrooms for 4 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2021/03/05/Floor-Plan-52-Mapsko-Mountville-Gurgaon-5028210_3889_3952.jpg": {
@@ -9631,13 +9692,20 @@
 10.0,
 13.0
 ]
+},
+{
+"label": "BEDROOM",
+"ft": [
+11.0,
+14.0
+]
 }
 ],
-"n_sizes": 5,
+"n_sizes": 9,
 "bhk_listed": 4,
 "sid": "s5028210",
 "min_short": 10.0,
-"status": "found 1 bedrooms for 4 BHK"
+"status": "found 2 bedrooms for 4 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2022/05/03/Floor-Plan-10-Godrej-Serenity--Gurgaon-5293533_1200_1600.jpg": {
 "bedrooms": [],
@@ -9898,7 +9966,7 @@
 ]
 }
 ],
-"n_sizes": 3,
+"n_sizes": 4,
 "bhk_listed": 3,
 "sid": "s5028410",
 "min_short": 10.0,
@@ -9949,7 +10017,7 @@
 ]
 }
 ],
-"n_sizes": 6,
+"n_sizes": 7,
 "bhk_listed": 1,
 "sid": "s5327203",
 "min_short": 10.007,
@@ -10256,7 +10324,7 @@
 ]
 }
 ],
-"n_sizes": 1,
+"n_sizes": 2,
 "bhk_listed": 2,
 "sid": "s5439155",
 "min_short": 12.0,
@@ -10746,7 +10814,7 @@
 ]
 }
 ],
-"n_sizes": 33,
+"n_sizes": 34,
 "bhk_listed": 4,
 "sid": "s5148805",
 "min_short": 11.975,
@@ -10809,13 +10877,21 @@
 10.0,
 12.0
 ]
+},
+{
+"label": "MASTER BEDROOM",
+"ft": [
+10.0,
+15.083
+]
 }
 ],
-"n_sizes": 2,
+"n_sizes": 3,
 "bhk_listed": 2,
 "sid": "s5042195",
 "min_short": 10.0,
-"status": "found 1 bedrooms for 2 BHK"
+"status": "read",
+"checked_by": "OCR + Jev"
 },
 "https://img.staticmb.com/mbimages/project/2025/09/26/Floor-Plan-22-The-Melia-Gurgaon-5042195_604_982.jpg": {
 "bedrooms": [
@@ -10988,21 +11064,13 @@
 11.975,
 14.026
 ]
-},
-{
-"label": "BEDROOM",
-"ft": [
-6.0,
-9.0
-]
 }
 ],
 "n_sizes": 15,
 "bhk_listed": 4,
 "sid": "s5401899",
-"min_short": 6.0,
-"status": "OCR and Jev disagree",
-"jev_min_short": 12.0
+"min_short": 11.975,
+"status": "found 3 bedrooms for 4 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2025/09/27/Floor-Plan-77-ILD-Grand-Centra-Gurgaon-5042626_337_600.jpg": {
 "bedrooms": [],
@@ -11084,7 +11152,7 @@
 ]
 }
 ],
-"n_sizes": 13,
+"n_sizes": 14,
 "bhk_listed": 4,
 "sid": "s5405051",
 "min_short": 10.827,
@@ -11131,13 +11199,6 @@
 "https://img.staticmb.com/mbimages/project/2023/05/01/Floor-Plan-14-Samsara-Avasa-Gurgaon-5405051_1200_1600.jpg": {
 "bedrooms": [
 {
-"label": "BEDROOM-3",
-"ft": [
-10.991,
-12.992
-]
-},
-{
 "label": "BEDROOM-2",
 "ft": [
 10.991,
@@ -11159,12 +11220,11 @@
 ]
 }
 ],
-"n_sizes": 13,
+"n_sizes": 14,
 "bhk_listed": 4,
 "sid": "s5405051",
 "min_short": 10.827,
-"status": "read",
-"checked_by": "OCR"
+"status": "found 3 bedrooms for 4 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2025/09/27/Floor-Plan-24-Vatika-Seven-Elements-Gurgaon-5066134_664_856.jpg": {
 "bedrooms": [],
@@ -11312,7 +11372,7 @@
 ]
 }
 ],
-"n_sizes": 8,
+"n_sizes": 9,
 "bhk_listed": 3,
 "sid": "s5023539",
 "min_short": 10.991,
@@ -11366,7 +11426,7 @@
 ]
 }
 ],
-"n_sizes": 14,
+"n_sizes": 18,
 "bhk_listed": 4,
 "sid": "s5023539",
 "min_short": 11.122,
@@ -11494,10 +11554,10 @@
 },
 "https://img.staticmb.com/mbimages/project/2025/09/12/Floor-Plan-57-Orchid-Island-Gurgaon-5000579_592_1001.jpg": {
 "bedrooms": [],
-"n_sizes": 0,
+"n_sizes": 1,
 "bhk_listed": 2,
 "sid": "s5000579",
-"status": "no sizes printed"
+"status": "bedrooms not found"
 },
 "https://img.staticmb.com/mbimages/project/2025/09/12/Floor-Plan-53-Orchid-Island-Gurgaon-5000579_544_845.jpg": {
 "bedrooms": [],
@@ -12147,7 +12207,7 @@
 ]
 }
 ],
-"n_sizes": 2,
+"n_sizes": 3,
 "bhk_listed": 4,
 "sid": "s5022933",
 "min_short": 11.0,
@@ -12436,7 +12496,7 @@
 ]
 }
 ],
-"n_sizes": 2,
+"n_sizes": 3,
 "bhk_listed": 3,
 "sid": "s5009907",
 "min_short": 10.0,
@@ -12746,7 +12806,7 @@
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-51-Green-Court-Gurgaon-5073754_586_311.JPG": {
 "bedrooms": [],
-"n_sizes": 1,
+"n_sizes": 2,
 "bhk_listed": 2,
 "sid": "s5073754",
 "status": "bedrooms not found"
@@ -13029,7 +13089,7 @@
 ]
 }
 ],
-"n_sizes": 2,
+"n_sizes": 3,
 "bhk_listed": 3,
 "sid": "s5019342",
 "min_short": 12.0,
@@ -13280,7 +13340,7 @@
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-44-Unitech-South-Park-Gurgaon-5017080_752_800.JPG": {
 "bedrooms": [],
-"n_sizes": 3,
+"n_sizes": 4,
 "bhk_listed": 2,
 "sid": "s5017080",
 "status": "bedrooms not found"
@@ -13340,7 +13400,7 @@
 ]
 }
 ],
-"n_sizes": 4,
+"n_sizes": 5,
 "bhk_listed": 3,
 "sid": "s5017080",
 "min_short": 10.083,
@@ -13528,7 +13588,7 @@
 ]
 }
 ],
-"n_sizes": 6,
+"n_sizes": 7,
 "bhk_listed": 3,
 "sid": "s5001751",
 "min_short": 10.499,
@@ -13552,7 +13612,7 @@
 ]
 }
 ],
-"n_sizes": 6,
+"n_sizes": 7,
 "bhk_listed": 4,
 "sid": "s5001751",
 "min_short": 12.369,
@@ -13756,16 +13816,24 @@
 {
 "label": "BEDROOM",
 "ft": [
+12.0,
+14.667
+]
+},
+{
+"label": "BEDROOM",
+"ft": [
 10.499,
 12.041
 ]
 }
 ],
-"n_sizes": 1,
+"n_sizes": 3,
 "bhk_listed": 2,
 "sid": "s5024306",
 "min_short": 10.499,
-"status": "found 1 bedrooms for 2 BHK"
+"status": "read",
+"checked_by": "OCR"
 },
 "https://img.staticmb.com/mbimages/project/2025/09/15/Floor-Plan-17-IREO-Uptown-Gurgaon-5024306_531_730.jpg": {
 "bedrooms": [
@@ -13854,7 +13922,7 @@
 },
 "https://img.staticmb.com/mbimages/project/2025/07/27/Floor-Plan-23-M3M-Polo-Suites-Gurgaon-5000729_772_922.jpg": {
 "bedrooms": [],
-"n_sizes": 2,
+"n_sizes": 3,
 "bhk_listed": 3,
 "sid": "s5000729",
 "status": "bedrooms not found"
@@ -14058,7 +14126,7 @@
 ]
 }
 ],
-"n_sizes": 5,
+"n_sizes": 6,
 "bhk_listed": 4,
 "sid": "s5000688",
 "min_short": 13.333,
@@ -14113,13 +14181,21 @@
 10.0,
 10.083
 ]
+},
+{
+"label": "BED ROOM",
+"ft": [
+10.0,
+10.0
+]
 }
 ],
-"n_sizes": 3,
+"n_sizes": 4,
 "bhk_listed": 2,
 "sid": "s5077184",
 "min_short": 10.0,
-"status": "found 1 bedrooms for 2 BHK"
+"status": "read",
+"checked_by": "OCR + Jev"
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-9-Andour-Heights-Gurgaon-5077184_700_600.jpg": {
 "bedrooms": [
@@ -14218,16 +14294,23 @@
 {
 "label": "BEDROOM",
 "ft": [
+12.583,
+16.0
+]
+},
+{
+"label": "BEDROOM",
+"ft": [
 12.369,
 13.78
 ]
 }
 ],
-"n_sizes": 6,
+"n_sizes": 7,
 "bhk_listed": 4,
 "sid": "s5001040",
 "min_short": 12.369,
-"status": "found 1 bedrooms for 4 BHK"
+"status": "found 2 bedrooms for 4 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2025/08/07/Floor-Plan-16-Central-Park-Flower-Valley-Flamingo-Floor-Gurgaon-5099323_675_418.jpg": {
 "bedrooms": [],
@@ -14245,7 +14328,7 @@
 },
 "https://img.staticmb.com/mbimages/project/2025/06/23/Floor-Plan-35-The-Primus-Gurgaon-5001029_649_765.jpg": {
 "bedrooms": [],
-"n_sizes": 2,
+"n_sizes": 3,
 "bhk_listed": 2,
 "sid": "s5001029",
 "status": "bedrooms not found"
@@ -14323,7 +14406,7 @@
 ]
 }
 ],
-"n_sizes": 5,
+"n_sizes": 6,
 "bhk_listed": 4,
 "sid": "s5000590",
 "min_short": 10.5,
@@ -14527,20 +14610,13 @@
 11.5,
 14.667
 ]
-},
-{
-"label": "BEDROOM",
-"ft": [
-6.0,
-12.0
-]
 }
 ],
 "n_sizes": 5,
 "bhk_listed": 4,
 "sid": "s5000532",
-"min_short": 6.0,
-"status": "found 2 bedrooms for 4 BHK"
+"min_short": 11.5,
+"status": "found 1 bedrooms for 4 BHK"
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-60-Pioneer-Park-Presidia-Gurgaon-5000532_448_761.jpg": {
 "bedrooms": [],
@@ -14743,7 +14819,7 @@
 },
 "https://img.staticmb.com/mbimages/project/2019/11/22/Floor-Plan-11-Ikonic-At-M3M-The-Marina-Gurgaon-5127535_614_943.jpg": {
 "bedrooms": [],
-"n_sizes": 1,
+"n_sizes": 2,
 "bhk_listed": 3,
 "sid": "s5127535",
 "status": "bedrooms not found"
@@ -14830,7 +14906,7 @@
 ]
 }
 ],
-"n_sizes": 2,
+"n_sizes": 3,
 "bhk_listed": 4,
 "sid": "s5000128",
 "min_short": 11.0,
@@ -15131,6 +15207,13 @@
 "https://img.staticmb.com/mbimages/project/2022/01/17/Floor-Plan-2-Paras-Mist-at-Paras-Dews-Gurgaon-5325223_600_800.jpg": {
 "bedrooms": [
 {
+"label": "BEDROOM",
+"ft": [
+10.0,
+11.792
+]
+},
+{
 "label": "MASTER BEDROOM",
 "ft": [
 11.375,
@@ -15138,18 +15221,28 @@
 ]
 }
 ],
-"n_sizes": 2,
+"n_sizes": 3,
 "bhk_listed": 2,
 "sid": "s5325223",
-"min_short": 11.375,
-"status": "found 1 bedrooms for 2 BHK"
+"min_short": 10.0,
+"status": "read",
+"checked_by": "OCR"
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-18-BPTP-Freedom-Park-Life-Gurgaon-5001118_1127_961.jpg": {
-"bedrooms": [],
-"n_sizes": 2,
+"bedrooms": [
+{
+"label": "BED ROOM",
+"ft": [
+11.583,
+13.0
+]
+}
+],
+"n_sizes": 3,
 "bhk_listed": 2,
 "sid": "s5001118",
-"status": "bedrooms not found"
+"min_short": 11.583,
+"status": "found 1 bedrooms for 2 BHK"
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-19-BPTP-Freedom-Park-Life-Gurgaon-5001118_1061_991.jpg": {
 "bedrooms": [
@@ -15190,13 +15283,20 @@
 11.5,
 12.0
 ]
+},
+{
+"label": "BED ROOM",
+"ft": [
+12.0,
+15.0
+]
 }
 ],
-"n_sizes": 4,
+"n_sizes": 5,
 "bhk_listed": 3,
 "sid": "s5001118",
 "min_short": 11.5,
-"status": "found 1 bedrooms for 3 BHK"
+"status": "found 2 bedrooms for 3 BHK"
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-19-BPTP-Freedom-Park-Life-Gurgaon-5001118_834_1300.jpg": {
 "bedrooms": [],
@@ -15391,10 +15491,10 @@
 },
 "https://img.staticmb.com/mbimages/project/2025/06/26/Floor-Plan-14-Emaar-MGF-The-Vilas-Gurgaon-5029537_1754_1241.jpg": {
 "bedrooms": [],
-"n_sizes": 0,
+"n_sizes": 1,
 "bhk_listed": 3,
 "sid": "s5029537",
-"status": "no sizes printed"
+"status": "bedrooms not found"
 },
 "https://img.staticmb.com/mbimages/project/2025/06/26/Floor-Plan-15-Emaar-MGF-The-Vilas-Gurgaon-5029537_1754_1241.jpg": {
 "bedrooms": [
@@ -15610,7 +15710,7 @@
 ]
 }
 ],
-"n_sizes": 5,
+"n_sizes": 6,
 "bhk_listed": 4,
 "sid": "s5028460",
 "min_short": 10.5,
@@ -16017,21 +16117,13 @@
 10.827,
 11.811
 ]
-},
-{
-"label": "KIDS ROOM",
-"ft": [
-7.874,
-10.499
-]
 }
 ],
-"n_sizes": 6,
+"n_sizes": 7,
 "bhk_listed": 3,
 "sid": "s5020425",
-"min_short": 7.874,
-"status": "read",
-"checked_by": "OCR"
+"min_short": 10.827,
+"status": "found 2 bedrooms for 3 BHK"
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-55-Microtek-Greenburg-Gurgaon-5020425_600_723.jpg": {
 "bedrooms": [],
@@ -16186,13 +16278,20 @@
 13.5,
 13.75
 ]
+},
+{
+"label": "BEDROOM-3",
+"ft": [
+10.0,
+14.0
+]
 }
 ],
-"n_sizes": 8,
+"n_sizes": 9,
 "bhk_listed": 4,
 "sid": "s5020796",
-"min_short": 13.5,
-"status": "found 1 bedrooms for 4 BHK"
+"min_short": 10.0,
+"status": "found 2 bedrooms for 4 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2018/09/07/Floor-Plan-57-M3M-Golf-Estate-Gurgaon-5020796_580_714.jpg": {
 "bedrooms": [],
@@ -16255,13 +16354,20 @@
 13.5,
 13.75
 ]
+},
+{
+"label": "BEDROOM-3",
+"ft": [
+10.0,
+14.0
+]
 }
 ],
-"n_sizes": 8,
+"n_sizes": 9,
 "bhk_listed": 5,
 "sid": "s5020796",
-"min_short": 13.5,
-"status": "found 1 bedrooms for 4 BHK"
+"min_short": 10.0,
+"status": "found 2 bedrooms for 4 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2018/09/07/Floor-Plan-58-M3M-Golf-Estate-Gurgaon-5020796_637_398.jpg": {
 "bedrooms": [],
@@ -16819,10 +16925,10 @@
 },
 "https://img.staticmb.com/mbimages/project/2025/06/26/Floor-Plan-13-Ashiana-Mulberry-Phase-II-Gurgaon-5420241_649_657.jpg": {
 "bedrooms": [],
-"n_sizes": 0,
+"n_sizes": 1,
 "bhk_listed": 3,
 "sid": "s5420241",
-"status": "no sizes printed"
+"status": "bedrooms not found"
 },
 "https://img.staticmb.com/mbimages/project/2025/07/08/Floor-Plan-24-M3M-Marina-Gurgaon-5072225_615_1015.jpg": {
 "bedrooms": [],
@@ -16901,7 +17007,7 @@
 ]
 }
 ],
-"n_sizes": 7,
+"n_sizes": 9,
 "bhk_listed": 4,
 "sid": "s5420873",
 "min_short": 12.5,
@@ -16969,7 +17075,7 @@
 ]
 }
 ],
-"n_sizes": 7,
+"n_sizes": 9,
 "bhk_listed": 4,
 "sid": "s5420873",
 "min_short": 12.5,
@@ -17002,6 +17108,13 @@
 ]
 },
 {
+"label": "BED ROOM",
+"ft": [
+10.5,
+12.0
+]
+},
+{
 "label": "MASTER BED ROOM",
 "ft": [
 11.0,
@@ -17009,11 +17122,12 @@
 ]
 }
 ],
-"n_sizes": 5,
+"n_sizes": 6,
 "bhk_listed": 3,
 "sid": "s5022915",
 "min_short": 10.5,
-"status": "found 2 bedrooms for 3 BHK"
+"status": "read",
+"checked_by": "OCR"
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-7-Cosmos-Express-Gurgaon-5022915_685_1000.gif": {
 "bedrooms": [
@@ -17083,6 +17197,13 @@
 ]
 },
 {
+"label": "All bedrooms have",
+"ft": [
+12.167,
+13.25
+]
+},
+{
 "label": "BEDROOM 3",
 "ft": [
 11.483,
@@ -17094,8 +17215,7 @@
 "bhk_listed": 3,
 "sid": "s5420967",
 "min_short": 11.483,
-"status": "read",
-"checked_by": "OCR"
+"status": "found 4 bedrooms for 3 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2024/05/30/Floor-Plan-8-Sobha-Aranya-Phase-1-Gurgaon-5420967_1200_1600.jpg": {
 "bedrooms": [
@@ -17116,8 +17236,8 @@
 {
 "label": "BEDROOM 1",
 "ft": [
-12.959,
-18.209
+20.333,
+32.333
 ]
 },
 {
@@ -17647,11 +17767,20 @@
 "checked_by": "OCR + Jev"
 },
 "https://img.staticmb.com/mbimages/project/2026/09/17/Floor-Plan-11-Green-Valley-Homes-Gurgaon-5439165_762_412.jpg": {
-"bedrooms": [],
-"n_sizes": 1,
+"bedrooms": [
+{
+"label": "BED ROOM",
+"ft": [
+10.25,
+11.0
+]
+}
+],
+"n_sizes": 2,
 "bhk_listed": 3,
 "sid": "s5439165",
-"status": "bedrooms not found"
+"min_short": 10.25,
+"status": "found 1 bedrooms for 3 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2024/06/26/Floor-Plan-2-The-Manor-Gurgaon-5421871_1200_1600.jpg": {
 "bedrooms": [],
@@ -18105,7 +18234,7 @@
 ]
 }
 ],
-"n_sizes": 15,
+"n_sizes": 16,
 "bhk_listed": 3,
 "sid": "s5424223",
 "min_short": 10.991,
@@ -18360,18 +18489,27 @@
 "status": "no sizes printed"
 },
 "https://img.staticmb.com/mbimages/project/2026/09/17/Floor-Plan-5-AIPL-The-Riviera-at-Lake-City-Gurgaon-5440503_606_817.jpg": {
+"bedrooms": [
+{
+"label": "MASTER BEDROOM-01",
+"ft": [
+12.0,
+16.75
+]
+}
+],
+"n_sizes": 3,
+"bhk_listed": 3,
+"sid": "s5440503",
+"min_short": 12.0,
+"status": "found 1 bedrooms for 3 BHK"
+},
+"https://img.staticmb.com/mbimages/project/2026/09/17/Floor-Plan-7-AIPL-The-Riviera-at-Lake-City-Gurgaon-5440503_568_810.jpg": {
 "bedrooms": [],
 "n_sizes": 2,
 "bhk_listed": 3,
 "sid": "s5440503",
 "status": "bedrooms not found"
-},
-"https://img.staticmb.com/mbimages/project/2026/09/17/Floor-Plan-7-AIPL-The-Riviera-at-Lake-City-Gurgaon-5440503_568_810.jpg": {
-"bedrooms": [],
-"n_sizes": 0,
-"bhk_listed": 3,
-"sid": "s5440503",
-"status": "no sizes printed"
 },
 "https://img.staticmb.com/mbimages/project/2026/09/17/Floor-Plan-12-AIPL-The-Riviera-at-Lake-City-Gurgaon-5440503_478_811.jpg": {
 "bedrooms": [],
@@ -18507,7 +18645,7 @@
 ]
 }
 ],
-"n_sizes": 7,
+"n_sizes": 8,
 "bhk_listed": 4,
 "sid": "s5428215",
 "min_short": 10.105,
@@ -18652,7 +18790,7 @@
 ]
 }
 ],
-"n_sizes": 1,
+"n_sizes": 2,
 "bhk_listed": 3,
 "sid": "s5020828",
 "min_short": 10.333,
@@ -18765,11 +18903,20 @@
 "status": "found 3 bedrooms for 4 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2026/01/27/Floor-Plan-5-Smartworld-Natures-Court-I-Gurgaon-5443375_499_761.JPG": {
-"bedrooms": [],
-"n_sizes": 0,
+"bedrooms": [
+{
+"label": "BEDROOM - 02",
+"ft": [
+10.0,
+10.833
+]
+}
+],
+"n_sizes": 1,
 "bhk_listed": 2,
 "sid": "s5443375",
-"status": "no sizes printed"
+"min_short": 10.0,
+"status": "found 1 bedrooms for 2 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2026/01/27/Floor-Plan-6-Smartworld-Natures-Court-I-Gurgaon-5443375_492_745.JPG": {
 "bedrooms": [],
@@ -18957,6 +19104,13 @@
 "https://img.staticmb.com/mbimages/project/2025/04/08/Floor-Plan-2-Renuka-Aashiyara-II-Gurgaon-5430051_619_883.JPG": {
 "bedrooms": [
 {
+"label": "M.BEDROOM",
+"ft": [
+10.0,
+12.667
+]
+},
+{
 "label": "BEDROOM",
 "ft": [
 10.0,
@@ -18964,11 +19118,11 @@
 ]
 }
 ],
-"n_sizes": 4,
+"n_sizes": 5,
 "bhk_listed": 3,
 "sid": "s5430051",
 "min_short": 10.0,
-"status": "found 1 bedrooms for 3 BHK"
+"status": "found 2 bedrooms for 3 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2025/04/08/Floor-Plan-3-Renuka-Aashiyara-II-Gurgaon-5430051_617_882.JPG": {
 "bedrooms": [
@@ -19010,7 +19164,7 @@
 ]
 }
 ],
-"n_sizes": 3,
+"n_sizes": 4,
 "bhk_listed": 2,
 "sid": "s5017523",
 "min_short": 10.75,
@@ -19066,10 +19220,10 @@
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-4-Supertech-Araville-Gurgaon-5017523_501_534.jpg": {
 "bedrooms": [],
-"n_sizes": 0,
+"n_sizes": 1,
 "bhk_listed": 3,
 "sid": "s5017523",
-"status": "no sizes printed"
+"status": "bedrooms not found"
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-5-Supertech-Araville-Gurgaon-5017523_473_832.jpg": {
 "bedrooms": [
@@ -19095,7 +19249,7 @@
 ]
 }
 ],
-"n_sizes": 6,
+"n_sizes": 8,
 "bhk_listed": 4,
 "sid": "s5017523",
 "min_short": 10.0,
@@ -19181,7 +19335,7 @@
 ]
 }
 ],
-"n_sizes": 3,
+"n_sizes": 4,
 "bhk_listed": 3,
 "sid": "s5430147",
 "min_short": 9.583,
@@ -19256,18 +19410,36 @@
 "status": "bedrooms not found"
 },
 "https://img.staticmb.com/mbimages/project/2025/07/04/Floor-Plan-60-The-Elite-Residences-Gurgaon-5019745_533_800.jpg": {
-"bedrooms": [],
-"n_sizes": 0,
+"bedrooms": [
+{
+"label": "BED ROOM",
+"ft": [
+10.5,
+12.0
+]
+}
+],
+"n_sizes": 1,
 "bhk_listed": 3,
 "sid": "s5019745",
-"status": "no sizes printed"
+"min_short": 10.5,
+"status": "found 1 bedrooms for 3 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2025/07/04/Floor-Plan-61-The-Elite-Residences-Gurgaon-5019745_533_800.jpg": {
-"bedrooms": [],
-"n_sizes": 1,
+"bedrooms": [
+{
+"label": "BED ROOM",
+"ft": [
+10.5,
+12.5
+]
+}
+],
+"n_sizes": 2,
 "bhk_listed": 4,
 "sid": "s5019745",
-"status": "bedrooms not found"
+"min_short": 10.5,
+"status": "found 1 bedrooms for 4 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2025/07/04/Floor-Plan-63-The-Elite-Residences-Gurgaon-5019745_533_800.jpg": {
 "bedrooms": [],
@@ -19278,10 +19450,10 @@
 },
 "https://img.staticmb.com/mbimages/project/2025/07/04/Floor-Plan-64-The-Elite-Residences-Gurgaon-5019745_533_800.jpg": {
 "bedrooms": [],
-"n_sizes": 0,
+"n_sizes": 1,
 "bhk_listed": 4,
 "sid": "s5019745",
-"status": "no sizes printed"
+"status": "bedrooms not found"
 },
 "https://img.staticmb.com/mbimages/project/2026/07/28/Floor-Plan-1-J-36-Gurgaon-5454881_648_787.jpg": {
 "bedrooms": [],
@@ -19370,7 +19542,7 @@
 ]
 }
 ],
-"n_sizes": 3,
+"n_sizes": 4,
 "bhk_listed": 2,
 "sid": "s5432119",
 "min_short": 10.0,
@@ -19803,20 +19975,27 @@
 10.0,
 12.0
 ]
+},
+{
+"label": "BEDROOM",
+"ft": [
+10.0,
+10.0
+]
 }
 ],
-"n_sizes": 4,
+"n_sizes": 5,
 "bhk_listed": 3,
 "sid": "s5001838",
 "min_short": 10.0,
-"status": "found 1 bedrooms for 3 BHK"
+"status": "found 2 bedrooms for 3 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2019/05/02/Floor-Plan-33-106-Golf-Avenue-Gurgaon-5001838_516_782.jpg": {
 "bedrooms": [],
-"n_sizes": 0,
+"n_sizes": 1,
 "bhk_listed": 4,
 "sid": "s5001838",
-"status": "no sizes printed"
+"status": "bedrooms not found"
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-101-CHD-Golf-Avenue-Gurgaon-5001838_550_800.jpg": {
 "bedrooms": [],
@@ -19894,7 +20073,7 @@
 ]
 }
 ],
-"n_sizes": 9,
+"n_sizes": 11,
 "bhk_listed": 4,
 "sid": "s5458383",
 "min_short": 10.499,
@@ -20168,7 +20347,7 @@
 ]
 }
 ],
-"n_sizes": 10,
+"n_sizes": 11,
 "bhk_listed": 3,
 "sid": "s5433993",
 "min_short": 10.335,
@@ -20508,7 +20687,7 @@
 },
 "https://img.staticmb.com/mbimages/project/2026/09/15/Floor-Plan-8-Godrej-Alira-Gurgaon-5434105_558_1084.JPG": {
 "bedrooms": [],
-"n_sizes": 11,
+"n_sizes": 12,
 "bhk_listed": 3,
 "sid": "s5434105",
 "status": "bedrooms not found"
@@ -20737,11 +20916,27 @@
 "checked_by": "OCR"
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-10-Maheshwara-Gurgaon-5088803_800_451.jpg": {
-"bedrooms": [],
-"n_sizes": 2,
+"bedrooms": [
+{
+"label": "BED ROOM",
+"ft": [
+10.833,
+15.083
+]
+},
+{
+"label": "BED ROOM",
+"ft": [
+10.833,
+15.083
+]
+}
+],
+"n_sizes": 4,
 "bhk_listed": 3,
 "sid": "s5088803",
-"status": "bedrooms not found"
+"min_short": 10.833,
+"status": "found 2 bedrooms for 3 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2018/12/04/Floor-Plan-31-Gurgaon-Greens-Gurgaon-5022490_500_850.jpg": {
 "bedrooms": [],
@@ -21134,7 +21329,7 @@
 ]
 }
 ],
-"n_sizes": 2,
+"n_sizes": 4,
 "bhk_listed": 2,
 "sid": "s5098869",
 "min_short": 10.0,
@@ -21565,10 +21760,10 @@
 },
 "https://img.staticmb.com/mbimages/project/2026/07/03/Floor-Plan-18-Oberoi-Three-Sixty-North--Gurgaon-5453143_1200_1600.jpg": {
 "bedrooms": [],
-"n_sizes": 0,
+"n_sizes": 1,
 "bhk_listed": 5,
 "sid": "s5453143",
-"status": "no sizes printed"
+"status": "bedrooms not found"
 },
 "https://img.staticmb.com/mbimages/project/2026/09/21/Floor-Plan-1-M3M-St-Andrews-at-SCDA-Gurgaon-5428931_1080_1920.jpg": {
 "bedrooms": [
@@ -21762,7 +21957,7 @@
 ]
 }
 ],
-"n_sizes": 9,
+"n_sizes": 10,
 "bhk_listed": 4,
 "sid": "s5456617",
 "min_short": 9.974,
@@ -21784,7 +21979,7 @@
 },
 "https://img.staticmb.com/mbimages/project/2023/05/12/Floor-Plan-3-Ompee-Tower-Gurgaon-5407683_600_800.jpg": {
 "bedrooms": [],
-"n_sizes": 2,
+"n_sizes": 3,
 "bhk_listed": 3,
 "sid": "s5407683",
 "status": "bedrooms not found"
@@ -21903,11 +22098,42 @@
 "checked_by": "OCR"
 },
 "https://img.staticmb.com/mbimages/project/2025/07/08/Floor-Plan-14-Piedmont-Taksila-heights-Gurgaon-5023696_364_753.jpg": {
-"bedrooms": [],
+"bedrooms": [
+{
+"label": "Master Bedroom",
+"ft": [
+11.0,
+16.0
+]
+},
+{
+"label": "Bedroom-2",
+"ft": [
+10.0,
+11.417
+]
+},
+{
+"label": "Bedroom-3",
+"ft": [
+10.0,
+12.0
+]
+},
+{
+"label": "Bedroom-4",
+"ft": [
+10.0,
+12.0
+]
+}
+],
 "n_sizes": 6,
 "bhk_listed": 4,
 "sid": "s5023696",
-"status": "bedrooms not found"
+"min_short": 10.0,
+"status": "read",
+"checked_by": "OCR + Jev"
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-10-Sare-Petioles-Gurgaon-5000317_557_785.jpg": {
 "bedrooms": [],
@@ -22294,11 +22520,20 @@
 "status": "no sizes printed"
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-5-Orchid-Garden-Gurgaon-5000581_789_960.gif": {
-"bedrooms": [],
-"n_sizes": 0,
+"bedrooms": [
+{
+"label": "BED ROOM",
+"ft": [
+9.0,
+12.0
+]
+}
+],
+"n_sizes": 1,
 "bhk_listed": 4,
 "sid": "s5000581",
-"status": "no sizes printed"
+"min_short": 9.0,
+"status": "found 1 bedrooms for 4 BHK"
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-4-Orchid-Garden-Gurgaon-5000581_803_960.gif": {
 "bedrooms": [],
@@ -22589,7 +22824,7 @@
 ]
 }
 ],
-"n_sizes": 2,
+"n_sizes": 3,
 "bhk_listed": 3,
 "sid": "s5426141",
 "min_short": 10.0,
@@ -22605,7 +22840,7 @@
 ]
 }
 ],
-"n_sizes": 2,
+"n_sizes": 3,
 "bhk_listed": 3,
 "sid": "s5426141",
 "min_short": 10.0,
@@ -22714,7 +22949,7 @@
 ]
 }
 ],
-"n_sizes": 13,
+"n_sizes": 15,
 "bhk_listed": 3,
 "sid": "s5000452",
 "min_short": 10.827,
@@ -22880,11 +23115,20 @@
 "status": "found 1 bedrooms for 3 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2025/08/27/Floor-Plan-17-BPTP-PARK-SERENE-Gurgaon-5023202_502_829.jpg": {
-"bedrooms": [],
-"n_sizes": 1,
+"bedrooms": [
+{
+"label": "BEDROOM",
+"ft": [
+11.0,
+12.083
+]
+}
+],
+"n_sizes": 3,
 "bhk_listed": 3,
 "sid": "s5023202",
-"status": "bedrooms not found"
+"min_short": 11.0,
+"status": "found 1 bedrooms for 3 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2025/08/27/Floor-Plan-18-BPTP-PARK-SERENE-Gurgaon-5023202_525_862.jpg": {
 "bedrooms": [
@@ -22894,13 +23138,20 @@
 10.917,
 13.083
 ]
+},
+{
+"label": "BED RM",
+"ft": [
+11.0,
+12.083
+]
 }
 ],
-"n_sizes": 2,
+"n_sizes": 3,
 "bhk_listed": 4,
 "sid": "s5023202",
 "min_short": 10.917,
-"status": "found 1 bedrooms for 4 BHK"
+"status": "found 2 bedrooms for 4 BHK"
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-16-GHP-Victory-Infratech-VG-48-Gurgaon-5072080_1104_1920.jpg": {
 "bedrooms": [],
@@ -23075,7 +23326,7 @@
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-32-Corona-Optus-Gurgaon-5022932_576_800.jpg": {
 "bedrooms": [],
-"n_sizes": 2,
+"n_sizes": 3,
 "bhk_listed": 2,
 "sid": "s5022932",
 "status": "bedrooms not found"
@@ -23351,7 +23602,7 @@
 ]
 }
 ],
-"n_sizes": 14,
+"n_sizes": 15,
 "bhk_listed": 4,
 "sid": "s5438571",
 "min_short": 10.581,
@@ -23911,13 +24162,20 @@
 11.25,
 13.833
 ]
+},
+{
+"label": "M. BEDROOM",
+"ft": [
+13.167,
+16.167
+]
 }
 ],
-"n_sizes": 3,
+"n_sizes": 4,
 "bhk_listed": 4,
 "sid": "s5010338",
 "min_short": 11.25,
-"status": "found 1 bedrooms for 4 BHK"
+"status": "found 2 bedrooms for 4 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2025/08/26/Floor-Plan-34-Atharva-Gurgaon-5010338_700_549.jpg": {
 "bedrooms": [],
@@ -24944,7 +25202,7 @@
 },
 "https://img.staticmb.com/mbimages/project/2025/05/06/Floor-Plan-48-NCR-Green-Gurgaon-5018084_699_2000.jpg": {
 "bedrooms": [],
-"n_sizes": 3,
+"n_sizes": 4,
 "bhk_listed": 4,
 "sid": "s5018084",
 "status": "bedrooms not found"
@@ -25100,7 +25358,7 @@
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-6-Unitech-Fresco-Gurgaon-5017075_507_758.jpg": {
 "bedrooms": [],
-"n_sizes": 2,
+"n_sizes": 3,
 "bhk_listed": 2,
 "sid": "s5017075",
 "status": "bedrooms not found"
@@ -25413,6 +25671,13 @@
 {
 "label": "BEDROOM",
 "ft": [
+10.0,
+10.5
+]
+},
+{
+"label": "BEDROOM",
+"ft": [
 11.0,
 12.833
 ]
@@ -25425,11 +25690,12 @@
 ]
 }
 ],
-"n_sizes": 5,
+"n_sizes": 6,
 "bhk_listed": 4,
 "sid": "s5017106",
-"min_short": 11.0,
-"status": "found 3 bedrooms for 4 BHK"
+"min_short": 10.0,
+"status": "read",
+"checked_by": "OCR"
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-9-Unitech-Vista-Gurgaon-5017106_500_900.jpg": {
 "bedrooms": [],
@@ -25448,7 +25714,7 @@
 ]
 }
 ],
-"n_sizes": 6,
+"n_sizes": 7,
 "bhk_listed": 1,
 "sid": "s5017109",
 "min_short": 10.991,
@@ -25692,7 +25958,7 @@
 ]
 }
 ],
-"n_sizes": 3,
+"n_sizes": 4,
 "bhk_listed": 3,
 "sid": "s5458827",
 "min_short": 10.083,
@@ -25885,10 +26151,10 @@
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-25-Spaze-Privy-72-Gurgaon-5037980_809_622.jpg": {
 "bedrooms": [],
-"n_sizes": 0,
+"n_sizes": 1,
 "bhk_listed": 3,
 "sid": "s5037980",
-"status": "no sizes printed"
+"status": "bedrooms not found"
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-45-Spaze-Privy-72-Gurgaon-5037980_599_800.jpg": {
 "bedrooms": [
@@ -25907,7 +26173,7 @@
 ]
 }
 ],
-"n_sizes": 3,
+"n_sizes": 4,
 "bhk_listed": 3,
 "sid": "s5037980",
 "min_short": 12.0,
@@ -26001,13 +26267,20 @@
 11.0,
 14.0
 ]
+},
+{
+"label": "BEDROOM",
+"ft": [
+10.0,
+13.0
+]
 }
 ],
-"n_sizes": 3,
+"n_sizes": 4,
 "bhk_listed": 2,
 "sid": "s5085484",
-"min_short": 11.0,
-"status": "found 1 bedrooms for 3 BHK"
+"min_short": 10.0,
+"status": "found 2 bedrooms for 3 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2020/09/09/Floor-Plan-19-Zen-Residences-Gurgaon-5085484_600_800.jpg": {
 "bedrooms": [
@@ -26017,13 +26290,20 @@
 11.0,
 14.0
 ]
+},
+{
+"label": "BEDROOM",
+"ft": [
+10.0,
+13.0
+]
 }
 ],
-"n_sizes": 3,
+"n_sizes": 4,
 "bhk_listed": 3,
 "sid": "s5085484",
-"min_short": 11.0,
-"status": "found 1 bedrooms for 3 BHK"
+"min_short": 10.0,
+"status": "found 2 bedrooms for 3 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2026/01/15/Floor-Plan-1-ILD-Greens-Gurgaon-5285127_461_372.JPG": {
 "bedrooms": [],
@@ -26273,7 +26553,7 @@
 },
 "https://img.staticmb.com/mbimages/project/2025/09/11/Floor-Plan-23-Bestech-Park-View-City-2-Gurgaon-5029924_1584_1674.jpg": {
 "bedrooms": [],
-"n_sizes": 1,
+"n_sizes": 2,
 "bhk_listed": 3,
 "sid": "s5029924",
 "status": "bedrooms not found"
@@ -26488,20 +26768,11 @@
 "status": "found 1 bedrooms for 3 BHK"
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-12-Ansal-Amantre-Gurgaon-5029890_600_800.jpg": {
-"bedrooms": [
-{
-"label": "BEDROOM 01",
-"ft": [
-6.0,
-8.0
-]
-}
-],
+"bedrooms": [],
 "n_sizes": 2,
 "bhk_listed": 4,
 "sid": "s5029890",
-"min_short": 6.0,
-"status": "found 1 bedrooms for 4 BHK"
+"status": "bedrooms not found"
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-13-Ambience-Lagoon-Gurgaon-5029870_321_1024.jpg": {
 "bedrooms": [],
@@ -26541,7 +26812,7 @@
 ]
 }
 ],
-"n_sizes": 5,
+"n_sizes": 6,
 "bhk_listed": 2,
 "sid": "s5000886",
 "min_short": 10.75,
@@ -26721,7 +26992,7 @@
 ]
 }
 ],
-"n_sizes": 2,
+"n_sizes": 3,
 "bhk_listed": 4,
 "sid": "s5001041",
 "min_short": 10.5,
@@ -26994,10 +27265,10 @@
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-52-One-India-Bulls-Gurgaon-5070728_600_800.jpg": {
 "bedrooms": [],
-"n_sizes": 0,
+"n_sizes": 1,
 "bhk_listed": 2,
 "sid": "s5070728",
-"status": "no sizes printed"
+"status": "bedrooms not found"
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-45-Regency-Park-2-Gurgaon-5001033_571_1024.jpg": {
 "bedrooms": [],
@@ -27852,11 +28123,20 @@
 "status": "no sizes printed"
 },
 "https://img.staticmb.com/mbimages/project/2025/07/21/Floor-Plan-25-Emaar-MGF-The-Palm-Drive-Gurgaon-5022482_639_849.jpg": {
-"bedrooms": [],
-"n_sizes": 0,
+"bedrooms": [
+{
+"label": "BEDROOM",
+"ft": [
+11.0,
+14.0
+]
+}
+],
+"n_sizes": 1,
 "bhk_listed": 3,
 "sid": "s5022482",
-"status": "no sizes printed"
+"min_short": 11.0,
+"status": "found 1 bedrooms for 3 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2025/07/21/Floor-Plan-23-Emaar-MGF-The-Palm-Drive-Gurgaon-5022482_787_615.jpg": {
 "bedrooms": [],
@@ -27910,7 +28190,7 @@
 ]
 }
 ],
-"n_sizes": 2,
+"n_sizes": 3,
 "bhk_listed": 2,
 "sid": "s5000550",
 "min_short": 11.25,
@@ -27926,7 +28206,7 @@
 ]
 }
 ],
-"n_sizes": 2,
+"n_sizes": 3,
 "bhk_listed": 2,
 "sid": "s5000550",
 "min_short": 12.0,
@@ -28278,7 +28558,7 @@
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-31-Project-Uniworld-Resorts-Gurgaon-5010516_900_602.jpg": {
 "bedrooms": [],
-"n_sizes": 1,
+"n_sizes": 2,
 "bhk_listed": 4,
 "sid": "s5010516",
 "status": "bedrooms not found"
@@ -28533,7 +28813,7 @@
 ]
 }
 ],
-"n_sizes": 2,
+"n_sizes": 3,
 "bhk_listed": 3,
 "sid": "s5000110",
 "min_short": 10.167,
@@ -28612,13 +28892,20 @@
 14.083,
 16.417
 ]
+},
+{
+"label": "BEDROOM",
+"ft": [
+14.0,
+19.667
+]
 }
 ],
-"n_sizes": 7,
+"n_sizes": 8,
 "bhk_listed": 3,
 "sid": "s5010375",
-"min_short": 14.083,
-"status": "found 1 bedrooms for 3 BHK"
+"min_short": 14.0,
+"status": "found 2 bedrooms for 3 BHK"
 },
 "https://img.staticmb.com/mbimages/project/2025/08/26/Floor-Plan-36-Sahara-Grace-Gurgaon-5010375_729_934.jpg": {
 "bedrooms": [],
@@ -28729,7 +29016,7 @@
 ]
 }
 ],
-"n_sizes": 3,
+"n_sizes": 4,
 "bhk_listed": 3,
 "sid": "s5010351",
 "min_short": 11.0,
@@ -28797,7 +29084,7 @@
 ]
 }
 ],
-"n_sizes": 2,
+"n_sizes": 3,
 "bhk_listed": 4,
 "sid": "s5010486",
 "min_short": 11.75,
@@ -28848,7 +29135,7 @@
 ]
 }
 ],
-"n_sizes": 13,
+"n_sizes": 15,
 "bhk_listed": 4,
 "sid": "s5010486",
 "min_short": 11.0,
@@ -28934,7 +29221,7 @@
 ]
 }
 ],
-"n_sizes": 12,
+"n_sizes": 13,
 "bhk_listed": 3,
 "sid": "s5010343",
 "min_short": 10.827,
@@ -30098,7 +30385,7 @@
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-48-Agrante-Beethoven-8-Gurgaon-5011761_600_800.jpg": {
 "bedrooms": [],
-"n_sizes": 1,
+"n_sizes": 2,
 "bhk_listed": 2,
 "sid": "s5011761",
 "status": "bedrooms not found"
@@ -30313,10 +30600,10 @@
 },
 "https://img.staticmb.com/mbimages/project/2025/06/21/Floor-Plan-46-Gurgaon-One-Gurgaon-5028317_562_684.jpg": {
 "bedrooms": [],
-"n_sizes": 0,
+"n_sizes": 1,
 "bhk_listed": 4,
 "sid": "s5028317",
-"status": "no sizes printed"
+"status": "bedrooms not found"
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-32-Gurgaon-One-Gurgaon-5028317_505_1024.jpg": {
 "bedrooms": [
@@ -30461,7 +30748,7 @@
 ]
 }
 ],
-"n_sizes": 5,
+"n_sizes": 6,
 "bhk_listed": 3,
 "sid": "s5028547",
 "min_short": 11.0,
@@ -30794,8 +31081,8 @@
 {
 "label": "BEDROOM",
 "ft": [
-11.352,
-14.009
+11.5,
+18.333
 ]
 },
 {
@@ -31045,7 +31332,7 @@
 ]
 }
 ],
-"n_sizes": 6,
+"n_sizes": 7,
 "bhk_listed": 4,
 "sid": "s5000088",
 "min_short": 10.0,
@@ -31395,13 +31682,21 @@
 10.917,
 11.333
 ]
+},
+{
+"label": "BEDROOM",
+"ft": [
+10.25,
+10.75
+]
 }
 ],
-"n_sizes": 2,
+"n_sizes": 3,
 "bhk_listed": 2,
 "sid": "s5072941",
-"min_short": 10.917,
-"status": "found 1 bedrooms for 2 BHK"
+"min_short": 10.25,
+"status": "read",
+"checked_by": "OCR + Jev"
 },
 "https://img.staticmb.com/mbimages/project/Floor-Plan-2-Omaxe-Designer-Villas-Gurgaon-5010278_432_1024.jpeg": {
 "bedrooms": [],

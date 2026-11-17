@@ -33,3 +33,10 @@ def test_toilet_size_never_lands_on_a_bedroom():
              ("Toilet", .88, .78, .02, 1), ("6'x8'4\"", .88, .80, .02, 1)]
     beds = p.bedrooms_from_boxes(boxes)
     assert [b["ft"] for b in beds] == [(11.917, 13.917)]
+
+
+def test_size_table_rows():
+    boxes = [("Master Bedroom", .70, .30, .015, 1), ("13'0\" x 15'0\"", .90, .30, .015, 1),
+             ("Bedroom 2", .70, .33, .015, 1), ("11'0\" x 12'6\"", .90, .33, .015, 1),
+             ("Kitchen", .70, .36, .015, 1), ("8'0\" x 10'0\"", .90, .36, .015, 1)]
+    assert sorted(b["ft"] for b in p.bedrooms_from_boxes(boxes)) == [(11.0, 12.5), (13.0, 15.0)]

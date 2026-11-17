@@ -79,10 +79,14 @@ def bedrooms_from_boxes(boxes):
             if i == j or i in owner.values():
                 continue
             dx, dy = abs(sx - x), sy - y
-            if dx < 0.12 and -0.01 <= dy < 0.07:
+            if dx < 0.12 and -0.01 <= dy < 0.07:          # printed under (or on) the room name
                 d = dx + dy * 2
-                if best is None or d < best[0]:
-                    best = (d, i, t)
+            elif abs(dy) < 0.012 and 0 < sx - x < 0.45:   # a size table: same line, to the right
+                d = 0.05 + (sx - x) * 0.5
+            else:
+                continue
+            if best is None or d < best[0]:
+                best = (d, i, t)
         if best:
             owner[j] = best[1]
             if BED.search(best[2]) and not NOT_BED.search(best[2]):
