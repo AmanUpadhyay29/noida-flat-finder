@@ -404,10 +404,11 @@ def main(city="gurgaon"):
 
     # prices: real listing medians first, then labelled estimates
     model = pricing.fit_yields(societies)
+    print("price cells flagged as likely typos:", pricing.flag_outliers(societies))
     loc_psf = defaultdict(list)
     for s in societies:
         for b in s["prices"].values():
-            if b.get("psf"):
+            if b.get("psf") and "buy" not in b.get("flags", {}):
                 loc_psf[s["locality"]].append(b["psf"])
     for s in societies:
         sizes = defaultdict(list)
@@ -415,7 +416,7 @@ def main(city="gurgaon"):
             size = u.get("super_sqft") or u.get("size_sqft")
             if u.get("bhk") and size:
                 sizes[u["bhk"]].append(size)
-        own = [b["psf"] for b in s["prices"].values() if b.get("psf")]
+        own = [b["psf"] for b in s["prices"].values() if b.get("psf") and "buy" not in b.get("flags", {})]
         psf = statistics.median(own) if own else s.get("psf_now") or (statistics.median(loc_psf[s["locality"]]) if len(loc_psf[s["locality"]]) >= 3 else None)
         if s["kind"] in ("apartment", "builder floor", "villa"):
             pricing.add_estimates(s, model, {b: statistics.median(v) for b, v in sizes.items()}, psf)
@@ -468,7 +469,7 @@ def write_csv(soc_path, unit_path, societies):
     cols = ["id", "name", "developer", "locality", "type", "lat", "lng", "status", "possession", "rera_id", "towers", "units", "acres",
             "listings_for_sale", "listings_for_rent", "price_range_min", "price_range_max", "price_per_sqft"]
     for b in range(1, 6):
-        cols += [f"buy_{b}bhk_median", f"buy_{b}bhk_estimate", f"rent_{b}bhk_median", f"rent_{b}bhk_estimate"]
+        cols += [f"buy_{b}bhk_median", f"buy_{b}bhk_estimate", f"rent_{b}bhk_median", f"rent_{b}bhk_estimate", f"{b}bhk_price_flag"]
     cols += ["rating", "rating_count", "review_count", "amenities", "verified", "smallest_bedroom_ft", "magicbricks_url", "google_maps_url"]
     with open(soc_path, "w", newline="") as f:
         w = csv.writer(f)
@@ -481,7 +482,8 @@ def write_csv(soc_path, unit_path, societies):
             for b in range(1, 6):
                 p = s["prices"].get(str(b), {})
                 row += [(p.get("buy") or {}).get("median"), (p.get("buy_est") or {}).get("value"),
-                        (p.get("rent") or {}).get("median"), (p.get("rent_est") or {}).get("value")]
+                        (p.get("rent") or {}).get("median"), (p.get("rent_est") or {}).get("value"),
+                        "; ".join(f"{k}: {v}" for k, v in (p.get("flags") or {}).items()) or None]
             row += [s["rating"], s["rating_count"], s["review_count"], "; ".join(s["amenities"]), s["verified"],
                     f"{smallest[0]:.2f} x {smallest[1]:.2f}" if smallest else None, s["url"], s["gmaps"]]
             w.writerow(row)

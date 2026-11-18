@@ -155,14 +155,15 @@ export function feetLabel(ft) {
 }
 
 // Cheapest price for the chosen BHKs: listing median first, our estimate otherwise. null when unknown.
+// Medians flagged as likely typos (p.flags) are skipped, so one mistyped listing cannot hide or promote a society.
 export function priceFor(s, mode, bhk = []) {
   let best = null;
   for (const [b, p] of Object.entries(s.prices || {})) {
     if (bhk.length && !bhk.includes(+b)) continue;
-    const real = p[mode]?.median;
+    const real = p.flags?.[mode] ? null : p[mode]?.median;
     const est = p[`${mode}_est`]?.value;
     const v = real ?? est;
-    if (v && (!best || v < best.value)) best = { value: v, estimated: real == null, bhk: +b, basis: real == null ? p[`${mode}_est`].basis : null, n: p[mode]?.n };
+    if (v && (!best || v < best.value)) best = { value: v, estimated: real == null, bhk: +b, basis: real == null ? p[`${mode}_est`].basis : null, n: real == null ? null : p[mode]?.n };
   }
   if (!best && mode === 'buy' && s.price_min && !bhk.length) best = { value: s.price_min, estimated: false, bhk: null, basis: 'builder price range' };
   return best;

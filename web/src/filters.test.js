@@ -130,3 +130,11 @@ describe('ranges', () => {
     expect(matchSociety(s, crit({ mode: 'rent', minRent: 50000, maxRent: 80000 }))).toBe('match');
   });
 });
+
+describe('flagged prices', () => {
+  it('skips a flagged listing median and falls back to the estimate', async () => {
+    const { priceFor } = await import('./filters.js');
+    const s = { prices: { 3: { rent: { median: 960000, n: 1 }, rent_est: { value: 90100, basis: 'yield' }, flags: { rent: 'typo' } } } };
+    expect(priceFor(s, 'rent', [3])).toMatchObject({ value: 90100, estimated: true });
+  });
+});
