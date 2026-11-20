@@ -7,6 +7,9 @@ web/dist/
 __pycache__/
 .pytest_cache/
 .gstack/
+web/.wrangler/
 
 pipeline/cache_*.log
 data/verified/*-ai.json.bak
+pipeline/*.log
+.venv/

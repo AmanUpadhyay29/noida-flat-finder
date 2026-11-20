@@ -5,9 +5,9 @@ description: Use to find flats by room size and amenities, to add a new city to 
 
 # Flat Finder
 
-Flat Finder (https://flat-finder.pages.dev, repo `kairothq/flat-finder`) puts every housing society in a city on one map. Portal data covers every society; **verified rows** (bedroom sides read from builder brochures or RERA plans) are what make the room filter trustworthy. This skill does three jobs. Pick the one the user asked for.
+Noida Flat Finder (repo `AmanUpadhyay29/noida-flat-finder`, the Noida edition of `kairothq/flat-finder`) puts every housing society in a city on one map. It runs locally: `cd web && npm ci && npm run dev`, then http://localhost:5173/?city=noida. Portal data covers every society; **verified rows** (bedroom sides read from builder brochures or RERA plans) are what make the room filter trustworthy. This skill does three jobs. Pick the one the user asked for.
 
-Work from a clone of the repo: `gh repo clone kairothq/flat-finder && cd flat-finder`.
+Work from a clone of the repo: `gh repo clone AmanUpadhyay29/noida-flat-finder && cd noida-flat-finder`.
 
 ## Rules (all jobs)
 
@@ -21,7 +21,7 @@ Work from a clone of the repo: `gh repo clone kairothq/flat-finder && cd flat-fi
 ## Job 1: search
 
 ```bash
-npx github:kairothq/flat-finder --city gurgaon --bhk 3,4 --min-bedroom "11'3x12'3" --min-sqft 1620 --amenity squash --likely
+node cli/flatfinder.mjs --data web/public/data/noida.json --bhk 3,4 --min-bedroom "11'3x12'3" --min-sqft 1620 --amenity squash --likely
 ```
 
 Explain the verdicts: **match** (every bedroom read and passes), **likely** (rooms read so far pass, not all read), societies with no room data are "not checked yet" and are never shown as matches. Offer Job 3 for the most promising "not checked yet" societies.
@@ -43,6 +43,15 @@ Explain the verdicts: **match** (every bedroom read and passes), **likely** (roo
 
 ## Job 2a: read every floor plan, brochure and HRERA filing with local OCR (free)
 
+On Windows or Linux, floor plans only (RapidOCR, runs locally; resumable, saves every 50 plans, societies with homes for rent first):
+```bash
+cd pipeline
+python -m venv ../.venv && ../.venv/Scripts/pip install -r requirements-ocr.txt
+PYTHONUTF8=1 ../.venv/Scripts/python plan_ocr.py <city>
+PYTHONUTF8=1 python build_city.py <city>
+```
+Sizes without foot marks (`110X120`) are skipped, never guessed.
+
 On a Mac (uses the built-in Vision framework, no upload):
 ```bash
 cd pipeline
@@ -60,7 +69,7 @@ Spot-check a few results by eye (open the plan, compare the bedrooms). Pairing b
 
 ## Job 3: verify a society
 
-1. **Find the primary sources.** Search for the builder brochure PDF (developer site, then mirrors) and the state RERA filing (Haryana: haryanarera.gov.in, Karnataka: rera.karnataka.gov.in, Maharashtra: maharera.maharashtra.gov.in). The Magicbricks `brochure_url` in the city JSON is a good start. Firecrawl works well for finding and fetching these.
+1. **Find the primary sources.** Search for the builder brochure PDF (developer site, then mirrors) and the state RERA filing (Uttar Pradesh, for Noida: up-rera.in; Haryana: haryanarera.gov.in, Karnataka: rera.karnataka.gov.in, Maharashtra: maharera.maharashtra.gov.in). The Magicbricks `brochure_url` in the city JSON is a good start. Firecrawl works well for finding and fetching these.
 2. **Read the floor plans.** Download each file into its own new folder. Render pages with `pdftoppm -r 150 file.pdf page` (300 dpi when labels are small) and read the room labels with vision. Fall back to `tesseract` OCR.
 3. **Record every bedroom of each unit type exactly as printed**, in `data/verified/<city>.json`:
    ```json
@@ -83,4 +92,4 @@ Spot-check a few results by eye (open the plan, compare the bedrooms). Pairing b
 
 ## Output to the user
 
-Say what changed and whether it worked: societies verified (with pass or fail against the user's criteria), what could not be read and why, and links (`https://flat-finder.pages.dev/?city=<city>&open=<id>`).
+Say what changed and whether it worked: societies verified (with pass or fail against the user's criteria), what could not be read and why, and links (`http://localhost:5173/?city=<city>&open=<id>`).
