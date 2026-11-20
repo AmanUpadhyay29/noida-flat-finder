@@ -2,6 +2,8 @@
 
 usage: uv run --with pyobjc-framework-Vision --with pyobjc-framework-Quartz python plan_ocr.py gurgaon
        -> data/verified/<city>-ocr.json
+Windows: ../.venv/Scripts/python plan_ocr.py noida   (RapidOCR, see ocr_rapid.py; downloads plan images as it goes,
+       one at a time, saves every 50 plans and resumes)
 
 OCR returns text boxes; code pairs each bedroom label with the size printed under or beside it, so the
 "smallest of all bedrooms" is arithmetic, not a model's judgement. A plan counts as read when the number
@@ -13,10 +15,15 @@ import json
 import pathlib
 import re
 import sys
+import time
+import urllib.request
 from concurrent.futures import ProcessPoolExecutor
 
 ROOT = pathlib.Path(__file__).parent
 CACHE = ROOT / "cache" / "plans"
+WINDOWS = sys.platform == "win32"  # no macOS Vision here: RapidOCR, one process (it already uses every core)
+ENGINE = "RapidOCR (local)" if WINDOWS else "macOS Vision OCR"
+UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36"
 
 BED = re.compile(r"\b(M\.?\s*|MASTER\s*|KIDS?\s*|GUEST\s*)?(BED\s*-?\s*ROOM|BEDROOM|BED\s*RM|B\.?\s*R\.?\b)|\bKIDS?\s*ROOM|\bGUEST\s*ROOM", re.I)
 NOT_BED = re.compile(r"TOILET|BATH|WASH|DRESS|BALCONY|LOBBY|W\.?C\b|SERVANT|STAFF|UTILITY|STORE|STUDY", re.I)
@@ -98,10 +105,20 @@ def bedrooms_from_boxes(boxes):
 def read_image(args):
     url, bhk_hint = args
     f = CACHE / (hashlib.sha1(url.encode()).hexdigest() + ".jpg")
+    if not f.exists() and WINDOWS:  # no separate downloader on Windows: fetch it now, politely
+        try:
+            CACHE.mkdir(parents=True, exist_ok=True)
+            f.write_bytes(urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": UA}), timeout=40).read())
+            time.sleep(0.5)
+        except Exception as e:
+            return url, {"status": "no image", "error": str(e)[:120]}
     if not f.exists():
         return url, {"status": "no image"}
     try:
-        from ocr import ocr
+        if WINDOWS:
+            from ocr_rapid import ocr
+        else:
+            from ocr import ocr
         boxes = ocr(f)
     except Exception as e:
         return url, {"status": "ocr error", "error": str(e)[:120]}
@@ -130,22 +147,36 @@ def judge(r, jev):
 
 
 def main(city="gurgaon"):
-    data = json.loads((ROOT.parent / "web" / "public" / "data" / f"{city}.json").read_text())
-    jev = json.loads((ROOT.parent / "data" / "verified" / f"{city}-ai.json").read_text())["plans"]
+    data = json.loads((ROOT.parent / "web" / "public" / "data" / f"{city}.json").read_text(encoding="utf-8"))
+    ai_file = ROOT.parent / "data" / "verified" / f"{city}-ai.json"  # Jev cross-check: optional (needs a Jev key)
+    jev = json.loads(ai_file.read_text(encoding="utf-8"))["plans"] if ai_file.exists() else {}
+    out_file = ROOT.parent / "data" / "verified" / f"{city}-ocr.json"
+    out = json.loads(out_file.read_text(encoding="utf-8"))["plans"] if out_file.exists() else {}  # resume
     jobs, sid_of = [], {}
-    for s in data["societies"]:
+    # societies with homes for rent first, then for sale, then the rest: a stopped run has read the useful ones
+    for s in sorted(data["societies"], key=lambda s: (0 if s.get("rent_count") else 1, -(s.get("sale_count") or 0))):
         for b, urls in (s.get("plan_links") or {}).items():
             for u in urls[:3]:
-                jobs.append((u, b))
+                if u not in sid_of and u not in out:
+                    jobs.append((u, b))
                 sid_of[u] = s["id"]
-    out = {}
-    with ProcessPoolExecutor(max_workers=6) as ex:
-        for i, (u, r) in enumerate(ex.map(read_image, jobs, chunksize=8), 1):
-            r["sid"] = sid_of[u]
-            out[u] = judge(r, jev.get(u)) if "bedrooms" in r else r
-            if i % 200 == 0:
-                print(f"{i}/{len(jobs)}", flush=True)
-    (ROOT.parent / "data" / "verified" / f"{city}-ocr.json").write_text(json.dumps({"engine": "macOS Vision OCR + Jev check", "plans": out}, indent=0))
+    engine = ENGINE + (" + Jev check" if jev else "")
+    print(f"{len(jobs)} plans to read ({len(out)} already done), engine {engine}", flush=True)
+
+    def save():
+        out_file.write_text(json.dumps({"engine": engine, "plans": out}, indent=0), encoding="utf-8")
+
+    ex = None if WINDOWS else ProcessPoolExecutor(max_workers=6)
+    results = map(read_image, jobs) if ex is None else ex.map(read_image, jobs, chunksize=8)
+    for i, (u, r) in enumerate(results, 1):
+        r["sid"] = sid_of[u]
+        out[u] = judge(r, jev.get(u)) if "bedrooms" in r else r
+        if i % 50 == 0 or i == len(jobs):
+            save()
+            print(f"{i}/{len(jobs)}", flush=True)
+    if ex:
+        ex.shutdown()
+    save()
     from collections import Counter
     print(Counter(r["status"] for r in out.values()).most_common())
     print("societies with a read plan", len({r["sid"] for r in out.values() if r["status"] == "read"}))

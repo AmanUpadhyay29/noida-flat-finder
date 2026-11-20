@@ -1,0 +1,4 @@
+# Floor-plan reading on Windows or Linux (plan_ocr.py picks RapidOCR when not on a Mac).
+# The rest of the pipeline is standard-library Python only.
+rapidocr_onnxruntime>=1.4
+pillow>=10
