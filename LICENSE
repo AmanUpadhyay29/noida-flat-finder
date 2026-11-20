@@ -3,8 +3,6 @@ MIT License
 Copyright (c) 2026 Divy Kairoth (Flat Finder, https://github.com/kairothq/flat-finder)
 Copyright (c) 2026 AmanUpadhyay29 (Noida edition)
 
-The original Flat Finder declares the MIT licence in its package.json; this edition keeps it.
-
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
@@ -22,7 +20,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-This licence covers the code. The data files are not covered by it: listing data
-comes from Magicbricks (their terms apply), map data from OpenStreetMap
-contributors (ODbL). See README.md, "Data sources".

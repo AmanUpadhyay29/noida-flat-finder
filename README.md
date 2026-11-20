@@ -138,4 +138,4 @@ Floor plan images and brochures are not stored in this repo, only links to them.
 
 ## Credits and licence
 
-Flat Finder was created by [Divy Kairoth](https://github.com/kairothq/flat-finder); this repository keeps its full history. The Noida edition is by [AmanUpadhyay29](https://github.com/AmanUpadhyay29). The code is MIT licensed (see `LICENSE`); the data files are not covered by that licence.
+Flat Finder was created by [Divy Kairoth](https://github.com/kairothq/flat-finder); this repository keeps its full history. The Noida edition is by [AmanUpadhyay29](https://github.com/AmanUpadhyay29). The code is MIT licensed (see `LICENSE`), as the original declares in its `package.json`. The data files are not covered by that licence: Magicbricks' terms apply to the listing data, and OpenStreetMap data is ODbL.
