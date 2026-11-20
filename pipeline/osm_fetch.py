@@ -24,13 +24,17 @@ MIRRORS = [
 ]
 
 
-def overpass(query, name):
+class OverpassFailed(Exception):
+    pass
+
+
+def overpass(query, name, tries=None):
     CACHE.mkdir(parents=True, exist_ok=True)
     f = CACHE / f"{name}.json"
     if f.exists():
         return json.loads(f.read_text())
     body = urllib.parse.urlencode({"data": query}).encode()
-    for url in MIRRORS * 2:
+    for url in (MIRRORS * 2)[:tries]:
         try:
             req = urllib.request.Request(url, data=body, headers={"User-Agent": "flat-finder/0.1"})
             raw = urllib.request.urlopen(req, timeout=300).read()
@@ -40,7 +44,21 @@ def overpass(query, name):
         except Exception as e:
             print("mirror failed", url, e, flush=True)
             time.sleep(10)
-    raise SystemExit("all Overpass mirrors failed")
+    raise OverpassFailed("all Overpass mirrors failed")
+
+
+def buildings_in(ts, tw, tn, te, name, depth=0):
+    """Building ways in a box; a box that times out everywhere is split in four (dense centres), twice at most."""
+    q = f'[out:json][timeout:280];way["building"]({ts},{tw},{tn},{te});out geom;'
+    try:
+        return overpass(q, name, tries=3 if depth < 2 else None)["elements"]
+    except OverpassFailed:
+        if depth >= 2:
+            raise
+        print("  splitting", name, flush=True)
+        ms, mw = (ts + tn) / 2, (tw + te) / 2
+        return [el for k, (a, b, c, d) in enumerate([(ts, tw, ms, mw), (ts, mw, ms, te), (ms, tw, tn, mw), (ms, mw, tn, te)])
+                for el in buildings_in(a, b, c, d, f"{name}_{k}", depth + 1)]
 
 
 def _pts(geom):
@@ -102,9 +120,22 @@ def main():
     (OUT / "osm_areas.geojson").write_text(json.dumps({"type": "FeatureCollection", "features": feats}))
     print("areas", len(feats))
 
-    blds = overpass(f'[out:json][timeout:280];way["building"]{bb};out geom;', "buildings")
+    # one query over a whole city times out on every mirror (Noida); ask tile by tile, each tile cached on its own
+    tiles = int(CITIES[CITY].get("osm_tiles", 1))
+    elements, seen = [], set()
+    for i in range(tiles):
+        for j in range(tiles):
+            ts, tn = s + (n - s) * i / tiles, s + (n - s) * (i + 1) / tiles
+            tw, te = w + (e - w) * j / tiles, w + (e - w) * (j + 1) / tiles
+            name = "buildings" if tiles == 1 else f"buildings_{i}_{j}"
+            for el in buildings_in(ts, tw, tn, te, name):
+                if el["id"] not in seen:  # a way crossing a tile edge comes back from both tiles
+                    seen.add(el["id"])
+                    elements.append(el)
+            if tiles > 1:
+                print(f"buildings tile {i * tiles + j + 1}/{tiles * tiles}: {len(elements)}", flush=True)
     bf = []
-    for el in blds["elements"]:
+    for el in elements:
         if "geometry" not in el:
             continue
         r = _pts(el["geometry"])

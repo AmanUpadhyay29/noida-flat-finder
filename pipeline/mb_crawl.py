@@ -20,7 +20,8 @@ OUT = ROOT / "out"
 CITIES = json.loads((ROOT.parent / "data" / "cities.json").read_text())
 CITY = next((a for a in sys.argv[1:] if a in CITIES), "gurgaon")
 CFG = CITIES[CITY]
-LIST_URL = "https://www.magicbricks.com/residential-projects-in-" + CFG["magicbricks"] + "-nprid/page-{}"
+SLUGS = CFG["magicbricks"] if isinstance(CFG["magicbricks"], list) else [CFG["magicbricks"]]
+LIST_URLS = ["https://www.magicbricks.com/residential-projects-in-" + s + "-nprid/page-{}" for s in SLUGS]
 OUT = OUT / CITY
 UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36"
 DELAY = 1.0
@@ -45,17 +46,19 @@ def fetch(url):
 
 
 def crawl_list():
-    first = fetch(LIST_URL.format(1))
-    total = mb_parse.parse_total(first)
-    pages = -(-total // 20)
-    projects = {}
-    for n in range(1, pages + 1):
-        html = fetch(LIST_URL.format(n))
-        if not html:
-            continue
-        for c in mb_parse.parse_list_page(html):
-            projects[c["psmid"]] = mb_parse.card_to_project(c)
-        print(f"list {n}/{pages}: {len(projects)} projects", flush=True)
+    projects, total = {}, 0
+    for slug, list_url in zip(SLUGS, LIST_URLS):  # a project listed under two slugs is kept once (same psmid)
+        first = fetch(list_url.format(1))
+        n_slug = mb_parse.parse_total(first)
+        total += n_slug
+        pages = -(-n_slug // 20)
+        for n in range(1, pages + 1):
+            html = fetch(list_url.format(n))
+            if not html:
+                continue
+            for c in mb_parse.parse_list_page(html):
+                projects[c["psmid"]] = mb_parse.card_to_project(c)
+            print(f"{slug} list {n}/{pages}: {len(projects)} projects", flush=True)
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "mb_index.json").write_text(json.dumps(list(projects.values()), indent=0))
     print("total reported", total, "collected", len(projects))
