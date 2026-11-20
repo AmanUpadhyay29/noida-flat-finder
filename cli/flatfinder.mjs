@@ -4,13 +4,13 @@ import { readFile, realpath } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { DEFAULT_CRITERIA, feetLabel, formatINR, matchSociety, priceFor } from '../web/src/filters.js';
 
-const SITE = 'https://flat-finder.pages.dev';
+const SITE = process.env.FLATFINDER_SITE || 'http://localhost:5173'; // the local Noida copy (npm run dev in web/)
 
 const HELP = `flatfinder: find housing societies that fit
 
-  npx github:kairothq/flat-finder [options]
+  npx github:AmanUpadhyay29/noida-flat-finder [options]
 
-  --city <id>            gurgaon (default), more as they are added
+  --city <id>            noida (default), gurgaon
   --bhk 3,4              BHK types
   --min-bedroom 11'3x12'3   every bedroom must clear both sides (also 11.25x12.25)
   --min-sqft 1620        minimum unit size (super area where known)
@@ -40,7 +40,7 @@ export function parsePrice(s) {
 }
 
 export function parseArgs(argv) {
-  const o = { city: 'gurgaon', crit: structuredClone(DEFAULT_CRITERIA), limit: 30, json: false, likely: false, data: null };
+  const o = { city: 'noida', crit: structuredClone(DEFAULT_CRITERIA), limit: 30, json: false, likely: false, data: null };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i], v = () => argv[++i];
     if (a === '--city') o.city = v();

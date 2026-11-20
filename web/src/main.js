@@ -8,7 +8,7 @@ import { AMENITY_KEYS, DEFAULT_CRITERIA, NEAR, RANK, feetLabel, formatINR, match
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const mobile = matchMedia('(max-width: 700px)').matches;
-const REPO = 'https://github.com/kairothq/flat-finder';
+const REPO = 'https://github.com/AmanUpadhyay29/noida-flat-finder';
 const params = new URLSearchParams(location.search);
 const store = { // localStorage can be missing or blocked: never let it break the page
   get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch { return d; } },
@@ -26,7 +26,9 @@ const DIVY = { // Divy's own Gurugram search, shown as the example
   ...structuredClone(DEFAULT_CRITERIA), kinds: ['apartment'], bhk: [2, 3, 4], roomArea: 138, minSqft: 1620, amenities: ['squash'] }; // 11'3" x 12'3" = 138 sq ft
 const STATE_LABEL = { match: 'Matches your search', likely: 'Likely match', probable: 'Probably fits (estimated)', unknown: 'Not checked yet', no: 'Does not match' };
 
+const RENT_ONLY = false; // true hides Buy everywhere (filters, cards, counts) for a rent-only search
 let crit = structuredClone(DEFAULT_CRITERIA);
+if (RENT_ONLY) crit.mode = 'rent';
 let baseMode = BASE_MODES.includes(params.get('map')) ? params.get('map') : 'streets';
 let roomMode = 'off', areaUnit = 'gaj', sortBy = 'best';
 let data, byId, map, feed, selected = null, states = new Map(), tourTimer = null, cityId = 'gurgaon', details = null;
@@ -34,8 +36,8 @@ let myList = [], allAmenities = [];
 const highlights = { glow: true, bounds: true, labels: true, ...store.get('ff-highlights', {}) };
 
 async function boot() {
-  const cities = await fetch('/data/cities.json').then((r) => r.json()).catch(() => ({ gurgaon: { name: 'Gurugram' } }));
-  cityId = cities[params.get('city')] ? params.get('city') : 'gurgaon';
+  const cities = await fetch('/data/cities.json').then((r) => r.json()).catch(() => ({ noida: { name: 'Noida' } }));
+  cityId = cities[params.get('city')] ? params.get('city') : cities.noida ? 'noida' : Object.keys(cities)[0];
   const [city, shapes] = await Promise.all([
     fetch(`/data/${cityId}.json`).then((r) => r.json()),
     fetch(`/data/${cityId}-shapes.geojson`).then((r) => r.json()),
@@ -53,7 +55,7 @@ async function boot() {
 
   myList = params.get('list') ? params.get('list').split(',').filter((id) => byId.has(id)) : store.get(`ff-list-${cityId}`, []).filter((id) => byId.has(id));
   const c = city.counts, m = city.price_model || {}, rated = city.societies.filter((s) => s.rating).length;
-  $('note').textContent = `${c.on_map.toLocaleString()} societies · ${(c.for_sale || 0).toLocaleString()} homes for sale, ${(c.for_rent || 0).toLocaleString()} for rent on Magicbricks · ${c.verified} verified from brochures and HRERA plans`;
+  $('note').textContent = `${c.on_map.toLocaleString()} societies · ${RENT_ONLY ? '' : `${(c.for_sale || 0).toLocaleString()} homes for sale, `}${(c.for_rent || 0).toLocaleString()} for rent on Magicbricks · ${c.verified} verified from brochures and RERA plans`;
   $('about-prices').innerHTML = `Prices and rents are medians of live Magicbricks listings. <b>⚠</b> marks a listing price our checks think is a typo (far from the same home nearby, or rent and price that cannot both be right): it is shown as listed but not used for filters. <b>~</b> marks our estimate: rent is about ${((m.city_yield || 0.025) * 100).toFixed(1)}% of the price per year here (measured on ${m.pairs || 0} society and BHK pairs, correlation ${m.log_price_rent_correlation ?? 'n/a'}). "Probably fits" uses a cautious bedroom size estimated from unit size (${city.room_model?.n || 0} verified unit types). Resident ratings exist for ${rated.toLocaleString()} societies.`;
   $('dl-all').href = `/data/${cityId}-societies.csv`;
   $('dl-units').href = `/data/${cityId}-units.csv`;
@@ -160,6 +162,7 @@ function dualRange(el, { min, max, step, fmt, onChange }) {
 
 function useCriteria(c) {
   crit = structuredClone(c);
+  if (RENT_ONLY) crit.mode = 'rent'; // presets (Divy's search) were saved in Buy mode
   roomMode = crit.roomArea ? 'area' : 'off';
   redrawFilters();
   applyFilters();
@@ -230,6 +233,7 @@ function buildFilters() {
     $('v-area').textContent = areaUnit === 'gaj' ? `at least ${g.toFixed(2).replace(/\.?0+$/, '')} gaj (${Math.round(g * 9)} sq ft)` : `at least ${Math.round(g * 9)} sq ft (${g.toFixed(1)} gaj)`;
     $('room-hint').textContent = 'Every bedroom must be at least this big (length × width).';
   }
+  if (RENT_ONLY) document.querySelector('#f-mode button[data-m="buy"]')?.remove();
   document.querySelectorAll('#f-mode button').forEach((b) => (b.onclick = () => { crit.mode = b.dataset.m; redrawFilters(); applyFilters(); }));
   document.querySelectorAll('#f-room-mode button').forEach((b) => (b.onclick = () => { roomMode = b.dataset.r; redrawFilters(); readRoom(); }));
   document.querySelectorAll('#f-area-unit button').forEach((b) => (b.onclick = () => { areaUnit = b.dataset.u; redrawFilters(); }));
@@ -387,7 +391,7 @@ function renderCard(s) {
     ? `<b${flag ? ` class="flagged" title="${esc(flag)}"` : ''}>${formatINR(real.median)}${rent ? '/mo' : ''}${flag ? ' ⚠' : ''}</b><div class="fine">${real.n > 1 ? `${formatINR(real.min)} to ${formatINR(real.max)} · ` : ''}${real.n} listing${real.n > 1 ? 's' : ''}${rangeFlag ? ` · <span title="${esc(rangeFlag)}">⚠ odd listings</span>` : ''}</div>${flag ? `<div class="fine flag-note">⚠ Our check: ${esc(flag)}.${est ? ` Our estimate: ~${formatINR(est.value)}${rent ? '/mo' : ''}.` : ''}</div>` : ''}`
     : est ? `<b class="est" title="${esc(est.basis)}">~${formatINR(est.value)}${rent ? '/mo' : ''}</b><div class="fine">our estimate: ${esc(est.basis)}</div>` : '<span class="fine">no data</span>';
   const priceRows = Object.entries(s.prices || {}).filter(([b]) => !crit.bhk.length || crit.bhk.includes(+b)).map(([b, p]) =>
-    `<tr><td>${b} BHK${p.psf ? `<div class="fine">₹${p.psf.toLocaleString()}/sq ft</div>` : ''}</td><td>${cell(p.buy, p.buy_est, false, p.flags?.buy, p.flags?.buy_range)}</td><td>${cell(p.rent, p.rent_est, true, p.flags?.rent, p.flags?.rent_range)}</td></tr>`).join('');
+    `<tr><td>${b} BHK${p.psf ? `<div class="fine">₹${p.psf.toLocaleString()}/sq ft</div>` : ''}</td>${RENT_ONLY ? '' : `<td>${cell(p.buy, p.buy_est, false, p.flags?.buy, p.flags?.buy_range)}</td>`}<td>${cell(p.rent, p.rent_est, true, p.flags?.rent, p.flags?.rent_range)}</td></tr>`).join('');
   const d = details?.[s.id];
   const want = new Set(crit.amenities.flatMap((k) => AMENITY_KEYS[k] || [k.slice(2)]));
   const facts = Object.entries(s.amen_facts || {}).map(([k, f]) => `<span class="hit">${esc(AMEN_LABELS[k] || k)}: ${esc(f.value)} (<a href="${esc(f.source)}" target="_blank" rel="noopener">p.${esc(f.page)}</a>)</span>`).join('');
@@ -395,7 +399,8 @@ function renderCard(s) {
   const plans = Object.entries(s.plan_links || {}).map(([b, urls]) => urls.slice(0, 2).map((u, i) => `<a href="${esc(u)}" target="_blank" rel="noopener">${b} BHK plan${urls.length > 1 ? ' ' + (i + 1) : ''}</a>`).join(' ')).join(' ');
   const issue = `${REPO}/issues/new?title=${encodeURIComponent('Research: ' + s.name)}&body=${encodeURIComponent(`Please verify room sizes and amenities for ${s.name} (${s.locality || ''}).\n\nPortal page: ${s.url}\n${s.brochure_url ? 'Brochure: ' + s.brochure_url : ''}`)}`;
   const facts2 = [s.towers && `${s.towers} towers`, s.units && `${Number(s.units).toLocaleString()} units`, s.acres && `${s.acres} acres`, s.status, s.possession && `possession ${s.possession}`].filter(Boolean).join(' · ');
-  const counts = (s.sale_count || s.rent_count) ? `${(s.sale_count || 0).toLocaleString()} for sale · ${(s.rent_count || 0).toLocaleString()} for rent now` : 'No live listings';
+  const counts = RENT_ONLY ? (s.rent_count ? `${s.rent_count.toLocaleString()} for rent now` : 'No flats for rent listed now')
+    : (s.sale_count || s.rent_count) ? `${(s.sale_count || 0).toLocaleString()} for sale · ${(s.rent_count || 0).toLocaleString()} for rent now` : 'No live listings';
   const parts = s.score_parts || {};
   const score = s.score != null ? `<div class="score"><div class="big">${s.score}<small>/10</small></div><div class="parts">
       ${parts.residents != null ? `<span>Residents <b>${parts.residents}</b></span>` : '<span class="fine">No resident ratings yet</span>'}<span>Nearby <b>${parts.nearby}</b></span><span>Amenities <b>${parts.amenities}</b></span>
@@ -421,8 +426,8 @@ function renderCard(s) {
     ${score}
     <div class="meta">${s.rating ? `<span class="stars">★ ${s.rating.toFixed(1)}</span> ${s.rating_count || 0} resident ratings · ${s.review_count || 0} reviews · ` : ''}${counts}</div>
     ${s.note ? `<div class="fine">${esc(s.note)}</div>` : ''}
-    <h4>Buy and rent</h4>
-    ${priceRows ? `<table class="prices"><tr><th>Home</th><th>Buy</th><th>Rent</th></tr>${priceRows}</table>` : '<div class="fine">No price data.</div>'}
+    <h4>${RENT_ONLY ? 'Rent' : 'Buy and rent'}</h4>
+    ${priceRows ? `<table class="prices"><tr><th>Home</th>${RENT_ONLY ? '' : '<th>Buy</th>'}<th>Rent</th></tr>${priceRows}</table>` : '<div class="fine">No price data.</div>'}
     ${trend}
     <h4>Bedrooms</h4>
     ${unitRows ? `<table><tr><th>Unit</th><th>Bedrooms</th><th></th><th>Source</th></tr>${unitRows}</table>` : '<div class="fine">No unit types listed.</div>'}
